@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Learn | My Octopress Blog]]></title>
+  <link href="http://GingerBear.github.io/blog/categories/learn/atom.xml" rel="self"/>
+  <link href="http://GingerBear.github.io/"/>
+  <updated>2013-10-13T23:11:49-04:00</updated>
+  <id>http://GingerBear.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Dropbox + Git 多人协作]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/"/>
+    <updated>2013-02-13T00:00:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%e5%a4%9a%e4%ba%ba%e5%8d%8f%e4%bd%9c</id>
+    <content type="html"><![CDATA[<div>
+<h1><strong>背景： </strong></h1>
+</div>
+
+
+<p>一个人开发项目到了一半，想多拉几个人过来一起开发。</p>
+
+<h1><strong>使用顺序： </strong></h1>
+
+
+<h2><strong>（一）我先配置好公共的repo。</strong></h2>
+
+
+<ol>
+<li>在Dropbox上创建一个文件夹作为共享的空repo：</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ cd C:/Users/Neil/Dropbox/</span>
+
+<span style="color:#999999;"> $ mkdir Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ cd Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ git init --bare
+
+</span></pre>
+
+
+<ol>
+<li> 把原来本机上项目放到到那个共享的repo里：</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ cd C:/User/Neil/Projects/MyProject1</span>
+
+<span style="color:#999999;"> $ git init</span>
+
+<span style="color:#999999;"> $ git remote add origin C:/Users/Neil/Dropbox/Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "first commit."</span>
+
+<span style="color:#999999;"> $ git push origin master</span></pre>
+
+
+<h2></h2>
+
+
+<h2><strong>（二）新加进来的开发们在本机clone一份。</strong></h2>
+
+
+<p><span style="color:#999999;">注意：在操作git之前，先config好自己的user.name和user.email</span></p>
+
+<ol>
+<li>创建本地目录，把Dropbox共享到的repo clone到里面。</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/</span>
+
+<span style="color:#999999;"> $ git clone C:/Users/Eric/Dropbox/Share/MyProject1.git</span></pre>
+
+
+<h2></h2>
+
+
+<h2><strong>（三）开始日常开发。</strong></h2>
+
+
+<ol>
+<li>获取最新的版本：</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/MyProject1</span>
+
+<span style="color:#999999;"> $ git pull origin master
+
+</span></pre>
+
+
+<ol>
+<li>完成一个小功能后，commit一个版本到本地的repo：</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "comment on this commit"
+
+</span></pre>
+
+
+<ol>
+<li>完成一个大功能后，把本地的repo push到共享的repo里：</li>
+</ol>
+
+
+<pre><span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "comment on this commit"</span>
+
+<span style="color:#999999;"> $ git push origin master</span></pre>
+
+
+<h2></h2>
+
+
+<h2><strong>另外：</strong></h2>
+
+
+<p>可能会遇到冲突，因为在你pull最新版本下来之后，又有人push了更新的版本到共享repo里，而且他修改了跟你相关的代码。因此当你现在push的时候会出错，因为共享repo也不知道用他的代码好还是你的代码好。这时就git就会要求你在push之前再pull一次，并且会告诉你冲突的地方，在具体文件中会以下面这种方式体现：</p>
+
+<pre><span style="color:#999999;"> &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+
+<span style="color:#999999;"> 我的代码</span>
+
+<span style="color:#999999;"> ===========</span>
+
+<span style="color:#999999;"> 他的代码</span>
+
+<span style="color:#999999;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span></pre>
+
+
+<p>我需要把这段代码解决（跟他商量怎么回事儿）之后在push到共享的repo。</p>
+
+<p>（完）</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[March Summery & April Plan]]></title>
+    <link href="http://GingerBear.github.io/blog/2010/03/31/4/"/>
+    <updated>2010-03-31T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2010/03/31/4</id>
+    <content type="html"><![CDATA[<p>I used to have two and half months to prepare for my TOEFL,and it past the first month now.</p>
+
+<p>I feel that I have make a good progress in this month,especially  my reading skill.</p>
+
+<p>Also the tough job &mdash;words&mdash;had been finished,though it&rsquo;s not stable.Reviewing the words might be one of things that should be done next month.</p>
+
+<p>Next,it&rsquo;s the listening that I do listened a lot English materials such as college lectures,BBC news,few novels,but it seemingly didn&rsquo;t make too much effects.I didn&rsquo;t feel I had made much progress in listening to English.So making some changes in ways of practice should be planed next.</p>
+
+<p>In the writing field there is zero.though t says that it&rsquo;s the easiest part of the test,I have to develop it in the next weeks for 4 tests in the DELTA book.</p>
+
+<p>Speaking,maybe the most difficult one for me,also be filled with nothing.I have to find a good way to practice ,but not just speak to myself when walking alone with some F words.</p>
+
+<p><strong> OK.that is the overlooking to all four parts.Here are some things i should do next. </strong></p>
+
+<p>In the first two weeks, finish the DELTA books include the 4 simulative test and review the words.</p>
+
+<p>In addition,8 papers in related to Internet views should be finished in this two weeks.</p>
+
+<p>Also,the courses should be condensed,which maintains <em>Economic</em> and<em> The Dynamics of Mass Communication .</em></p>
+
+<p>In the later two weeks,I should try my best to finish the BARRON Book in order to make time to finish the OG and the official simulative test in the last two weeks.</p>
+
+<p>In the first week ,the New Orient IBT courses(finding the way to practice the writing and listening and speaking skill) will be necessary in next week&rsquo;s 4 tests.So next month I should turn on my most energetic mode to do<strong> Books courses + all IBT courses + all DELTA Practice + 4 Papers + half Words.</strong></p>
+
+<p>At least one Blog every week,so next week I should make a week summery too.</p>
+]]></content>
+  </entry>
+  
+</feed>

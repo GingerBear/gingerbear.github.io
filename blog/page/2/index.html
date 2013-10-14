@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="总体来说，看官方的Polls 教程，还是比较清楚的。写个小记，加深记忆。 安装： 命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。 建立工程： &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/">Django学习小记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-03T00:00:00-04:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">总体来说，看官方的<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">Polls 教程</a>，还是比较清楚的。写个小记，加深记忆。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006.jpg"><img class="alignnone size-medium wp-image-15" title="bear-vs-snake-deathmatch-2006" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006-300x257.jpg" alt="" width="300" height="257" /></a>
+
+<strong>安装：</strong>
+
+命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。
+
+<strong>建立工程：</strong>
+
+<strong></strong>命令行cd到目录，运行django-admin.py startproject mysite建立名为mysite的工程。里面自动生成四个文件：__init__.py没用到，manage.py执行各种操作，settings.py配置文件，urls处理url。
+
+<strong>配置数据库：</strong>
+
+<strong></strong>修改settings,py里的DATABASES的参数，改了两个：（1）&#8217;ENGINE&#8217;里选sqlite3，（2）‘NAME’里写sqlite.db的地址。因为用的是SQLite，所以其他参数不管。然后运行python manage.py syncdb，意思是按照settings.py里的INSTALLED_APPS来建立数据库。
+
+<strong>建立应用：</strong>
+
+<strong></strong>在工程目录下，命令行运行python manage.py startapp polls建立名为polls的投票应用。里面自动生成四个文件：__init__.py没用到，models.py用类写成的数据库，tests.py没用到，views.py根据urls.py传来的参数，作出相应的操作，然后显示出来。
+
+<strong>创建应用models：</strong>
+
+<strong></strong>在models.py里写两个类（建数据表），并在settings.py里的INSTALLED_APPS加入（称为“注册”更合适）这个应用，完了别忘了运行python manage.py syncdb。Django里还有各种Database API对数据库进行<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial01/#playing-with-the-api" target="_blank">各种操作</a>。
+
+<strong>建立应用的管理后台：</strong>
+
+<strong></strong>实际上是使用Django自带的后台管理应用，方便对数据进行操作。步骤同上：settings.py里注册应用，syncdb，修改urls.py，然后就可以运行了（惊喜）。命令行运行python manage.py runserver，浏览器输入地址可以很不错的管理界面，并且能够<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin" target="_blank">定制界面</a>。
+
+<strong>配置应用的url：</strong>
+
+<strong></strong>修改urls.py，主要写url的正则表达式，以及负责接收的view。这里有些技巧（1）在patterns里写规则，减少重复的代码。（2）分开工程的urls.py和应用的urls.py，提高可拓展性。
+
+<strong>建立应用的views：</strong>
+
+<strong></strong>这一步是最花精力的。负责实现应用的逻辑。用def写各种方法，对应url的指示，比如index负责首页显示的东西，detail负责每一次投票（表单）等。通常现实的布局，由views交给templates处理，views只把所以要显示的数据给template，而template则是HTML，布局很容易。
+
+到这一步，一个应用基本上就完成了。其中还有各种减少代码的方法，不一一列出，具体参见<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">官方教程</a>。
+
+（End | by Neil）
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/30/hello-asia/">Hello, Asia</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-30T00:00:00-04:00" pubdate data-updated="true">Oct 30<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">这是我刚刚开启的独立博客，在Sina App Engine的服务下搭建。
+
+&nbsp;
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/09/node-js%25e5%2592%258cmongodb/">Node.js和MongoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-09T00:00:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&nbsp;</p>
+<p><strong>Node.js和MongoDB</strong></p>
+<p>这是 <a href="http://nodeknockout.com/" target="_blank">Node.js Knockout</a> 系列学习使用<a href="http://nodejs.org/" target="_blank">node.js</a>的第六篇。这篇文章的作者是<a href="http://mongodb.org/" target="_blank">10gen</a>，并从他的博客中<a href="http://blog.mongodb.org/post/812003773/node-js-and-mongodb" target="_blank">转发</a>。</p>
+<p><a href="http://www.10gen.com/" target="_blank">10gen</a>是<a href="http://www.mongodb.org/" target="_blank">MongoDB</a>的企业赞助人。MongoDB在键值存储（key-value stores）（高速并且高度可扩展）和传统的关系数据库（提供大量查询和深度功能）之间的缺口上建立了桥梁。</p>
+<p><strong>Node 和 MongoDB</strong></p>
+<p>Node.js是建立各种实时应用程序（从分析系统到聊天服务器到地理位置追踪服务）的一种框架的选择之一。如果你对于Node还一无所知，请看<a href="http://simonwillison.net/2009/Nov/23/node/" target="_blank">Simon Willson 的出色介绍</a>。如果你已经在使用Node，那么你可能需要一个数据库，并且你正在考虑是否使用MongoDB。</p>
+<p>基本原理已经存在。使用Node Javascript意味着MongoDB文件取得了最自然的代表（就如JSON）存在于应用层。在你的应用与MongoDB的外壳（shell）之间存在着很大的一致性，因为外壳是JavaScript的解释器，所以你不必更换语言或者把应用移到数据库里。</p>
+<p><strong>Node.js MongodB Driver</strong></p>
+<p>在10gen，对于Node.js和MongoDB的支持让我印象非常深刻。首先，有Christian Kvalheim&#8217;s优秀的<a href="http://github.com/christkv/node-mongodb-native" target="_blank">mongodb-node-native项目</a>，一个完全通过JavaScript使用Node.js系统库的无障碍MongoDB驱动。这个项目是与<a href="http://www.mongodb.org/display/DOCS/Ruby+Language+Center" target="_blank">MongoDB Ruby驱动</a>非常接近的端口，使得已经使用的驱动能够轻松转换到10gen支持的驱动。如果你刚刚开始，<a href="http://groups.google.com/group/node-mongodb-native" target="_blank">mongodb-node-native mailing list</a>对你会非常有用。</p>
+<p><strong>Hummingbird</strong></p>
+<p>需要一个真实的例子吗？看看<a href="http://mnutt.github.com/hummingbird/" target="_blank">Hummingbird</a>吧，Michael Nutt&#8217;s 的实施分析应用。它建立在MongoDB上使用Node.js和mongodb-node-native驱动。Hummingbird是一个用于<a href="http://www.gilt.com/" target="_blank">Gilt Group</a>的产品，使用了一系列给人印象深刻的技术；它使用了<a href="http://expressjs.com/" target="_blank">express.js</a>应用框架，在websockets的帮助下炫耀了一个灵敏的接口。绝对值得一试。</p>
+<p><strong>Mongoose</strong></p>
+<p>当然，一个使用Node.js的公认困难是关于深奥回收结构。如果你遇到了问题，或者你需要一个更丰富的数据模型库，那么<a href="http://www.learnboost.com/mongoose/" target="_blank">Mongoose</a>就是答案。由<a href="http://www.learnboost.com/" target="_blank">Learnboost</a>创造的Mongoose建立在mongodb-node-native上，为建立你的引用提供了一个优秀的API。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://howtonode.org/node-and-mongo">http://howtonode.org/node-and-mongo</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/06/%25e6%259c%25ac%25e5%2591%25a8%25e6%259c%2580%25e4%25bd%25b3android%25e8%25bd%25af%25e4%25bb%25b6/">本周最佳Android软件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-06T00:00:00-04:00" pubdate data-updated="true">Jul 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&nbsp;</p>
+<p>本周最佳Android软件</p>
+<p>Casey Chan 6月1日</p>
+<p><strong>Google+</strong>：Google+很不错吗？的确。Google+的首页上四个图标启动四个主要功能：Circles, Stream, Huddle 和 Photos。Circles让你在你选的组群里分享东西。Stream是一个按时间显示的朋友最近分享，与Facebook的新鲜事（news feed）差不多。Huddle一个类似于Groupme的群聊天工具，通过它你可以即时组一个群，谈论计划一个晚会或者假期之类。Photos很不错，因为它有一个&ldquo;即时上传&rdquo;的 功能，能够自动把照片上传到云中，让分享很方便。免费</p>
+<p><strong>Pool Party</strong>：Pool Party由Slide设计，big G的子公司。它类似于Instagram，因为它们都是社会化照片分享应用，但这也只是唯一的相似点。Instagram主要针对是个人的表达（有它的时髦过滤器（hipster-ish filters）为证），Pool Party更注重社交聚会（party）。它更重视组群的分享，在这里个人用户为一个组群相册（一个pool）做贡献，只有你愿意。在这方面，它有点像Color，除了它是基于朋友群的，而非地理位置。</p>
+<p><strong>Background Check - Been认证</strong>：Been认证的背景查看第一次到达Android平台。只要根据名字或者Email地址，你可以查看任何人的背景（包括亲戚、财产记录、犯罪记录以及社会媒体的足迹）。你能每周获得一份免费报告。增强版售价$.99，或者$.99二十包。</p>
+<p><strong>Skype</strong>：Skype已经在Android上已经更新到了2.0版本，使Android手机、iPhone，Macs、Windows和TV之间能够实现视频聊天。它在3G和WIFI网络上都可以工作，并且它是免费的。</p>
+<p><strong>HoneyGram</strong>: 特别为Android Honeycomb开发，HoneyGram是一个Android上的虚拟Instagram应用。它利用了扫屏和手势去看时髦的照片。所有的用户都很偷看Instagram的图片，附近的图片，标签搜索，在你的控制板上放一个小部件。当你登录的话似乎，你将看到朋友的新鲜事，添加更多的小部件到控制板上。</p>
+<p><strong>Kona&#8217;s Crate</strong>：一个物理游戏（之前只有iOS版本），游戏中，你控制一座喷气发动的平台，把箱子放到指定的地点。躲避障碍完成任务的速度越快，分越高！很有趣也很靠技巧。$1</p>
+<p><strong>Proint Center</strong>：来自OfficeMax的程序，它能让你发生文件到他们的商店打印。你能够定制打印，打印eamil，文档，图片已经存放在你的Google Docs里的其他文件。当打印请求完成时，你也会收到提醒。对那些附近有OfficeMax的的人很有帮助。</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://gizmodo.com/5817542/">http://gizmodo.com/5817542/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/06/%25e4%25bc%25b4%25e9%259a%258f%25e7%259d%2580%25e9%25a1%25b6%25e7%25ba%25a7%25e9%2593%25b6%25e8%25a1%258c%25ef%25bc%258c%25e9%2587%2591%25e8%259e%258d%25e6%259c%258d%25e5%258a%25a1%25e5%2595%2586yodlee%25e7%259a%2584%25e7%2594%25a8%25e6%2588%25b7%25e8%25be%25be%25e5%2588%25b03%25e5%258d%2583%25e4%25b8%2587/">伴随着顶级银行，金融服务商Yodlee的用户达到3千万</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-06T00:00:00-04:00" pubdate data-updated="true">Jul 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<div style="overflow-x:auto;overflow-y:auto;font:normal normal normal 14px/normal Verdana;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#ffffff;cursor:text;margin:0;padding:2px 4px 0;">
+<div>
+<div>
+<div><span style="line-height:21px;">伴随着顶级银行，金融服务商Yodlee的用户达到3千万</span></div>
+<div><span style="line-height:21px;">Rip Empson</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">Yodlee，一家以帐户聚集而著名的个人金融管理服务提供商今天宣布他们跨过了3千万用户这一里程碑。1999年建立的Yodlee已经筹集了1亿美元的资金，并悄悄地建立了一套金融管理的解决方案，帮助了很多大型的金融机构和门户，包括美国银行、Fidelity和Amex。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">然而，由于筹集了大量资本，并在十年的金融动荡中存活了下来，Yodlee依然处在危险之中（under the radar），尽管Yodlee给所有Y Combinator的启动项目提供服务，并且最初提供后端技术给Mint.com，直到Mint 2009年被Intuit获得。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">正如Mike Arrington当时写道，Yodlee在它早期提供它的帐户聚集服务给Mint，让Mint把注意里集中在用户体验以及大型市场运动上。它的启动在业界造成的很大的反应，几乎使它的先辈黯然失色。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">正如之前所说，Yodlee继续超过Mint.com的5百万用户，因为它已经建立了一个平台，作为了大部分在线个人金融管理服务的后端。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">Yodlee跨越了3千万用户这一里程碑，似乎印证了这样一个事实：网上银行已经过渡到个人金融管理，因为用户越来越希望能通过一个可定制的平台管理他们所有的的资金。加上基于app的移动功能，通过它的FinApp Store开放API给开发人员建立apps来启动各种产品，这已经使Yodlee变成了更受关注的在线金融服务提供商之一。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">然而，虽然Yodlee最近获得了它的第45个专利，美国最大10家银行中五家是它的客户，已经注册用户达到3千万，它依然在寻找那个逃生口（Mint.com在几年之前已经找到）。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">也许随着45个专利的发布，专利包含数据聚合分类，即时帐户认证，个人资产管理，Yodlee智力资产的投资已经开始取得成效。</span></div>
+<div><br /></div>
+<div><span style="line-height:21px;">原文：</span><a href="http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/">http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/</a></div>
+</div>
+</div>
+</div>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/">Node.JS，LAMP，和未来</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<p><strong>Node.JS，LAMP，和未来</strong></p>
+<p><span style="font-family:mceinline;">2011年4月29日</span></p>
+<p>我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了，并且使用服务器端JavaScript建立了他们的仪表盘。你能够用它做很多很酷的事实，而且它也很有潜力。它的安装和运行很容易，就像Redis也一样。下面是对那篇文章的摘要：</p>
+<p>我做出这句决定是因为我意识到：LAMP已经死亡。自从它诞生的时候的二十年里，Web的构成（内容、协议、服务器、客户端）已经发生了根本的转变。总的来说，有这么三个时期：</p>
+<div style="padding-left:10px;margin-left:10px;border-left:5px #eee solid;">
+<p>I. 1991-1999: HTML时代。</p>
+<p>HTML时代是关于文件的，印证了Tim Berners-Lee&rsquo;s 最初的愿景：&ldquo;一个大的，虚拟的，空中的文件系统&rdquo;。Web被静态的手输代码的文件所主导，Web客户端被严格的格式化（甚至违背了最温和排版）。静态文件用于静态客户端。</p>
+<p>II. 2000-2009: LAMP时代。</p>
+<p>LAMP时代是关于数据库的，而非文件，主导的web组合上LAMP或者类似LAMP的。无论CGI，PHP，Ruby on Rails, 或者 Django，主导的模式是用数据库的值填入HTML的模板。内容动态的存于服务器端，但在客户端仍然是静态的。</p>
+<p>III. 2010-??: Javascript时代.</p>
+<p>Javascript时代是关于事件流的。现代的Web页面部在是页面，他们是事件驱动的应用程序，信息通过它们流动。Web的核心容器&mdash;&mdash;文件对象模型&mdash;&mdash;依然存在，但不像HTML标记。DOM（文件对象模型）是一个，由JavaScript产生，内存中的，高效编码的数据结构。</p>
+<p>LAMP架构已经死亡因为很少的应用会为了响应一个很小的事件而进行全部标记的的重载；他们只想更新DOM的一小部分，通过JavaScript。AJAX做到了，但当你的服务器端LAMP模板是10%的HTML和90%的JavaScript时，很明显你在做一件错误的事情。</p>
+</div>
+<p><strong>宣称LAMP死亡的时候已经到了</strong></p>
+<p>对与类似LAMP架构死亡的解释正在进行。我会想，这是一个非常狂热的观点，需要把它放到某一个视角下来看：</p>
+<p>在每一个&ldquo;时代&rdquo;期间，新开发的技术是为了解决问题的。人们创造HTML为了创造内联的信息。当需求增加并且变得越来越难管理时，类似LAMP的工具，如PHP, Django, Ruby on Rails等等被开发出来帮助信息更容易传递。与其说替代了老技术，倒不如说在老技术上添加新东西。有时候你想用新一些的技术更管老技术，但我们仍然在使用HTML和CSS，并且当需要时，增家对他们的使用。</p>
+<p>但是类似LAMP的系统部署在所有的地方的产品上，使有些经常被访问的网站变得跟加有强大。虽然有些人正在使用Node.JS，比如Yammer，但Node.JS并没有提供与PHP, Ruby, Python, 甚至.NET相同的内容量。</p>
+<p><strong>什么是Node.JS？</strong></p>
+<p>基本上，它是围绕着Google&lsquo;s V8 JavaScript引擎的一个轻量级框架。V8是运转Google的开源浏览器Chrome的JavaScript引擎，另外一方面，Node.JS是事件驱动，并且更加快速高效。</p>
+<p>我已经捣鼓Node.JS好几周了，它很有趣也很有潜力。它是对JavaScript的独特地运用，它的基于事件的方法能很轻松德完成某些事情（通常更难用传统工具实现）。Node.JS还拥有很多很酷的库，比如Socket.IO，一个使用了特征探测的支持多重传输的库。所以，如果你的浏览器支持WebSocket或者Adobe Flash Socket，你就能使用它，或是AJAX长查询，多方流，甚至Forever Iframe技术。因为，你的程序使用任何类型的传输都会变得最有效。</p>
+<p><strong>现实一些的审视</strong></p>
+<p>不过，现在让我们更加诚实地想想吧，Node.JS发明与2010年。它依然非常非常年轻。首页上关于Node.JS的视频讲的是发明者对于PHP用户群关于Node和谨慎使用的陈述。作为一个工具，它还需要很长时间成熟。尽管如此，基于V8引擎带给这个项目不少的成熟。</p>
+<p>至于那些被替代的技术如PHP, Ruby, 和Django，我不相信他们已经&ldquo;死亡&rdquo;，相反我认为Node.JS增强了现存的技术。就像当MySQL不很适合时，我使用Redis作为数据存储工具，我认为会在未来的网站的实时通信技术上起作用。</p>
+<p>我希望写一些更多的关于Node.JS的文章，并希望能用它解决新的或者特殊的问题。但我不会去用Node.JS重写我的网站，那可能会是个噩梦。所以就像NoSQL和云计算一样，它确实是一个新技术，但它不会从根本上移除所有其他相关的东西。就像使用Redis，我不会放弃MySQL，我只是当Redis更合适时才使用。</p>
+<p>原文：<a style="outline-style:none;outline-width:initial;outline-color:initial;text-decoration:underline;cursor:pointer;color:#1e5494;" href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/" target="_blank">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/">CouchDB能为HTML5，Web Apps做什么？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&nbsp;</p>
+<p><strong>CouchDB能为HTML5，Web Apps做什么？</strong></p>
+<p><strong>CouchAPps的功效与CouchDB能如何决定移动</strong></p>
+<p>CouchApps是直接由面向文件的数据库CouchDB服务的JavaScript和HTML5应用。在下面的采访中，Found Line联合创始人以及OSCON发言人Bradley Holt (@BradleyHolt) 谈论CouchApps的功效，CouchDB能提供给开发者什么，以及数据库如何与HTML5一起工作。</p>
+<p><strong>CouchApps如何工作？</strong></p>
+<p>Bradley Holt: CouchApps是用CouchDB，JavaScript，HTML5建立的web应用.它们避免了中间层，允许web应用直接与数据库对话&mdash;&mdash;CouchDB数据库甚至能够运行在用户的机器上或者Android/iOS设备。</p>
+<p><strong>建立CouchApps的好处？</strong></p>
+<p>Bradley Holt: 使你的代码库的效率跟高（没有中间层）、可重复、根据应用程序的数据部署/复制程序的能力、由于&#8221;顺理&#8221;的web工作方式带来的好处（come with going &#8220;with the grain&#8221; of how the web works）是建立CouchApps的好处。</p>
+<p>非常坦率的说，我认为CouchApps已经适合大范围的采纳使用。最大的障碍是工具。目前的开发工具集需要改进，有时建立CouchApps的过程有点困难。&ldquo;CouchApp&ldquo;这一术语也有很多不同的理解。这意味着CouchApps的好处是引人注意的，并且工具会很快赶上。</p>
+<p><strong>HTML5引发了很多存储问题，CouchDB会融入哪儿？</strong></p>
+<p>Bradley Holt: HTML5的Web存储特性描述了用户浏览器对于关键键值的本地持续存储的API。与之前浏览器本地存储特性的尝试不同，HTML5的存储特性已经取得了重大的跨浏览器支持。</p>
+<p>然而，有一点是HTML5本地存储API缺乏的，即除了指定键，使用其他形式查询值的方法。你不能穿过一套键或值查询。IndexedDB能够处理这种情况，并允许索化的数据库查询，但IndexedDB并非当前HTML5特性的一部分，并且只在一小部分浏览器中应用。</p>
+<p>如果你需要的不仅仅是键/值存储，那么你需要到HTML5特性外面看看。和HTML5 Web存储一样，CouchDB存储键/值对。在CouchDB里，键/值对的键部分是一个文件ID，值部分是一个变现单一文件的JSON对象。与HTML5 Web存储不一样的是，CouchDB提供了一种索引和查询数据方法&mdash;&mdash;使用MapReduce&ldquo;试图&rdquo;。因为CouchDB使用了RESTful HTTP API和JSON对象最为存储文件，HTML5/JavaScript Web应用能够很容易地直接与CouchDB一起工作。</p>
+<p><strong>CouchDB的可重复特性如何与HTML5工作？</strong></p>
+<p>Bradley Holt: 同样，CouchDB不是与HTML5特性直接关联，但CouchDB的可重复特性创造了独特的机会，使CouchApps使用JavaScript和HTML5建立（而且，其他使用CouchDB建立的应用也如此）。</p>
+<p>我听说J. Chris Anderson使用&ldquo;地面计算&rdquo;（ground computing）这一术语与&ldquo;云计算&rdquo;相对。这一思想是尽可能把用户的数据存放得离用户近&mdash;&mdash;不能比用户的计算机和手机更近的了！CouchDB的可重复性使得这变成可能。使用CouchDB的增量重复，与特定用户相关的数据能够被复制到用户自己的计算机与手机（或者从上面复制出）。这允许更快地的访问用户（因为他/她的应用程序访问的是本地的数据库），离线访问、数据便携性，以及潜在对于他/她的数据更好的控制。</p>
+<p><strong>既然CouchDB在移动设备上运行，它是如何决定移动应用开发的？</strong></p>
+<p>Bradley Holt: 虽然Android是一个出色的平台，但移动应用的最大渠道还是苹果的iOS。现在CouchDB已经在Android上发布了一段时间了，但在iOS上它还是先对新的。既然CouchDB已经能用来建立iPhone/iPad应用了，我们将会很确定地看到更多的移动应用程序建立在CouchDB上，为了利用CouchDB独特的优势&mdash;&mdash;尤其是可复制性。</p>
+<p>最大的问题是，这些应用会作为本地应用建立，还是最为CouchApps建立？我也不知道答案，但我更想看到这些程序建立在CouchApps这边。通过CouchApps，开发者能够更容易地跨平台输出他们的应用，并且他们能够使用显存的HTML5，JavaScript，CSS技能集合。</p>
+<p>这一采访被编辑和缩减过。</p>
+<p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/03/%25e6%2595%25b0%25e6%258d%25ae%25e5%258f%25af%25e8%25a7%2586%25e5%258c%2596-%25e7%25bb%25b4%25e5%259f%25ba%25e7%2599%25be%25e7%25a7%2591%25e7%259a%2584%25e5%25ae%259a%25e4%25b9%2589/">数据可视化-维基百科的定义</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-03T00:00:00-04:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<p>数据可视化</p>
+<p>来自维基百科，免费的百科全书</p>
+<p>数据可视化是对数据的视觉表现的研究，意思是&ldquo;以图解的形式对信息进行摘要，包括单位信息的属性与变量&rdquo;。根据Friedman（2008），数据可视化的主要目的是通过图像清楚有效的传播信息。这不意味着数据可视化为了功能需要而看起很无趣，抑或为了看起来美观就变得特别复杂。为了有效地传递思想，美观的形式与功能性需要密切地关联，通过以一种更直观的方式传播关键部分，提供对相当分散和复杂的数据集的洞悉。尽管设计者常常不能在设计与功能之间取得一个很好的平衡，创造华丽的数据可视化效果，但没有很好地完成他们的主要目的&mdash;&mdash;传播信息。&rdquo;</p>
+<p>的确，Fernanda Viegas和Martin M. Wattenberg已经建议：一个理想的可视化应该不仅仅清楚地传播，而且应该激发观看的参与感与注意力。</p>
+<p>数据可视化与信息图形、信息可视化、科学可视化和统计图形都有密切相关。在新的千年里，数据可视化已经变成了研究、教学与开发的热点。 根据Post et al.(2002) ，它已经和科学与信息可视化领域结合。KPI库已经开发出了&ldquo;可视化方法的周期表&rdquo;，一张显示了不同数据可视化方法的交互表【下图】。它详细展示了6中数据可视化方法：数据，信息，概念，策略，象征和复合。</p>
+<p><img src="http://filer.blogbus.com/6302357/6302357_13096257018.png" border="0" alt="" /></p>
+<p>原文：<a href="http://en.wikipedia.org/wiki/Data_visualization">http://en.wikipedia.org/wiki/Data_visualization</a></p>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/02/node-js%25e4%25b8%258e%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25e7%25ab%25af%25e8%2584%259a%25e6%259c%25ac%25e7%259a%2584%25e6%259c%25aa%25e6%259d%25a5/">Node.js与服务器端脚本的未来</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-02T00:00:00-04:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<p>Node.js与服务器端脚本的未来</p>
+<p><span style="color:#aaaaaa;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:21px;">Posted by&nbsp;<a style="outline-width:0;outline-style:initial;outline-color:initial;font-size:11px;text-decoration:none;color:#999999;padding:0;margin:0;border:0 initial initial;" href="http://notjoelshapiro.com/index.php/author/admin/">Joel</a>&nbsp;on May 9, 2011 at 1:30am</span></p>
+<p>典型的web技术可以分为两类：前端和后端。根据前端代码的收入，后端代码被执行并且运行在服务器上。前端技术与后端技术被创造了不同的次数，但是在它们诞生的时候便产出了不同的要求与思想。结果，在语法，反馈，资源利用，易用性上两类语言都很很大的不同。当人们试图去掌握着两种Web开发技术时，那些选择前端的人常常发现自己处在不利的位置。亲爱的读者，跟着我去到Node.js和服务器端脚本的世界里。</p>
+<p>&nbsp;</p>
+<p>在最基本的水平，Node.js是一个把Javascript作为服务器端编程语言的框架。我不会讲述具体的应用细节（并非我不够格），但我会告诉大家用它的好处。</p>
+<p>&nbsp;</p>
+<p>最流行的服务器端语言是PHP（处理变量），通常与MySQL一起工作（一个为了长期保存了数据的数据库）。Node.js一般处在PHP的位置，扮演你的用户与数据库的中间人的角色。你的服务器端语言的替换，引起了一个有趣的地方：你已经避免了PHP，因为你不想学习一门新的语言，但你需要学习Javascript与数据库如何一起工作，这是原本的Javacript做不到的。你为什么要这么做，而不直接学习PHP呢？很多开发者已经有足够的理由去选择&ldquo;正确&rdquo;的路并采用PHP，但用熟悉的语言编程的好处又使学习如Node.js的中间工具也有一定优势。</p>
+<p>&nbsp;</p>
+<p>如果你是选择了后者，你会发现有大量的有用插件存在。在其他的功能中有插件连接流行的API，绘图，解释XML。Node.js开发者甚至写了一个服务器与客户端之间进行实时共享变量与方法的插件（未来的文章会提到）。当你试图把这些工具和他们的特点结合在一起时，使用共享语言和平台的价值就大大增加了。你不仅拥有了一个让前端开发者开发的快速方便的环境，而且你已经使得很多人不必话费大量的学习成本就可以建立Web应用和服务。</p>
+<p>&nbsp;</p>
+<p>说到这里，很多人会问，为什么很多人不用完整可行的技术，而会投身于这个变通方案。答案很简单：创新和拥有。Node.js是一个贯穿Web的闪亮创新，给了那些一无所有的人能力，并且他的作用已经开始显现。专门的服务器端语言会就此消亡吗？可能不会。客户端语言会成为服务器端脚本的主力吗？很难说。有一件事情上确定的，对于前端开发者来说，传统的客户端开发的日子已经结束了，对于另外那些受限制的开发者，一个新的世界已经开始建立。</p>
+</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/01/google-plus%25e4%25b8%25ba%25e4%25bb%2580%25e4%25b9%2588google%25e5%25bf%2585%25e5%25b0%2586%25e8%25a1%25b0%25e8%2590%25bd/">Google Plus:为什么Google必将衰落</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-01T00:00:00-04:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&nbsp;</p>
+<p>Google Plus:为什么Google会陨落</p>
+<p>Dennis Howlett | June 29, 2011, 7:51am PDT</p>
+<p>Google Plus, Google的社交网络目前正在一个高度控制范围内测试。很少人能够触及，但ReadRightWeb的Marshall Kirkpatrick被邀请一整晚体验它的功能。 他对此留下来深刻印象：</p>
+<p>这确实是一件大事，数十名工程师怀着极大的决心保密将近几个月。（通过一些有用的来源，我在三个月以前就已经打探的了核心的Circles部分）这一服务做得确实非常非常好。它会变得足够好吗？我也不知道，但我的确一整晚都一直在使用它。</p>
+<p>好，那么Google有一个好的开始。我对昨晚的意识流更感兴趣，这个意识流来自于Silicon Angle的John Furrier，他说他追随Google已经十年了，他热爱这个公司但他字这一讨论中郑重地说：</p>
+<p>Google有类似于Oracle的问题。在抹杀自己的未来之前，你要抓住自己的钱多久来做出衰落的选举权。（how long do you hold on to your money making &ldquo;declining&rdquo; franchise before killing your own to keep a future）</p>
+<p>Furrier 论证（从很多Tweetsream碎片中整理出）</p>
+<p>twitter上发生的事情解释了为什么搜索正在消亡。@JillatHP分享了一个链接给我，最相关，在最合适的情景和时间</p>
+<p>Facebook对于Google的搜素的特权是一个威胁，这也是Google使用运行新模式的原因，不惜上十亿美元的风险。</p>
+<p>Google正意识到他们现在的用户体验每天都越来越糟糕，他们越早换人越好。</p>
+<p>越来越多的人对于Google的依赖越来越少，他们从别的来源&rdquo;发现&ldquo;内容&mdash;&mdash;搜素引擎正在改变，Google也是</p>
+<p>大家别误会我，我是一个Google的粉丝，但Google不能够启动任何社会化的或者人类主导的东西。</p>
+<p>我记得几年前Paul Strassmann谈论Google的成功，但警告拥有无懈可击的商业模式的Google也并没有什么特别。如果你听说过Strassmann，一个历史和过去十年事实集合的爱好者，那么你也会知道Strassmann并不是一位煽情者，而是一位非常理性并且迷人的人。至少这少我的观点。还有另外一个真理&mdash;&mdash;最终所有的帝国都会倒下。</p>
+<p>尽管技术能够并且经常提供一些意义，为了建立当时看起来坚不可摧的力量，然而随着时间推移，帝国的根基总是瓦解。正是知识（你的查看所有的伟大帝国）印证了我的观点，Furrier是正确的，Google会倒下，即便它有很多很多钱。</p>
+<p>今天，有所不同的是，互联网的速度加速了帝国的建立与毁灭。我最近不经意感觉到40年似乎是一个临界点，以SAP和Oracle为例。Google有所不同的是，它在一个不同的时代，比起SAP和Oracle，它更快地取得了当前的位置。这是时代的标志。这也意味着我不确信Facebook会比可避免的获利。</p>
+<p>但这跟企业有什么关系？</p>
+<p>我的几个同事持这样的观点：未来企业软件的空间的主力不再与对于SAP Oracle IBM Infor等的怀疑。这温和我40年理论。我甚至不确定我们知道哪一个公司能够变成谁，尽管我正在工作日打一个试探性的赌。</p>
+<p>当我听到一些声音，企业社会化的需求依然得不到满足，不管这意味着什么，我不得不说没有人（我是说没有一个人）曾有过一分钟对企业的产品服务交易的深层次需求以及社会化真言如果和调节他们的需求与系统进行过的思考。</p>
+<p>这些系统不会离开，除非他们完全自动化，或者我们发明了一种Pacioli的可行的替代。虽然我尽力尝试，但我无法在我有生看到任一情节发生，虽然我猜测我们能先实现前者。</p>
+<p>另一方面，有迹象已经出现，至少有些人你已经开始听从它的意思，虽然我认为这些对话有些浅。</p>
+<p>这就是为什么像Appirio这样的公司，专注于整合Google，工作日以及销售力的公司，代表了提供我相信是折中点的队伍的前线。</p>
+<p>这就是为什么TIBCO将会成为为了企业决策者的心里与思想新战争的国王制造者。</p>
+<p>这也是为什么Google用尽全力认真对待Circles（加上其他大量财产）并且在开放透明的环境中解决无休止的隐私问题。如果它这样做了，他将改变道路，转移到另外一条道路上，意识到人类干预能够小心地表现为Sameer Patel称之为&ldquo;未来企业中间件&rdquo;，以及Furrier的暗示：以社交网路通过Twitter来搜素。如果Google做了所以这些事情（特别注意到移动），那么它将不会生存下去。它会想Furrier所说的一样。它将会换血与改过自新，就将IBM在90年底早期的灾难一样。</p>
+<p>这就是一件产生分歧的地方。这不是关于&ldquo;Google走向社会化&rdquo;，而是意识到它正掌握这这样一张潜力，变成企业核心的东西，能够实现的价值以及大量的收益机会正在它的面前。其他的都是无关紧要的。</p>
+<p>Image courtesy of XKCD via RWW</p>
+<p>Kick off your day with ZDNet&#8217;s daily e-mail newsletter. It&#8217;s the freshest tech news and opinion, served hot. Get it.</p>
+<p>原文：<a href="http://www.zdnet.com/blog/howlett/google-plus-why-google-must-fall/3259">http://www.zdnet.com/blog/howlett/google-plus-why-google-must-fall/3259</a></p>
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">备忘ebay的一个讲座</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

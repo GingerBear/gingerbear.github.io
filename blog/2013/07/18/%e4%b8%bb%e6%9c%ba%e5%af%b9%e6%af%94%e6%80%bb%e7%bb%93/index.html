@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>主机对比总结 - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="1. 选择虚拟主机，VPS，还是云平台？ 虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。 优点：便宜，配置方便。 缺点：不稳定，速度较慢，限制多。 VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。 优点： &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">主机对比总结</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-18T00:00:00-04:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><strong>1. 选择虚拟主机，VPS，还是云平台？</strong>
+
+虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。
+<ul>
+	<li>优点：便宜，配置方便。</li>
+	<li>缺点：不稳定，速度较慢，限制多。</li>
+</ul>
+VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。
+<ul>
+	<li>优点：稳定，自由（能拥有root权限），安全。</li>
+	<li>缺点：需要手动安装程序，需要linux维护。</li>
+</ul>
+云，“如果云不是指弹性云&#8230;..那单机云就是vps&#8230;..“，“弹性云就是可以自由调整配置， 可以制作模板动态扩容/缩减， 按时按需计划，提供多节点自动的动态负载均衡” <span style="text-decoration:underline;"><a href="http://www.hostloc.com/thread-194935-1-1.html">http://www.hostloc.com/thread-194935-1-1.html</a></span>
+
+<strong>2. AWS(云), Azure(云), Linode(VPS) 参数对比</strong>
+<div>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top"></td>
+<td valign="top">  AWS Free Tier</td>
+<td valign="top">Azure Extra Small</td>
+<td valign="top">Linode 1G</td>
+</tr>
+<tr>
+<td valign="top"><strong>RAM</strong></td>
+<td valign="top">  613MB</td>
+<td valign="top">768M</td>
+<td valign="top">1GB</td>
+</tr>
+<tr>
+<td valign="top"><strong>CPU</strong></td>
+<td valign="top">  N/A</td>
+<td valign="top">shared</td>
+<td valign="top">8 cores</td>
+</tr>
+<tr>
+<td valign="top"><strong>Storage</strong></td>
+<td valign="top">  30G</td>
+<td valign="top">20G</td>
+<td valign="top">24G</td>
+</tr>
+<tr>
+<td valign="top"><strong>Database</strong></td>
+<td valign="top">  20G</td>
+<td valign="top">N/A</td>
+<td valign="top">N/A</td>
+</tr>
+<tr>
+<td valign="top"><strong>Transfer</strong></td>
+<td valign="top">  15G</td>
+<td valign="top">5G free, $0.12/GB(5G-10T)</td>
+<td valign="top">2T</td>
+</tr>
+<tr>
+<td valign="top"><strong>Cost</strong></td>
+<td valign="top">  1-year free/ charge on demand</td>
+<td valign="top">15/m</td>
+<td valign="top">20/m</td>
+</tr>
+<tr>
+<td valign="top"><strong>*</strong></td>
+<td valign="top">  1-year free means 750 hours CPU (<span style="text-decoration:underline;"><a href="http://python.6.x6.nabble.com/CPyUG-OT-Amazon-EC2-VS-Linode-td2730701.html">普遍反映贵</a></span>, <span style="text-decoration:underline;"><a href="http://www.quora.com/Amazon-Web-Services/How-much-does-it-cost-for-a-similar-linode-instance-on-EC2">略复杂1</a></span>, <span style="text-decoration:underline;"><a href="https://forum.linode.com/viewtopic.php?t=9885&amp;p=57731">略复杂2</a></span>)</td>
+<td valign="top">Extra Small 有5Mbps 带宽限制，Small则要45/m</td>
+<td valign="top">纯净Linux, 所有东西需要自己配置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<strong>3. 方案</strong>
+
+先使用$200的Azure的Web Site，再使用Linode的VPS，因为
+
+1）需要快速上线，Azure的Web Site现在已经部署上线，Linode需要在命令行配置LAMP运行环境，AWS配置更加复杂。
+
+2）开始访问量低，Azure的Shared Web Site应该能够应付，尽管性能较低。
+
+3）Azure能够应付突发的访问量，尽管超出定额后会收费较高。
+
+4）Linode的口碑最佳，稳定高速，简单易于维护，适合中小应用。
+
+5）如果以后访问量巨大，可再迁移到功能更强大的AWS。
+
+6）$200不用白不用。
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-18T00:00:00-04:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://GingerBear.github.io/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/" data-via="" data-counturl="http://GingerBear.github.io/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/23/experimental-summer-life/" title="Previous Post: Experimental Summer Life">&laquo; Experimental Summer Life</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">备忘ebay的一个讲座</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

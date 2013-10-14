@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://GingerBear.github.io/sitemap.xml 
