@@ -1,0 +1,61 @@
+---
+layout: post
+title: Django项目小记
+categories: []
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  original_post_id: '18'
+  _wp_old_slug: '18'
+  _elasticsearch_indexed_on: '2011-11-05 17:49:59'
+---
+<p style="text-align:center;"><a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png"><img class="size-full wp-image-19 aligncenter" title="Untitled" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png" alt="" width="834" height="314" />图</a>：通过Django编写的表单提交操作，使用Jpype调用Java类，运行Web-Harvest抓取新浪微博，存入MySQL的过程中，Web-Harvest的运行状态。</p>
+<p style="text-align:left;">每次能看到这幅图片，就感到特别欣慰，特别是刚才的那次，感觉就像走完了一片沙漠看到了绿洲。</p>
+<p style="text-align:left;">从三天前大致学会Django的基本原理，到现在集成Web-Harvest，MySQL，PyMining到Django并成功运行。的确是费了不少周折。下面罗列出能够回想起的问题与解决方法。</p>
+<p style="text-align:left;"><strong>（1）问题：SQLite连接Web-Harvest中文乱码，databse插件无法执行多句SQL</strong></p>
+<p style="text-align:left;">未解决：放弃SQLite，改用MySQL</p>
+<p style="text-align:left;"><strong>（2）问题：XQuery输出SQL语句的格式MySQL读取失败</strong></p>
+<p style="text-align:left;">解决：用XQuery的concat方法链接字符串与变量，使之构成完整SQL字符串。经过仔细追求，修改WebHarvest源代码，还是发现WebHarvest的database插件只支持执行依据SQL语句，于是退而求其次，用了笨办法，把database插件包含到loops里，也就是说，每执行一次SQL，就连接一次MySQL。这是没有办法的办法，不过考虑到系统不会有很多人使用，并且爬虫速度的短板在http的读取上，这还是勉强能接受的。</p>
+<p style="text-align:left;"><strong>（3）问题：Web-Harvest连接MySQL，出现中文乱码</strong></p>
+<p style="text-align:left;">解决：乱码无非是文件编码、数据库编码、连接的编码三者不一致导致的。所以，确定文件编码、数据库编码都是utf-8后，只有是连接的编码没有设置好了，记得在PHP里是用一句语句设置连接编码的，但Web-Harvest里没有这种设置，database的参数里也没有。Google了很久后发现，在链接字符串里可以加入编码设置参数，于是连接字符串加上：</p>
+
+<pre>jdbc:mysql://127.0.0.1:3306/OpinionMonitor<span style="color:#ff0000;">?useUnicode=true&amp;amp;characterEncoding=UTF-8</span></pre>
+<p style="text-align:left;">这样就解决了乱码问题。</p>
+<p style="text-align:left;">另外，Django连接MySQL很方便，在settings.py里更改DATABASES，再syncdb即可。</p>
+<p style="text-align:left;"><strong>（4）问题：把PyMining集成到Django</strong></p>
+<p style="text-align:left;">解决：很方便，把conf, data, dict, mining四个文件复制到Project目录下，在App的views.py里加入原先的运行程序，最后加上return HttpResponse(...)，就可以运行了。</p>
+<p style="text-align:left;"><strong>（5）问题：把Web-Harvest集成到Django，并用表单传入爬虫运行参数</strong></p>
+<p style="text-align:left;">解决：十分纠结。首先第一个子问题出现了插入数据的问题：</p>
+
+<pre>Incorrect integer value: '' for column 'ReNum' at row 1”</pre>
+<p style="text-align:left;">也就是空（‘’）不能插入到integer型字段里。</p>
+<p style="text-align:left;">想到的解决方法一，用XQuery自定义函数把空转成0，理应很简单，但是中通不过语法检查，Google了很多样本，按照里面的各种格式不断修改尝试，但还是不行，最终放弃。</p>
+<p style="text-align:left;">想到的解决方法二，可能是MySQL的字段不允许为空，或者可能有自动转空为0的设置。但是设置允许为空之后，没有任何变化。Google之后，MySQL的确有转空为0的设置，在my.ini的safe_mode里设置，但奇怪的是，我的XAMPP里的mysql没有这个设置。只能放弃。</p>
+<p style="text-align:left;">最后的解决方法：在XQuery的return里加上判断$WeiboReNum != "" ，然后修改SQL语句。（依然是笨办法）奇怪的是，新浪微博里居然出了被转发的微博的转发数居然是0的，逻辑不通，但防止报错，改成了更丑陋的代码。如下：</p>
+
+<pre><span style="color:#ff0000;">return</span>	<span style="color:#008000;">if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum = "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum = "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '",0 , "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", 0, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")</pre>
+<p style="text-align:left;">然后第二个子问题是，如何在不用eclipse的情况下，加入classpath，解决方法是在系统的classpath里加入mysql-connector-java-5.1.18-bin.jar与webharvest_all_2.jar。并且在JPype的启动JVM的方法里，加入参数classpath（在加一遍系统参数）。</p>
+<p style="text-align:left;">第三个子问题是，JPype传参数到Java类里，一直报错：</p>
+
+<pre>No matching overloads found. at src/native/common/jp_method.cpp:121</pre>
+<p style="text-align:left;">看了很多论坛的解答后，发现似乎是实例化的问题，需要构造函数，果然在最早的JavaHello示例中，类里面故意写了一个空的构造函数（可能是为了满足JPype的特殊要求），于是在WebHarvestTest.java里加入了“形式上”的构造函数。经过不断的模仿与尝试，终于成功了。呼呼，颇为纠结。</p>
+<p style="text-align:left;">第四个子问题是，JPype只能运行一次，具体说来就是，shutdownJVM之后就不能再startJVM了，而且startJVM之后也不能再startJVM了，不然就报错：</p>
+
+<pre>RuntimeError: Unable to start JVM at src/native/common/jp_env.cpp:54</pre>
+<p style="text-align:left;">奇怪的问题，Google中无法发现jpype.isJVMStarted()这个方法，很好，如果判断已经启动，就不再启动了，果然问题解决。</p>
+
+<pre>if not jpype.isJVMStarted():
+    startJVM(getDefaultJVMPath(),"classpath")</pre>
+<p style="text-align:left;">（问题结束）</p>
+<p style="text-align:left;">随着问题的出现，烦恼，解决，心情也是起起伏伏。现在很平静，因为前期的基本问题已经解决，后面却还有更多问题要解决。主要涉及算法的应用与数据的表现，这可能就不是简单的Google几下就能解决的了，但不会像这么纠结在小问题上。</p>
+<p style="text-align:left;">（End | by Neil）</p>
+<p style="text-align:center;"></p>

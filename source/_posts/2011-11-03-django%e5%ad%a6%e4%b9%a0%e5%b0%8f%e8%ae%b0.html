@@ -1,0 +1,53 @@
+---
+layout: post
+title: Django学习小记
+categories: []
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  original_post_id: '14'
+  _wp_old_slug: '14'
+  _elasticsearch_indexed_on: '2011-11-03 06:18:12'
+---
+总体来说，看官方的<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">Polls 教程</a>，还是比较清楚的。写个小记，加深记忆。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006.jpg"><img class="alignnone size-medium wp-image-15" title="bear-vs-snake-deathmatch-2006" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006-300x257.jpg" alt="" width="300" height="257" /></a>
+
+<strong>安装：</strong>
+
+命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。
+
+<strong>建立工程：</strong>
+
+<strong></strong>命令行cd到目录，运行django-admin.py startproject mysite建立名为mysite的工程。里面自动生成四个文件：__init__.py没用到，manage.py执行各种操作，settings.py配置文件，urls处理url。
+
+<strong>配置数据库：</strong>
+
+<strong></strong>修改settings,py里的DATABASES的参数，改了两个：（1）'ENGINE'里选sqlite3，（2）‘NAME’里写sqlite.db的地址。因为用的是SQLite，所以其他参数不管。然后运行python manage.py syncdb，意思是按照settings.py里的INSTALLED_APPS来建立数据库。
+
+<strong>建立应用：</strong>
+
+<strong></strong>在工程目录下，命令行运行python manage.py startapp polls建立名为polls的投票应用。里面自动生成四个文件：__init__.py没用到，models.py用类写成的数据库，tests.py没用到，views.py根据urls.py传来的参数，作出相应的操作，然后显示出来。
+
+<strong>创建应用models：</strong>
+
+<strong></strong>在models.py里写两个类（建数据表），并在settings.py里的INSTALLED_APPS加入（称为“注册”更合适）这个应用，完了别忘了运行python manage.py syncdb。Django里还有各种Database API对数据库进行<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial01/#playing-with-the-api" target="_blank">各种操作</a>。
+
+<strong>建立应用的管理后台：</strong>
+
+<strong></strong>实际上是使用Django自带的后台管理应用，方便对数据进行操作。步骤同上：settings.py里注册应用，syncdb，修改urls.py，然后就可以运行了（惊喜）。命令行运行python manage.py runserver，浏览器输入地址可以很不错的管理界面，并且能够<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin" target="_blank">定制界面</a>。
+
+<strong>配置应用的url：</strong>
+
+<strong></strong>修改urls.py，主要写url的正则表达式，以及负责接收的view。这里有些技巧（1）在patterns里写规则，减少重复的代码。（2）分开工程的urls.py和应用的urls.py，提高可拓展性。
+
+<strong>建立应用的views：</strong>
+
+<strong></strong>这一步是最花精力的。负责实现应用的逻辑。用def写各种方法，对应url的指示，比如index负责首页显示的东西，detail负责每一次投票（表单）等。通常现实的布局，由views交给templates处理，views只把所以要显示的数据给template，而template则是HTML，布局很容易。
+
+到这一步，一个应用基本上就完成了。其中还有各种减少代码的方法，不一一列出，具体参见<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">官方教程</a>。
+
+（End | by Neil）

@@ -1,0 +1,46 @@
+---
+layout: post
+title: 备忘ebay的一个讲座
+categories:
+- Tech
+tags:
+- big data
+- ebay
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  _elasticsearch_indexed_on: '2013-02-13 22:01:44'
+---
+<strong>演讲人</strong>：Brain Johnson@ebay
+
+<strong>主题</strong>：ebay的大数据
+
+<strong>最大印象</strong>：努力很大，投入很多，但效果一般（5% better / year）
+
+<strong>片段</strong>：
+
+"big is not the case, detail is."
+
+关于 搜索key word expansion，他讲了很多情况中是不是要把搜索关键词的相关词也纳入搜索范围，比如加s的复数。但在会出现加了s就是毫不相关的东西，例子忘了。另外，在人们搜索diary的时候，很多人想找的是吸血鬼日记，而不是笔记本。在人们搜索basketball的时候，大多数人想找的是篮球鞋，而不是篮球。我的第一影响力可以用搜索后，点击商品的类别来自动划分不同key word的expansion。
+
+他还略过了一句话，其实也是我很想问的。那就是他说算法不重要（大概意思），数据更重要。为啥？
+
+刚开发的时候，ebay投了几千万美元（具体忘了），结果由于所带来的改进，几个月（具体忘了）就赚回来了。看来有和无的差别是巨大的。
+<div>
+<div>他还分享了任务的data flow pipeline:</div>
+<div>
+<ul>
+	<li>production</li>
+	<li>behavioral item data analysisi</li>
+	<li>feature generation</li>
+	<li>classification prediction</li>
+	<li>offline analysis</li>
+	<li>human judgment</li>
+	<li>a/b test</li>
+</ul>
+（完）
+
+</div>
+</div>

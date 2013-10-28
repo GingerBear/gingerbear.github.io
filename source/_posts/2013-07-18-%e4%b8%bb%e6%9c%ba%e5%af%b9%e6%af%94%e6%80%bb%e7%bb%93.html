@@ -1,0 +1,102 @@
+---
+layout: post
+title: 主机对比总结
+categories: []
+tags:
+- AWS
+- Azure
+- Learn
+- Linode
+- Server
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  geo_public: '0'
+  _elasticsearch_indexed_on: '2013-07-19 00:50:05'
+---
+<strong>1. 选择虚拟主机，VPS，还是云平台？</strong>
+
+虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。
+<ul>
+	<li>优点：便宜，配置方便。</li>
+	<li>缺点：不稳定，速度较慢，限制多。</li>
+</ul>
+VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。
+<ul>
+	<li>优点：稳定，自由（能拥有root权限），安全。</li>
+	<li>缺点：需要手动安装程序，需要linux维护。</li>
+</ul>
+云，“如果云不是指弹性云.....那单机云就是vps.....“，“弹性云就是可以自由调整配置， 可以制作模板动态扩容/缩减， 按时按需计划，提供多节点自动的动态负载均衡” <span style="text-decoration:underline;"><a href="http://www.hostloc.com/thread-194935-1-1.html">http://www.hostloc.com/thread-194935-1-1.html</a></span>
+
+<strong>2. AWS(云), Azure(云), Linode(VPS) 参数对比</strong>
+<div>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top"></td>
+<td valign="top">  AWS Free Tier</td>
+<td valign="top">Azure Extra Small</td>
+<td valign="top">Linode 1G</td>
+</tr>
+<tr>
+<td valign="top"><strong>RAM</strong></td>
+<td valign="top">  613MB</td>
+<td valign="top">768M</td>
+<td valign="top">1GB</td>
+</tr>
+<tr>
+<td valign="top"><strong>CPU</strong></td>
+<td valign="top">  N/A</td>
+<td valign="top">shared</td>
+<td valign="top">8 cores</td>
+</tr>
+<tr>
+<td valign="top"><strong>Storage</strong></td>
+<td valign="top">  30G</td>
+<td valign="top">20G</td>
+<td valign="top">24G</td>
+</tr>
+<tr>
+<td valign="top"><strong>Database</strong></td>
+<td valign="top">  20G</td>
+<td valign="top">N/A</td>
+<td valign="top">N/A</td>
+</tr>
+<tr>
+<td valign="top"><strong>Transfer</strong></td>
+<td valign="top">  15G</td>
+<td valign="top">5G free, $0.12/GB(5G-10T)</td>
+<td valign="top">2T</td>
+</tr>
+<tr>
+<td valign="top"><strong>Cost</strong></td>
+<td valign="top">  1-year free/ charge on demand</td>
+<td valign="top">15/m</td>
+<td valign="top">20/m</td>
+</tr>
+<tr>
+<td valign="top"><strong>*</strong></td>
+<td valign="top">  1-year free means 750 hours CPU (<span style="text-decoration:underline;"><a href="http://python.6.x6.nabble.com/CPyUG-OT-Amazon-EC2-VS-Linode-td2730701.html">普遍反映贵</a></span>, <span style="text-decoration:underline;"><a href="http://www.quora.com/Amazon-Web-Services/How-much-does-it-cost-for-a-similar-linode-instance-on-EC2">略复杂1</a></span>, <span style="text-decoration:underline;"><a href="https://forum.linode.com/viewtopic.php?t=9885&amp;p=57731">略复杂2</a></span>)</td>
+<td valign="top">Extra Small 有5Mbps 带宽限制，Small则要45/m</td>
+<td valign="top">纯净Linux, 所有东西需要自己配置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<strong>3. 方案</strong>
+
+先使用$200的Azure的Web Site，再使用Linode的VPS，因为
+
+1）需要快速上线，Azure的Web Site现在已经部署上线，Linode需要在命令行配置LAMP运行环境，AWS配置更加复杂。
+
+2）开始访问量低，Azure的Shared Web Site应该能够应付，尽管性能较低。
+
+3）Azure能够应付突发的访问量，尽管超出定额后会收费较高。
+
+4）Linode的口碑最佳，稳定高速，简单易于维护，适合中小应用。
+
+5）如果以后访问量巨大，可再迁移到功能更强大的AWS。
+
+6）$200不用白不用。

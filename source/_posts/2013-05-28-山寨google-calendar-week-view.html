@@ -1,0 +1,27 @@
+---
+layout: post
+title: 山寨Google Calendar Week View
+categories: []
+tags: []
+status: draft
+type: post
+published: false
+meta: {}
+---
+先说说山寨的原因，之一是之前给心理协会做了一个小工具，用来给成员们选择自己有空开会时间，最好得出一个大家都有空的时间。工具做好基本可以用了，但用户体验不是那么好，需要用下来菜单来选择一个个时间段，不够直观也容易选错（使用的反馈也印证了）。用了Bootstrap和一个timepicker的jQuery插件。如下图：
+
+<a href="http://neilding.files.wordpress.com/2013/03/untitled.png"><img class="size-full wp-image" id="i-98" alt="Image" src="http://neilding.files.wordpress.com/2013/03/untitled.png?w=616" /></a>
+
+于是脑子里就老想着做成Google Calendar的那种拖住选择时间的样子。
+
+原因之二就是我自己很喜欢做这种东西。最近事情其实不是，有EMR，有算法作业，有Kaggle项目，还有面试要准备的算法题。但这些都没有这个项目吸引我，原因我也不知道，可能是我比较喜欢直观的东西吧。
+
+下面就说说山寨的过程，首先我试着自己不看Google Calendar的源码自己徒手开始写最核心的交互，也就是拖拽选时间。
+
+<a href="http://neilding.files.wordpress.com/2013/03/untitled2.png"><img class="size-full wp-image" id="i-116" alt="Image" src="http://neilding.files.wordpress.com/2013/03/untitled2.png?w=338" /></a>
+
+我用了&lt;div&gt;来放day，用&lt;li&gt;来放时间，JS逻辑是这样的，在时间&lt;li&gt;上按下鼠标并且移动就让这个&lt;li&gt;变色，移动到下一个时间&lt;li&gt;后，就分情况讨论，（1）如果新的&lt;li&gt;是没被选过的，那就选中它（变蓝），（2）如果新的&lt;li&gt;是已经被选过的，那么就让前一个&lt;li&gt;，也就是刚离开的&lt;li&gt;取消选中（变白）。
+
+逻辑清楚了（不容易清楚），代码就很简单，先给panel绑定mousedown事件，在mousedown事件里再给&lt;li&gt;绑定mouseenter和mouseleave事件。在mouseleave事件里存下当前&lt;li&gt;作为前一个&lt;li&gt;，在mouseenter里进行分情况讨论。
+
+但我想了很久也没想到好的办法来显示那些已经存在的事件，也就怎么把那些块儿放到这堆&lt;li&gt;，直到现在（看过Google Calendar的设计后）我才想到可可以position: relative来实现。并且上面这种方法也有个bug，在鼠标移动过快的时候，会导致中间有某些个&lt;li&gt;没选上。

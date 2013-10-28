@@ -1,0 +1,36 @@
+---
+layout: post
+title: CouchDB能为HTML5，Web Apps做什么？
+categories: []
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  original_post_id: '62'
+  _wp_old_slug: '62'
+  _elasticsearch_indexed_on: '2011-07-04 20:24:00'
+---
+<p>&nbsp;</p>
+<p><strong>CouchDB能为HTML5，Web Apps做什么？</strong></p>
+<p><strong>CouchAPps的功效与CouchDB能如何决定移动</strong></p>
+<p>CouchApps是直接由面向文件的数据库CouchDB服务的JavaScript和HTML5应用。在下面的采访中，Found Line联合创始人以及OSCON发言人Bradley Holt (@BradleyHolt) 谈论CouchApps的功效，CouchDB能提供给开发者什么，以及数据库如何与HTML5一起工作。</p>
+<p><strong>CouchApps如何工作？</strong></p>
+<p>Bradley Holt: CouchApps是用CouchDB，JavaScript，HTML5建立的web应用.它们避免了中间层，允许web应用直接与数据库对话&mdash;&mdash;CouchDB数据库甚至能够运行在用户的机器上或者Android/iOS设备。</p>
+<p><strong>建立CouchApps的好处？</strong></p>
+<p>Bradley Holt: 使你的代码库的效率跟高（没有中间层）、可重复、根据应用程序的数据部署/复制程序的能力、由于"顺理"的web工作方式带来的好处（come with going "with the grain" of how the web works）是建立CouchApps的好处。</p>
+<p>非常坦率的说，我认为CouchApps已经适合大范围的采纳使用。最大的障碍是工具。目前的开发工具集需要改进，有时建立CouchApps的过程有点困难。&ldquo;CouchApp&ldquo;这一术语也有很多不同的理解。这意味着CouchApps的好处是引人注意的，并且工具会很快赶上。</p>
+<p><strong>HTML5引发了很多存储问题，CouchDB会融入哪儿？</strong></p>
+<p>Bradley Holt: HTML5的Web存储特性描述了用户浏览器对于关键键值的本地持续存储的API。与之前浏览器本地存储特性的尝试不同，HTML5的存储特性已经取得了重大的跨浏览器支持。</p>
+<p>然而，有一点是HTML5本地存储API缺乏的，即除了指定键，使用其他形式查询值的方法。你不能穿过一套键或值查询。IndexedDB能够处理这种情况，并允许索化的数据库查询，但IndexedDB并非当前HTML5特性的一部分，并且只在一小部分浏览器中应用。</p>
+<p>如果你需要的不仅仅是键/值存储，那么你需要到HTML5特性外面看看。和HTML5 Web存储一样，CouchDB存储键/值对。在CouchDB里，键/值对的键部分是一个文件ID，值部分是一个变现单一文件的JSON对象。与HTML5 Web存储不一样的是，CouchDB提供了一种索引和查询数据方法&mdash;&mdash;使用MapReduce&ldquo;试图&rdquo;。因为CouchDB使用了RESTful HTTP API和JSON对象最为存储文件，HTML5/JavaScript Web应用能够很容易地直接与CouchDB一起工作。</p>
+<p><strong>CouchDB的可重复特性如何与HTML5工作？</strong></p>
+<p>Bradley Holt: 同样，CouchDB不是与HTML5特性直接关联，但CouchDB的可重复特性创造了独特的机会，使CouchApps使用JavaScript和HTML5建立（而且，其他使用CouchDB建立的应用也如此）。</p>
+<p>我听说J. Chris Anderson使用&ldquo;地面计算&rdquo;（ground computing）这一术语与&ldquo;云计算&rdquo;相对。这一思想是尽可能把用户的数据存放得离用户近&mdash;&mdash;不能比用户的计算机和手机更近的了！CouchDB的可重复性使得这变成可能。使用CouchDB的增量重复，与特定用户相关的数据能够被复制到用户自己的计算机与手机（或者从上面复制出）。这允许更快地的访问用户（因为他/她的应用程序访问的是本地的数据库），离线访问、数据便携性，以及潜在对于他/她的数据更好的控制。</p>
+<p><strong>既然CouchDB在移动设备上运行，它是如何决定移动应用开发的？</strong></p>
+<p>Bradley Holt: 虽然Android是一个出色的平台，但移动应用的最大渠道还是苹果的iOS。现在CouchDB已经在Android上发布了一段时间了，但在iOS上它还是先对新的。既然CouchDB已经能用来建立iPhone/iPad应用了，我们将会很确定地看到更多的移动应用程序建立在CouchDB上，为了利用CouchDB独特的优势&mdash;&mdash;尤其是可复制性。</p>
+<p>最大的问题是，这些应用会作为本地应用建立，还是最为CouchApps建立？我也不知道答案，但我更想看到这些程序建立在CouchApps这边。通过CouchApps，开发者能够更容易地跨平台输出他们的应用，并且他们能够使用显存的HTML5，JavaScript，CSS技能集合。</p>
+<p>这一采访被编辑和缩减过。</p>
+<p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
+<p>&nbsp;</p>
