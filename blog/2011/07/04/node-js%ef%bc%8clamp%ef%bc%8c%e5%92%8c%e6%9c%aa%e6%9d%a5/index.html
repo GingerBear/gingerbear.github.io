@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Node.JS，LAMP，和未来 - Neil Ding's Blog</title>
+  <meta name="author" content="Neil Ding">
+
+  
+  <meta name="description" content="Node.JS，LAMP，和未来 2011年4月29日 我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Neil Ding's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Neil Ding's Blog</a></h1>
+  
+    <h2>Keep the memory forever.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Node.JS，LAMP，和未来</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+<p><strong>Node.JS，LAMP，和未来</strong></p>
+<p><span style="font-family:mceinline;">2011年4月29日</span></p>
+<p>我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了，并且使用服务器端JavaScript建立了他们的仪表盘。你能够用它做很多很酷的事实，而且它也很有潜力。它的安装和运行很容易，就像Redis也一样。下面是对那篇文章的摘要：</p>
+<p>我做出这句决定是因为我意识到：LAMP已经死亡。自从它诞生的时候的二十年里，Web的构成（内容、协议、服务器、客户端）已经发生了根本的转变。总的来说，有这么三个时期：</p>
+<div style="padding-left:10px;margin-left:10px;border-left:5px #eee solid;">
+<p>I. 1991-1999: HTML时代。</p>
+<p>HTML时代是关于文件的，印证了Tim Berners-Lee&rsquo;s 最初的愿景：&ldquo;一个大的，虚拟的，空中的文件系统&rdquo;。Web被静态的手输代码的文件所主导，Web客户端被严格的格式化（甚至违背了最温和排版）。静态文件用于静态客户端。</p>
+<p>II. 2000-2009: LAMP时代。</p>
+<p>LAMP时代是关于数据库的，而非文件，主导的web组合上LAMP或者类似LAMP的。无论CGI，PHP，Ruby on Rails, 或者 Django，主导的模式是用数据库的值填入HTML的模板。内容动态的存于服务器端，但在客户端仍然是静态的。</p>
+<p>III. 2010-??: Javascript时代.</p>
+<p>Javascript时代是关于事件流的。现代的Web页面部在是页面，他们是事件驱动的应用程序，信息通过它们流动。Web的核心容器&mdash;&mdash;文件对象模型&mdash;&mdash;依然存在，但不像HTML标记。DOM（文件对象模型）是一个，由JavaScript产生，内存中的，高效编码的数据结构。</p>
+<p>LAMP架构已经死亡因为很少的应用会为了响应一个很小的事件而进行全部标记的的重载；他们只想更新DOM的一小部分，通过JavaScript。AJAX做到了，但当你的服务器端LAMP模板是10%的HTML和90%的JavaScript时，很明显你在做一件错误的事情。</p>
+</div>
+<p><strong>宣称LAMP死亡的时候已经到了</strong></p>
+<p>对与类似LAMP架构死亡的解释正在进行。我会想，这是一个非常狂热的观点，需要把它放到某一个视角下来看：</p>
+<p>在每一个&ldquo;时代&rdquo;期间，新开发的技术是为了解决问题的。人们创造HTML为了创造内联的信息。当需求增加并且变得越来越难管理时，类似LAMP的工具，如PHP, Django, Ruby on Rails等等被开发出来帮助信息更容易传递。与其说替代了老技术，倒不如说在老技术上添加新东西。有时候你想用新一些的技术更管老技术，但我们仍然在使用HTML和CSS，并且当需要时，增家对他们的使用。</p>
+<p>但是类似LAMP的系统部署在所有的地方的产品上，使有些经常被访问的网站变得跟加有强大。虽然有些人正在使用Node.JS，比如Yammer，但Node.JS并没有提供与PHP, Ruby, Python, 甚至.NET相同的内容量。</p>
+<p><strong>什么是Node.JS？</strong></p>
+<p>基本上，它是围绕着Google&lsquo;s V8 JavaScript引擎的一个轻量级框架。V8是运转Google的开源浏览器Chrome的JavaScript引擎，另外一方面，Node.JS是事件驱动，并且更加快速高效。</p>
+<p>我已经捣鼓Node.JS好几周了，它很有趣也很有潜力。它是对JavaScript的独特地运用，它的基于事件的方法能很轻松德完成某些事情（通常更难用传统工具实现）。Node.JS还拥有很多很酷的库，比如Socket.IO，一个使用了特征探测的支持多重传输的库。所以，如果你的浏览器支持WebSocket或者Adobe Flash Socket，你就能使用它，或是AJAX长查询，多方流，甚至Forever Iframe技术。因为，你的程序使用任何类型的传输都会变得最有效。</p>
+<p><strong>现实一些的审视</strong></p>
+<p>不过，现在让我们更加诚实地想想吧，Node.JS发明与2010年。它依然非常非常年轻。首页上关于Node.JS的视频讲的是发明者对于PHP用户群关于Node和谨慎使用的陈述。作为一个工具，它还需要很长时间成熟。尽管如此，基于V8引擎带给这个项目不少的成熟。</p>
+<p>至于那些被替代的技术如PHP, Ruby, 和Django，我不相信他们已经&ldquo;死亡&rdquo;，相反我认为Node.JS增强了现存的技术。就像当MySQL不很适合时，我使用Redis作为数据存储工具，我认为会在未来的网站的实时通信技术上起作用。</p>
+<p>我希望写一些更多的关于Node.JS的文章，并希望能用它解决新的或者特殊的问题。但我不会去用Node.JS重写我的网站，那可能会是个噩梦。所以就像NoSQL和云计算一样，它确实是一个新技术，但它不会从根本上移除所有其他相关的东西。就像使用Redis，我不会放弃MySQL，我只是当Redis更合适时才使用。</p>
+<p>原文：<a style="outline-style:none;outline-width:initial;outline-color:initial;text-decoration:underline;cursor:pointer;color:#1e5494;" href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/" target="_blank">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
+</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Neil Ding</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/" data-via="LoadingBear" data-counturl="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/" title="Previous Post: CouchDB能为HTML5，Web Apps做什么？">&laquo; CouchDB能为HTML5，Web Apps做什么？</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/07/06/%25e4%25bc%25b4%25e9%259a%258f%25e7%259d%2580%25e9%25a1%25b6%25e7%25ba%25a7%25e9%2593%25b6%25e8%25a1%258c%25ef%25bc%258c%25e9%2587%2591%25e8%259e%258d%25e6%259c%258d%25e5%258a%25a1%25e5%2595%2586yodlee%25e7%259a%2584%25e7%2594%25a8%25e6%2588%25b7%25e8%25be%25be%25e5%2588%25b03%25e5%258d%2583%25e4%25b8%2587/" title="Next Post: 伴随着顶级银行，金融服务商Yodlee的用户达到3千万">伴随着顶级银行，金融服务商Yodlee的用户达到3千万 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/GingerBear">@GingerBear</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'GingerBear',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Neil Ding -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

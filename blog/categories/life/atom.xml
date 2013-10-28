@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: LIfe | Neil Ding's Blog]]></title>
+  <link href="http://GingerBear.github.io/blog/categories/life/atom.xml" rel="self"/>
+  <link href="http://GingerBear.github.io/"/>
+  <updated>2013-10-28T12:05:02-04:00</updated>
+  <id>http://GingerBear.github.io/</id>
+  <author>
+    <name><![CDATA[Neil Ding]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Experimental Summer Life]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/05/23/experimental-summer-life/"/>
+    <updated>2013-05-23T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/05/23/experimental-summer-life</id>
+    <content type="html"><![CDATA[<p>还是写中文吧。</p>
+
+<p>从五月到八月，本来是打算找个地方实习的，然后再选一门课，下学期就可以part-time，但并未如愿以偿。之前与Interactive System Design这门课中的项目合作单位Department of Oral Biology in School Of Dental Medicine联系了实习，对方也给出了积极的回应，但不巧对方教授出差，等她回来后距离选课（申请CPT）的日子只有不到一周，随即她告诉我在截止日期前完成实习手续已无可能。实习便只能作罢。</p>
+
+<p>然后就是自己两周低落的无所事事，每天打篮球，看季后赛，看电影，看书，生活毫无规律。心想这个四个月要是这么过，毕业找工作什么就别想了，更别谈什么梦想志向了。不在于四月有多么重要，而在于对自己管不住自己感到失望，从而失去了自信。</p>
+
+<p>倔强的我于是觉得自己该做点该做的，坚持四个月，一定能改变自己。于是便有了这篇本想要英文写的文字，试验性的暑假生活。“实验性”第一是因为自己打算过一次从来没过过的暑假（可能是最后一个暑假），第二因为自己想过一种激进的生活，看看自己的level到底能到多少。</p>
+
+<p>我认为自己是有天赋了，在各个方面达到远胜现在的高度。比如篮球，比如技术，比如自信，比如vision。事实并不残酷，我只是没有尽力，没有管住自己。我要证明我能能够做到。</p>
+
+<p>首先是肥胖，自制力差的最直观表现。在这两周的无所事事中，体重飙升，几乎到达了90公斤，原因主要是没有控制住饮食，再加上脚伤，篮球也并没有坚持每天打。其实要减肥也很简单，生活规律，控制饮食，保持锻炼。所以在这个暑假里，我要做到日常饮食以水果，蔬菜，面包以及少量肉类为主，stay real hungary，把体重控制到75以内。每天早上坚持跑步，做力量训练，周二周五打篮球。每天一点以前睡觉，早上七点起床。</p>
+
+<p>然后是学习，主要是技术上的学习。四个月的时间可以学习很多东西，但目标很明确，Google的要求是什么就学什么。下面是Google Front End Engineer的要求</p>
+
+<div>Minimum qualifications</div>
+
+
+<div>
+<ul>
+    <li>BS degree in Computer Science or related field (In lieu of degree, 4 years of relevant work experience).</li>
+    <li>Development experience in server-side technologies such as C/C++ and/or Java.</li>
+    <li>Experience with AJAX, HTML and CSS, or Ruby, with an interest in user interface design.</li>
+    <li>Web application development experience.</li>
+</ul>
+</div>
+
+
+<div>
+<div>Preferred qualifications</div>
+<div>
+<ul>
+    <li>Masters or PhD in Computer Science or related field.</li>
+    <li>Significant experience developing user-facing software.</li>
+    <li>Experience working on cross-browser platforms.</li>
+    <li>Knowledge of UI frameworks such as XUL, Flex, and XAML.</li>
+    <li>Object-oriented JavaScript skills.</li>
+</ul>
+</div>
+</div>
+
+
+<p>明显不足的一点是一门Server-Side的语言，比如Java，在很多笔试题中Java也经常会使用到。</p>
+
+<p>所以第一件事情是学习Java，学到什么程度，第一是写一个OOP的博客，第二是熟练使用Java写算法题。</p>
+
+<p>第二重要的应该是深入了解JavaScript，对于JavaScript的语言特性，面向对象机制，模块化，主流框架，NodeJs都应该到底master的程度。学习的途径第一是看书，手上的几本书在四个月内都应奋力读完，做好读书笔记。途径二是参加开源项目，从那篇学习开源项目的文章开始看起。</p>
+
+<p>第三和第四同等重要，即计算机基础知识与前端基础知识。计算机基础知识包括Linux和C语言，重读Linux和C一站式编程，了解服务器，编译器，浏览器内核的底层实现原理。第四是前端基础知识，包括CSS的深入学习，CSS3与HTML5的新特性，浏览器兼容性的知识。</p>
+
+<p>第五和第六同等重要，即设计的学习与知识杂项。设计一直是我很向往的方向，但始终都处在感性的认识阶段，未来我隐约感觉到自己会走上“设计师”的道路，但开始，还是从Engineering入门会更加基础牢固，所以在暑假的闲暇时间里读一些设计方面的名著是很有益的。知识杂项就就包括了一些必要的但了解即可的知识，比如Git，不如Ruby，比如Sayanee的Vimeo，以及一些讲座。</p>
+
+<p>总结成一份List，暑假每天应该这么过：</p>
+
+<p>身体方面：</p>
+
+<ul>
+    <li>7点起床，晚上1点之前睡觉</li>
+    <li>早晨跑步，力量训练，周二周五晚上打篮球</li>
+    <li>饮食规律，水果蔬菜为主</li>
+</ul>
+
+
+<p>知识方面：</p>
+
+<ul>
+    <li>8小时学习时间</li>
+    <li>制定每月每周每日目标</li>
+    <li>2小时读书</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[暑假学习第一天]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/"/>
+    <updated>2013-05-23T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/05/23/%e6%9a%91%e5%81%87%e5%ad%a6%e4%b9%a0%e7%ac%ac%e4%b8%80%e5%a4%a9</id>
+    <content type="html"><![CDATA[<p>积极地说，感觉还不错，虽然做的还远不够好。</p>
+
+<p>由于昨天睡得晚，今天9点才起来，但早晨状态不错，并不困，简单吃了早餐和锻炼后，开始干正事儿。实际上这个时间是一天最佳的时间，所以应该花在最重要的事情上，但惰性使然，导致自己看起了vimeo的教学视频，一看就看了好多。略看了一下已知的知识，包括sublime tex, wordpress, web font。了解了一种格式语言Markdown，使用在github的readme中，通过ruby能够自动转化成HTML。还了解到了sublime text的package manager，下载的sass的代码高亮。最主要的是学习了一下SASS。</p>
+
+<p><strong>SASS最主要的是三个功能：变量，方法，循环。</strong></p>
+
+<p>使用美元符号$定义变量，可以定义统一的颜色，宽度，让CSS更容易维护。</p>
+
+<p>使用@mixin定义方法，在方法体内写入复用CSS，可以传递参数，使用@include调用。这使得按钮，widget很容易实现，配合变量，使得样式的主题很容易修改。</p>
+
+<p>循环的格式为</p>
+
+<blockquote>@for i from 1 through 9</blockquote>
+
+
+<p>缩进的内容为循环体。循环可以实现渐变的样式，但我觉得用处不大。</p>
+
+<p><strong>另外SASS的使用规则还有：</strong></p>
+
+<ul>
+    <li>不需要大括号，使用缩进</li>
+    <li>可用用缩进加$重复利用某一元素，类似于JavaScript的with关键字</li>
+    <li>一些函数darken(#ccc, 10%), lighten(#ccc, 10%)</li>
+</ul>
+
+
+<p>从sass &mdash;watch产生了小想法。watch能使.sass每次有变化的时候会自动编译成.css文件，那么，做web开发的时候，每当完成某个页面的时候，当自动保存sublime text后能不能自动刷新浏览器呢？这会带来一些方便。</p>
+
+<p>很快就到午饭时间了，吃了牛肉青椒番茄丁拌米线，半小时搞定。打算下午考驾照permit，开始做题，到了快两点出门结果下大雨，走了不远便打道回府。开始干“正事儿”。进入状态很慢，Java读着读着就容易走神，容易去看别的东西。看着看着觉得Java学习内容太多，太难肯，并且在web方向用的不多。并且越来越觉得Python更加适合，应用更广，更新，与web更近。回头再把Java扔到了一边开始找Python的书看，挑了不少时间结果很不明智地挑一本cookbook，鼓足一股劲开始啃了一起来，终于啃到正题了，结果发现根本就不是我需要的，都是一些细节函数的用法，没法读只能用来查。又扔到了一遍。又找了一圈要么太基础，要么太专，要么太老。我开始上网找网上的学习资料，结果看到了<a href="http://www.learnpython.org/"><a href="http://www.learnpython.org/">http://www.learnpython.org/</a></a> 就又鼓起劲开始学了起来，非常基础但让我熟悉其语法来了，也加上了一些小coding，很快就把基础知识过了一遍。</p>
+
+<p>想尝试做几道leetcode题目但对于Java还是太不熟悉，无从下手。</p>
+
+<p>就这么已经晚上11点了。最正题的JavaScript还没看。</p>
+
+<p>&nbsp;</p>
+
+<p>虽然没完成任务，但状态感觉还是有很大进步的，后面抓紧分配好时间，提前在google calendar上制定好时间。</p>
+]]></content>
+  </entry>
+  
+</feed>

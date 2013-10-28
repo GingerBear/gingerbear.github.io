@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-10-28T04:02:59-04:00</updated>
+  <updated>2013-10-28T12:05:02-04:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Neil Ding]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -74,6 +74,893 @@
 <blockquote><p>Keep Focus and Keep Shipping</p></blockquote>
 
 <p>That is all I need to do, no need to think to far. No matter what will the product be in the future, it has a good start, namely I build it for myself use.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[主机对比总结]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/"/>
+    <updated>2013-07-18T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/07/18/%e4%b8%bb%e6%9c%ba%e5%af%b9%e6%af%94%e6%80%bb%e7%bb%93</id>
+    <content type="html"><![CDATA[<strong>1. 选择虚拟主机，VPS，还是云平台？</strong>
+
+虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。
+<ul>
+	<li>优点：便宜，配置方便。</li>
+	<li>缺点：不稳定，速度较慢，限制多。</li>
+</ul>
+VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。
+<ul>
+	<li>优点：稳定，自由（能拥有root权限），安全。</li>
+	<li>缺点：需要手动安装程序，需要linux维护。</li>
+</ul>
+云，“如果云不是指弹性云&#8230;..那单机云就是vps&#8230;..“，“弹性云就是可以自由调整配置， 可以制作模板动态扩容/缩减， 按时按需计划，提供多节点自动的动态负载均衡” <span style="text-decoration:underline;"><a href="http://www.hostloc.com/thread-194935-1-1.html">http://www.hostloc.com/thread-194935-1-1.html</a></span>
+
+<strong>2. AWS(云), Azure(云), Linode(VPS) 参数对比</strong>
+<div>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top"></td>
+<td valign="top">  AWS Free Tier</td>
+<td valign="top">Azure Extra Small</td>
+<td valign="top">Linode 1G</td>
+</tr>
+<tr>
+<td valign="top"><strong>RAM</strong></td>
+<td valign="top">  613MB</td>
+<td valign="top">768M</td>
+<td valign="top">1GB</td>
+</tr>
+<tr>
+<td valign="top"><strong>CPU</strong></td>
+<td valign="top">  N/A</td>
+<td valign="top">shared</td>
+<td valign="top">8 cores</td>
+</tr>
+<tr>
+<td valign="top"><strong>Storage</strong></td>
+<td valign="top">  30G</td>
+<td valign="top">20G</td>
+<td valign="top">24G</td>
+</tr>
+<tr>
+<td valign="top"><strong>Database</strong></td>
+<td valign="top">  20G</td>
+<td valign="top">N/A</td>
+<td valign="top">N/A</td>
+</tr>
+<tr>
+<td valign="top"><strong>Transfer</strong></td>
+<td valign="top">  15G</td>
+<td valign="top">5G free, $0.12/GB(5G-10T)</td>
+<td valign="top">2T</td>
+</tr>
+<tr>
+<td valign="top"><strong>Cost</strong></td>
+<td valign="top">  1-year free/ charge on demand</td>
+<td valign="top">15/m</td>
+<td valign="top">20/m</td>
+</tr>
+<tr>
+<td valign="top"><strong>*</strong></td>
+<td valign="top">  1-year free means 750 hours CPU (<span style="text-decoration:underline;"><a href="http://python.6.x6.nabble.com/CPyUG-OT-Amazon-EC2-VS-Linode-td2730701.html">普遍反映贵</a></span>, <span style="text-decoration:underline;"><a href="http://www.quora.com/Amazon-Web-Services/How-much-does-it-cost-for-a-similar-linode-instance-on-EC2">略复杂1</a></span>, <span style="text-decoration:underline;"><a href="https://forum.linode.com/viewtopic.php?t=9885&amp;p=57731">略复杂2</a></span>)</td>
+<td valign="top">Extra Small 有5Mbps 带宽限制，Small则要45/m</td>
+<td valign="top">纯净Linux, 所有东西需要自己配置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<strong>3. 方案</strong>
+
+先使用$200的Azure的Web Site，再使用Linode的VPS，因为
+
+1）需要快速上线，Azure的Web Site现在已经部署上线，Linode需要在命令行配置LAMP运行环境，AWS配置更加复杂。
+
+2）开始访问量低，Azure的Shared Web Site应该能够应付，尽管性能较低。
+
+3）Azure能够应付突发的访问量，尽管超出定额后会收费较高。
+
+4）Linode的口碑最佳，稳定高速，简单易于维护，适合中小应用。
+
+5）如果以后访问量巨大，可再迁移到功能更强大的AWS。
+
+6）$200不用白不用。
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Experimental Summer Life]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/05/23/experimental-summer-life/"/>
+    <updated>2013-05-23T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/05/23/experimental-summer-life</id>
+    <content type="html"><![CDATA[还是写中文吧。
+
+从五月到八月，本来是打算找个地方实习的，然后再选一门课，下学期就可以part-time，但并未如愿以偿。之前与Interactive System Design这门课中的项目合作单位Department of Oral Biology in School Of Dental Medicine联系了实习，对方也给出了积极的回应，但不巧对方教授出差，等她回来后距离选课（申请CPT）的日子只有不到一周，随即她告诉我在截止日期前完成实习手续已无可能。实习便只能作罢。
+
+然后就是自己两周低落的无所事事，每天打篮球，看季后赛，看电影，看书，生活毫无规律。心想这个四个月要是这么过，毕业找工作什么就别想了，更别谈什么梦想志向了。不在于四月有多么重要，而在于对自己管不住自己感到失望，从而失去了自信。
+
+倔强的我于是觉得自己该做点该做的，坚持四个月，一定能改变自己。于是便有了这篇本想要英文写的文字，试验性的暑假生活。“实验性”第一是因为自己打算过一次从来没过过的暑假（可能是最后一个暑假），第二因为自己想过一种激进的生活，看看自己的level到底能到多少。
+
+我认为自己是有天赋了，在各个方面达到远胜现在的高度。比如篮球，比如技术，比如自信，比如vision。事实并不残酷，我只是没有尽力，没有管住自己。我要证明我能能够做到。
+
+首先是肥胖，自制力差的最直观表现。在这两周的无所事事中，体重飙升，几乎到达了90公斤，原因主要是没有控制住饮食，再加上脚伤，篮球也并没有坚持每天打。其实要减肥也很简单，生活规律，控制饮食，保持锻炼。所以在这个暑假里，我要做到日常饮食以水果，蔬菜，面包以及少量肉类为主，stay real hungary，把体重控制到75以内。每天早上坚持跑步，做力量训练，周二周五打篮球。每天一点以前睡觉，早上七点起床。
+
+然后是学习，主要是技术上的学习。四个月的时间可以学习很多东西，但目标很明确，Google的要求是什么就学什么。下面是Google Front End Engineer的要求
+<div>Minimum qualifications</div>
+<div>
+<ul>
+	<li>BS degree in Computer Science or related field (In lieu of degree, 4 years of relevant work experience).</li>
+	<li>Development experience in server-side technologies such as C/C++ and/or Java.</li>
+	<li>Experience with AJAX, HTML and CSS, or Ruby, with an interest in user interface design.</li>
+	<li>Web application development experience.</li>
+</ul>
+</div>
+<div>
+<div>Preferred qualifications</div>
+<div>
+<ul>
+	<li>Masters or PhD in Computer Science or related field.</li>
+	<li>Significant experience developing user-facing software.</li>
+	<li>Experience working on cross-browser platforms.</li>
+	<li>Knowledge of UI frameworks such as XUL, Flex, and XAML.</li>
+	<li>Object-oriented JavaScript skills.</li>
+</ul>
+</div>
+</div>
+明显不足的一点是一门Server-Side的语言，比如Java，在很多笔试题中Java也经常会使用到。
+
+所以第一件事情是学习Java，学到什么程度，第一是写一个OOP的博客，第二是熟练使用Java写算法题。
+
+第二重要的应该是深入了解JavaScript，对于JavaScript的语言特性，面向对象机制，模块化，主流框架，NodeJs都应该到底master的程度。学习的途径第一是看书，手上的几本书在四个月内都应奋力读完，做好读书笔记。途径二是参加开源项目，从那篇学习开源项目的文章开始看起。
+
+第三和第四同等重要，即计算机基础知识与前端基础知识。计算机基础知识包括Linux和C语言，重读Linux和C一站式编程，了解服务器，编译器，浏览器内核的底层实现原理。第四是前端基础知识，包括CSS的深入学习，CSS3与HTML5的新特性，浏览器兼容性的知识。
+
+第五和第六同等重要，即设计的学习与知识杂项。设计一直是我很向往的方向，但始终都处在感性的认识阶段，未来我隐约感觉到自己会走上“设计师”的道路，但开始，还是从Engineering入门会更加基础牢固，所以在暑假的闲暇时间里读一些设计方面的名著是很有益的。知识杂项就就包括了一些必要的但了解即可的知识，比如Git，不如Ruby，比如Sayanee的Vimeo，以及一些讲座。
+
+总结成一份List，暑假每天应该这么过：
+
+身体方面：
+<ul>
+	<li>7点起床，晚上1点之前睡觉</li>
+	<li>早晨跑步，力量训练，周二周五晚上打篮球</li>
+	<li>饮食规律，水果蔬菜为主</li>
+</ul>
+知识方面：
+<ul>
+	<li>8小时学习时间</li>
+	<li>制定每月每周每日目标</li>
+	<li>2小时读书</li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[暑假学习第一天]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/"/>
+    <updated>2013-05-23T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/05/23/%e6%9a%91%e5%81%87%e5%ad%a6%e4%b9%a0%e7%ac%ac%e4%b8%80%e5%a4%a9</id>
+    <content type="html"><![CDATA[积极地说，感觉还不错，虽然做的还远不够好。
+
+由于昨天睡得晚，今天9点才起来，但早晨状态不错，并不困，简单吃了早餐和锻炼后，开始干正事儿。实际上这个时间是一天最佳的时间，所以应该花在最重要的事情上，但惰性使然，导致自己看起了vimeo的教学视频，一看就看了好多。略看了一下已知的知识，包括sublime tex, wordpress, web font。了解了一种格式语言Markdown，使用在github的readme中，通过ruby能够自动转化成HTML。还了解到了sublime text的package manager，下载的sass的代码高亮。最主要的是学习了一下SASS。
+
+<strong>SASS最主要的是三个功能：变量，方法，循环。</strong>
+
+使用美元符号$定义变量，可以定义统一的颜色，宽度，让CSS更容易维护。
+
+使用@mixin定义方法，在方法体内写入复用CSS，可以传递参数，使用@include调用。这使得按钮，widget很容易实现，配合变量，使得样式的主题很容易修改。
+
+循环的格式为
+<blockquote>@for i from 1 through 9</blockquote>
+缩进的内容为循环体。循环可以实现渐变的样式，但我觉得用处不大。
+
+<strong>另外SASS的使用规则还有：</strong>
+<ul>
+	<li>不需要大括号，使用缩进</li>
+	<li>可用用缩进加$重复利用某一元素，类似于JavaScript的with关键字</li>
+	<li>一些函数darken(#ccc, 10%), lighten(#ccc, 10%)</li>
+</ul>
+从sass &#8211;watch产生了小想法。watch能使.sass每次有变化的时候会自动编译成.css文件，那么，做web开发的时候，每当完成某个页面的时候，当自动保存sublime text后能不能自动刷新浏览器呢？这会带来一些方便。
+
+很快就到午饭时间了，吃了牛肉青椒番茄丁拌米线，半小时搞定。打算下午考驾照permit，开始做题，到了快两点出门结果下大雨，走了不远便打道回府。开始干“正事儿”。进入状态很慢，Java读着读着就容易走神，容易去看别的东西。看着看着觉得Java学习内容太多，太难肯，并且在web方向用的不多。并且越来越觉得Python更加适合，应用更广，更新，与web更近。回头再把Java扔到了一边开始找Python的书看，挑了不少时间结果很不明智地挑一本cookbook，鼓足一股劲开始啃了一起来，终于啃到正题了，结果发现根本就不是我需要的，都是一些细节函数的用法，没法读只能用来查。又扔到了一遍。又找了一圈要么太基础，要么太专，要么太老。我开始上网找网上的学习资料，结果看到了<a href="http://www.learnpython.org/">http://www.learnpython.org/</a> 就又鼓起劲开始学了起来，非常基础但让我熟悉其语法来了，也加上了一些小coding，很快就把基础知识过了一遍。
+
+想尝试做几道leetcode题目但对于Java还是太不熟悉，无从下手。
+
+就这么已经晚上11点了。最正题的JavaScript还没看。
+
+&nbsp;
+
+虽然没完成任务，但状态感觉还是有很大进步的，后面抓紧分配好时间，提前在google calendar上制定好时间。
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dropbox + Git 多人协作]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/"/>
+    <updated>2013-02-13T00:00:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%e5%a4%9a%e4%ba%ba%e5%8d%8f%e4%bd%9c</id>
+    <content type="html"><![CDATA[<div>
+<h1><strong>背景： </strong></h1>
+</div>
+一个人开发项目到了一半，想多拉几个人过来一起开发。
+<h1><strong>使用顺序： </strong></h1>
+<h2><strong>（一）我先配置好公共的repo。</strong></h2>
+1. 在Dropbox上创建一个文件夹作为共享的空repo：
+<pre><span style="color:#999999;"> $ cd C:/Users/Neil/Dropbox/</span>
+
+<span style="color:#999999;"> $ mkdir Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ cd Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ git init --bare
+
+</span></pre>
+2.  把原来本机上项目放到到那个共享的repo里：
+<pre><span style="color:#999999;"> $ cd C:/User/Neil/Projects/MyProject1</span>
+
+<span style="color:#999999;"> $ git init</span>
+
+<span style="color:#999999;"> $ git remote add origin C:/Users/Neil/Dropbox/Git-Repository/MyProject1.git</span>
+
+<span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "first commit."</span>
+
+<span style="color:#999999;"> $ git push origin master</span></pre>
+<h2></h2>
+<h2><strong>（二）新加进来的开发们在本机clone一份。</strong></h2>
+<span style="color:#999999;">注意：在操作git之前，先config好自己的user.name和user.email</span>
+
+1. 创建本地目录，把Dropbox共享到的repo clone到里面。
+<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/</span>
+
+<span style="color:#999999;"> $ git clone C:/Users/Eric/Dropbox/Share/MyProject1.git</span></pre>
+<h2></h2>
+<h2><strong>（三）开始日常开发。</strong></h2>
+1. 获取最新的版本：
+<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/MyProject1</span>
+
+<span style="color:#999999;"> $ git pull origin master
+
+</span></pre>
+2. 完成一个小功能后，commit一个版本到本地的repo：
+<pre><span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "comment on this commit"
+
+</span></pre>
+3. 完成一个大功能后，把本地的repo push到共享的repo里：
+<pre><span style="color:#999999;"> $ git add .</span>
+
+<span style="color:#999999;"> $ git commit -m "comment on this commit"</span>
+
+<span style="color:#999999;"> $ git push origin master</span></pre>
+<h2></h2>
+<h2><strong>另外：</strong></h2>
+可能会遇到冲突，因为在你pull最新版本下来之后，又有人push了更新的版本到共享repo里，而且他修改了跟你相关的代码。因此当你现在push的时候会出错，因为共享repo也不知道用他的代码好还是你的代码好。这时就git就会要求你在push之前再pull一次，并且会告诉你冲突的地方，在具体文件中会以下面这种方式体现：
+<pre><span style="color:#999999;"> &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+
+<span style="color:#999999;"> 我的代码</span>
+
+<span style="color:#999999;"> ===========</span>
+
+<span style="color:#999999;"> 他的代码</span>
+
+<span style="color:#999999;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span></pre>
+我需要把这段代码解决（跟他商量怎么回事儿）之后在push到共享的repo。
+
+（完）
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[备忘ebay的一个讲座]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/"/>
+    <updated>2013-02-13T00:00:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/02/13/%e5%a4%87%e5%bf%98ebay%e7%9a%84%e4%b8%80%e4%b8%aa%e8%ae%b2%e5%ba%a7</id>
+    <content type="html"><![CDATA[<strong>演讲人</strong>：Brain Johnson@ebay
+
+<strong>主题</strong>：ebay的大数据
+
+<strong>最大印象</strong>：努力很大，投入很多，但效果一般（5% better / year）
+
+<strong>片段</strong>：
+
+&#8220;big is not the case, detail is.&#8221;
+
+关于 搜索key word expansion，他讲了很多情况中是不是要把搜索关键词的相关词也纳入搜索范围，比如加s的复数。但在会出现加了s就是毫不相关的东西，例子忘了。另外，在人们搜索diary的时候，很多人想找的是吸血鬼日记，而不是笔记本。在人们搜索basketball的时候，大多数人想找的是篮球鞋，而不是篮球。我的第一影响力可以用搜索后，点击商品的类别来自动划分不同key word的expansion。
+
+他还略过了一句话，其实也是我很想问的。那就是他说算法不重要（大概意思），数据更重要。为啥？
+
+刚开发的时候，ebay投了几千万美元（具体忘了），结果由于所带来的改进，几个月（具体忘了）就赚回来了。看来有和无的差别是巨大的。
+<div>
+<div>他还分享了任务的data flow pipeline:</div>
+<div>
+<ul>
+	<li>production</li>
+	<li>behavioral item data analysisi</li>
+	<li>feature generation</li>
+	<li>classification prediction</li>
+	<li>offline analysis</li>
+	<li>human judgment</li>
+	<li>a/b test</li>
+</ul>
+（完）
+
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[写学习笔记]]></title>
+    <link href="http://GingerBear.github.io/blog/2012/09/29/%25e5%2586%2599%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%2594%25e8%25ae%25b0/"/>
+    <updated>2012-09-29T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2012/09/29/%e5%86%99%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0</id>
+    <content type="html"><![CDATA[最近在学不少东西，一直想写一下学习笔记，但都出于很多原因，主要是懒惰，没有付出实践。
+
+学了很多东西，需要消化。写学习笔记是很好的一种消化方式，能够让人温习学过的知识，并且用自己的语言重新描述一遍后，能够更好的理解知识。
+
+事实上我最近学习的知识也的确需要不断消化。Coursera上的Machine Learning课程有很多新的东西需要我去记忆与理解，每一节课都包含了很多复杂的公式与原理。经常听课的当时理解了，但很快就忘了。不如最近学到的Neural Network的原理就没有完全搞懂，之前的Linear Regression和Logistic Regression也不能立刻反映出实施步骤，中间总有知识断层。
+
+于是，在接下来的Blog中，我将从Neural Network的手写数字识别联系开始写Machine Learning的学习笔记，一直到最后。如果有多余的心思的话，把前面的也补上。
+
+另外，MIT的Python课程已经学完，一直想着实开发一个实际的项目，关于项目的构想与进展，我也将在Blog里谈谈。另外几门课程数据库与数据结构的课程也需要学习，在今天不小心又看了一遍阮一峰写Dennis Ritchie逝世的Blog后得知，我们的教程C Programming就是他写。于是产生了看完这本书的打算（反正比Python的书还薄）。所以同样我也打算写写这本书的读书笔记，也包括Python的本书。
+
+说到读书，之前的Hackers and Painters也读了一半了，但依旧停下了一周左右。其实在读书的过程中的确是有不少想法的，但也没有下意识的把这些想法记录下了。
+
+<span style="text-decoration:underline;">总结一下：</span>
+
+学习笔记：Machine Learning
+
+项目笔记：Python的项目
+
+读书笔记：H&amp;P，C Programming，Think Python
+
+<span style="text-decoration:underline;">后续计划：</span>
+
+学习笔记：Coursera里的其他课程，JavaScript学习
+
+项目笔记：新的项目
+
+读书笔记：Think Complexity，JavaScript The Good Part，Professional JavaScript.
+
+<span style="text-decoration:underline;">New idea</span>: Try to write in English.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[二手相机试拍与沃尔玛购物]]></title>
+    <link href="http://GingerBear.github.io/blog/2012/09/17/%25e4%25ba%258c%25e6%2589%258b%25e7%259b%25b8%25e6%259c%25ba%25e8%25af%2595%25e6%258b%258d%25e4%25b8%258e%25e6%25b2%2583%25e5%25b0%2594%25e7%258e%259b%25e8%25b4%25ad%25e7%2589%25a9/"/>
+    <updated>2012-09-17T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2012/09/17/%e4%ba%8c%e6%89%8b%e7%9b%b8%e6%9c%ba%e8%af%95%e6%8b%8d%e4%b8%8e%e6%b2%83%e5%b0%94%e7%8e%9b%e8%b4%ad%e7%89%a9</id>
+    <content type="html"><![CDATA[到美国一个月了，之间一直想写点什么但都没有付出实际行动，有时由于忙，但更多是由于懒。今天在不忙又不懒的状况下开始写点东西。
+
+写到这里，不禁自己问，自己为什么今天就不懒了？实际情况是我看到Hacker News上的一篇文章”<a title="THINGS I’VE QUIT DOING AT MY DESK" href="http://justinjackson.ca/i-quit-my-desk/">THINGS I’VE QUIT DOING AT MY DESK</a>“，讲的是作者清楚地区分自己在办公桌前做的正事儿与浪费时间的琐事儿，他甚至不用椅子。说到底，方法很简单，主要是意志力。看完文章后，我试图集中精力学习Coursera上的<a title="Machine Learning教程" href="https://class.coursera.org/ml-2012-002">Machine Learning教程</a>，效果确实好了些，但实际上仍然不自觉地打开微博人人FBQQ看看，更有可能的是，明天我就忘了这事儿，继续之前的懒散状态。
+
+好在现在才残留了一些定力足以让我打开WP写点东西。
+
+开始正题吧，主要写写一次很平常的沃尔玛的购物经历，我用即将退货的二手相机记录下了这一天的过程，对应着照片，谈谈平常日子里美国与中国的一些不同。照片以时间顺序出现。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.19.541.jpg"><img class="aligncenter size-full wp-image-89" title="Frank的房间" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.19.541.jpg" alt="Frank的房间" width="864" height="648" /></a>
+
+出门之前，我略显兴奋，拿起相机到处乱拍。这是Frank的房间，来自温州的高富帅，光看桌上的iPad，MBA以及华硕的游戏本便知。他还买了一个硕大的充气沙发，其实看起来比坐上去舒服，不过Frank确实比我们三个都更懂享受。这个房间是四个房间里最舒服的一个，光线充足，窗外就是公园，每天早上都能被阳光晒醒。
+
+比较奇怪的是这边的空调，外面除了中央空调，到处安装的都是这种一体式的小空调，在上海，这种空调只有在老式住宅里才能看到。实际上这种空调噪音非常大，而且只能制冷，就是便宜，一百多刀一个。
+
+[caption id=&#8221;attachment_91&#8221; align=&#8221;aligncenter&#8221; width=&#8221;600&#8221; caption=&#8221;楼下的Lei&#8221;]<img class="size-full wp-image-91" title="楼下的Lei" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.20.47.jpg" alt="楼下的Lei" width="600" height="800" />[/caption]
+
+楼下Lei已经等我们很久，来自苏州在吉林读大学的喜欢憨笑的室友，他住在一楼，最大的房间，大得显得空旷但没有门，我们在教会领到的电视就放在他的房间，所以他的房间几乎就被我们当做客厅了。
+
+整个房间铺上地板和地毯，而且很新，非常舒服。
+
+[caption id=&#8221;attachment_92&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;厨房&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.02.jpg"><img class="size-full wp-image-92" title="厨房" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.02.jpg" alt="厨房" width="800" height="600" /></a>[/caption]
+
+进门就能看到漂亮的厨房。虽然可以看出当时没有整理过，但依旧让人觉得很舒服。刚来的时候我很吃惊厨房里齐全的设备，连洗碗机这种我从没见过的机器都有（电饭煲下），而且都是新的。
+
+与国内不太一样的是这里的炉灶，在照片的左边的”蚊香盘“就是了，火很小，没有抽油烟机。
+
+这里还有齐全的报警器，一楼的窗上都装有。只要窗户被打开就会发出很大的警报声。另外还有烟雾报警器，又一次Lei煎牛排油烟太大居然引发了警报。
+
+[caption id=&#8221;attachment_93&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;门口的路&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.39.jpg"><img class="size-full wp-image-93" title="门口的路" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.39.jpg" alt="门口的路" width="800" height="600" /></a>[/caption]
+
+比起上海，这里的路面修的并不好，但很干净，没有乱扔的垃圾。每周二每户都会自觉的把垃圾打包好放在门口，会有收垃圾的人来处理。
+
+前面住着一家和蔼的老头叫Steve，每次见到都会跟他聊上几句。他总会给我们介绍周围的情况和一些习俗，他非常热心很乐意给我们提供帮助。我也很希望跟他老人家聊聊天，但每次总觉得怪怪的，不知该如何交流，好像进入不了那种”坐下来好好聊聊“的状态。他还养了一条狗叫Moly，个头很大的一只母狗，见到人就会大叫，但待人其实很好，我也尝试着去摸摸它，其实从来都没这么摸过狗。
+
+[caption id=&#8221;attachment_94&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Lei站在门口&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.51.jpg"><img class="size-full wp-image-94" title="Lei站在门口" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.22.51.jpg" alt="Lei站在门口" width="800" height="600" /></a>[/caption]
+
+Lei悠哉地站在门口等他们俩，这样子很像房子的主人。
+
+[caption id=&#8221;attachment_96&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;连体别墅&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.23.44.jpg"><img class="size-full wp-image-96" title="连体别墅" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.23.44.jpg" alt="连体别墅" width="800" height="600" /></a>[/caption]
+
+隔壁应该也住着几个留学生，已有过一次交流，听得懂中文但不会说。曾经看到过他们在家里开party，搞笑的是，我见到几个人在阳台上聊天，过了四五个小时，他们还在原地不动地聊天，不知道来外的party到底是怎么样的。
+
+[caption id=&#8221;attachment_97&#8221; align=&#8221;aligncenter&#8221; width=&#8221;600&#8221; caption=&#8221;房子侧面&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.24.33.jpg"><img class="size-full wp-image-97" title="房子侧面" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.24.33.jpg" alt="房子侧面" width="600" height="800" /></a>[/caption]
+
+从侧面看房子还是非常大的，从后院过去还有一个小露台，可以烧烤，晒太阳（经常看到老外这样）。
+
+[caption id=&#8221;attachment_98&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Eric与Lei&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.25.01.jpg"><img class="size-full wp-image-98" title="Eric与Lei" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.25.01.jpg" alt="Eric与Lei" width="800" height="600" /></a>[/caption]
+
+Eric和Lei两人的表情展现出一个鲜活的场景。
+
+Lei带着一个森海塞尔PX100，曾经一直想买但由于价格太高还是没行动。说起来我们四个都有点耳机控，Frank刚来没多久就买了一个Beats Studio，Eric至少有4副不同类型耳机，我也不知道换了多少耳机了。
+
+[caption id=&#8221;attachment_99&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;路&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.27.21.jpg"><img class="size-full wp-image-99" title="路" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.27.21.jpg" alt="路" width="800" height="600" /></a>[/caption]
+
+出来的天气非常好，多云不热。左边是小小的植物园，右边是人家的出库与后院，经常能看到几个老头躺在后院的躺椅上光着膀子惬意地晒太阳。
+
+说道天气，这里的特点概况就是，阳光明媚，昼夜温差大，雨下得突然。记得8月上海的那几天天气罕见的好，这里几乎每天都是那么好。
+
+[caption id=&#8221;attachment_101&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;街道&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.29.07.jpg"><img class="size-full wp-image-101" title="街道" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.29.07.jpg" alt="街道" width="800" height="600" /></a>[/caption]
+
+这条路叫Parkview St.，可以猜得出，右边的房子里能看到Park的view应该才叫这么名字。路边停满了车，每家门前的花园都修得很整齐。经常能看到人们在修剪草坪，浇水装饰，小孩儿在上面玩耍。
+
+想到了电影Flipped里，女主角家门口的草坪一直没人打理而被对面的邻居鄙视，不知者是不是大家勤于打理的原因之一。
+
+[caption id=&#8221;attachment_102&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Jeep&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.29.44.jpg"><img class="size-full wp-image-102" title="Jeep" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.29.44.jpg" alt="Jeep" width="800" height="600" /></a>[/caption]
+
+这里Jeep Wrangler很常见，在这条路上就经常能看到停着好几辆。这车确实很Cool，但很多停在路边都没有敞篷，直接把驾驶座露在外面。
+
+[caption id=&#8221;attachment_103&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;教堂&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.31.36.jpg"><img class="size-full wp-image-103" title="教堂" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.31.36.jpg" alt="教堂" width="800" height="600" /></a>[/caption]
+
+St George Antiochian Orthodox Cathedral，刚来的时候还以为是清真寺。在单词本上背到的三个教堂的单词：Chapel, Church, Cathedral。本以为都会以大小区分，但事实上是随便叫的。比如这叫小教堂就叫Cathedral，但Cathedral of Learning旁边的Heinz Memorial Chapel比这个大多了确叫Chapel。
+
+[caption id=&#8221;attachment_104&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;摩托&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.33.01.jpg"><img class="size-full wp-image-104" title="摩托" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.33.01.jpg" alt="摩托" width="800" height="600" /></a>[/caption]
+
+这边儿骑摩托的确实比开车的酷，更别说载着美女开这么酷的摩托了。我猜这哥们的这时感觉一定非常良好。
+
+[caption id=&#8221;attachment_106&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;加长版&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.37.22.jpg"><img class="size-full wp-image-106" title="加长版" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.37.22.jpg" alt="加长版" width="800" height="600" /></a>[/caption]
+
+这边儿的好车并不多，多是美式肌肉车和日韩省油车，这辆凯迪拉克的加长车倒是第一次见到。
+
+说到车，对这里印象最深的就是驾驶员都非常的文明，在每个没有红绿灯的路口，司机都会自觉停下来，确认没车才会经过。看到有行人要过马路，车都会立刻停下来，很耐心的等人过，在行人在犹豫时，驾驶员会伸手示意让行人先走。
+
+第二点就是这里没车的人，那真就是穷人。因为这里的车非常便宜，几千块就可以买辆不错的二手车，只有是有正常工作的人应该都买得起。由于大部分的人都有车，很多服务都为车专门设计，不如很多快餐店都有开车专用窗口。很多大得卖场都设有巨大的停车场和道路。这导致了没车的人去大卖场很不方便，我们刚来的时候就有这样的经历，那是刀机场的宜家和沃尔玛，几乎都没有给行人走的路。
+
+[caption id=&#8221;attachment_107&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;公交&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.58.57.jpg"><img class="size-full wp-image-107" title="公交" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-12.58.57.jpg" alt="公交" width="800" height="600" /></a>[/caption]
+
+这里的公交值得一提的就太多了，当然首先是学生卡可以免费乘，在刚来没卡的时候那是很贵的，一个区域内2.5刀，两个区域3.75刀，简直太贵了。二，如很多人所说，这里的公交不像有些地方都是黑人，没有那种”不安全“的感觉，反倒是大家都很友好。三，下车前要先先拉窗边的黄线，请求下车，不然司机就不会停。四，遇到行动不便的老人或残疾，车可以立刻降低底盘方便他们上下。五，后面一般不开，除非人非常拥挤。六，可以买往返票，能便宜一块多，但要在规定时间内返回。七，从中心地区到偏远地区是下车再付钱。
+
+[caption id=&#8221;attachment_109&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Mellon Institute&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.05.18.jpg"><img class="size-full wp-image-109" title="Mellon Institute" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.05.18.jpg" alt="Mellon Institute" width="800" height="600" /></a>[/caption]
+
+每次经过这里都很想拍照，因为The Dark Knight Raises就是在这里拍的，想说的是拍摄的场景很奇怪。在电影中Bane是在Wall Street上指挥雇佣兵与警察斗争的，但当他与Batman PK的时候却是在这里的柱子前，Frank当时还看到了Fifth Ave。所以电影实际上是把两个取景地合在了一起。
+
+[caption id=&#8221;attachment_110&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;桥上&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.32.59.jpg"><img class="size-full wp-image-110" title="桥上" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.32.59.jpg" alt="桥上" width="800" height="600" /></a>[/caption]
+
+这里的水非常干净，看着非常舒服，不像国内的河。另外这里的桥非常多，据说是全世界第二多的地方，仅次于威尼斯了。教会的人当时开玩笑说，匹兹堡人想向世界证明他们是多么能炼钢。
+
+[caption id=&#8221;attachment_111&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;walmart&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.50.20.jpg"><img class="size-full wp-image-111" title="walmart" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-13.50.20.jpg" alt="walmart" width="800" height="600" /></a>[/caption]
+
+其实匹兹堡是小地方，别看沃尔玛都建在郊外，实际上公交十几二十分钟就到了。周围是各种糖果，看着眼馋，但我减肥就忍住了没买。
+
+说起价格，如果我赚美元，买东西就真便宜。旁边一袋巧克力，两块多。但如果是人民币，大部分都乘以六点几都很贵。小部分乘以六点几都比国内便宜的也有，比如牛奶，橙汁，提子，西柚，香蕉等等。
+
+[caption id=&#8221;attachment_113&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;电视&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.10.54.jpg"><img class="size-full wp-image-113" title="电视" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.10.54.jpg" alt="电视" width="800" height="600" /></a>[/caption]
+
+都是SHARP的电视，居然有70寸。另外，在公共场所只要是有电视机的地方都在放橄榄球。
+
+[caption id=&#8221;attachment_114&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Kindle&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.11.02.jpg"><img class="size-full wp-image-114" title="Kindle" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.11.02.jpg" alt="Kindle" width="800" height="600" /></a>[/caption]
+
+沃尔玛里还有Kindle买，过几天就该换新Kindle了。我也第一次看到Nook，其实长得比Kindle漂亮而且便宜。
+
+值得一提的是，Nook和Kindle一样都是有买书的做起的，是一家叫Barnes &amp; Noble的书店的产品。在国内以电子纸技术起家的汉王是不是已经快不行了？
+
+[caption id=&#8221;attachment_115&#8221; align=&#8221;aligncenter&#8221; width=&#8221;600&#8221; caption=&#8221;Swift&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.27.49.jpg"><img class="size-full wp-image-115" title="Swift" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.27.49.jpg" alt="Swift" width="600" height="800" /></a>[/caption]
+
+Taylor Swift，嗯，这个样子还是挺好看的。
+
+[caption id=&#8221;attachment_116&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;巨型薯片&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.49.35.jpg"><img class="size-full wp-image-116" title="巨型薯片" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-14.49.35.jpg" alt="巨型薯片" width="800" height="600" /></a>[/caption]
+
+这边见到不少超大号的东西，超大的汉堡，超大的三明治，超大的可乐，超大的薯片，超大的汽车，超大的。。。
+
+难怪美国人能长那么胖了。
+
+&nbsp;
+
+[caption id=&#8221;attachment_117&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;擎天柱&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.14.57.jpg"><img class="size-full wp-image-117" title="擎天柱" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.14.57.jpg" alt="擎天柱" width="800" height="600" /></a>[/caption]
+
+在路上总能看到巨大的卡车，每次都会惊讶的说，这不算擎天柱嘛。但这次看到的才是真正的擎天柱，连颜色都一样，可惜没来得及拍正面。
+
+[caption id=&#8221;attachment_118&#8221; align=&#8221;aligncenter&#8221; width=&#8221;600&#8221; caption=&#8221;Wendy&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.25.13.jpg"><img class="size-full wp-image-118" title="wendy" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.25.13.jpg" alt="wendy" width="600" height="800" /></a>[/caption]
+
+Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这类垃圾食品。这个圣代还挺不错的。不过想说的是，坐了一会儿，手机收到了Google Latitude给我的Check-in提示，发现我到了Wendy问我要不要签到。一直觉得LBS应该还有很多应用。
+
+[caption id=&#8221;attachment_119&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;停车场&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.51.26.jpg"><img class="size-full wp-image-119" title="停车场" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.51.26.jpg" alt="停车场" width="800" height="600" /></a>[/caption]
+
+购物广场中的巨大的停车场，不过，应该是巨大停车场边的购物广场。
+
+[caption id=&#8221;attachment_120&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;Frank&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.55.30.jpg"><img class="size-full wp-image-120" title="Frank" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-15.55.30.jpg" alt="Frank" width="800" height="600" /></a>[/caption]
+
+在巨大的停车场里，Frank推着手推车，我们由衷的觉得有辆车该多方便。
+
+[caption id=&#8221;attachment_121&#8221; align=&#8221;aligncenter&#8221; width=&#8221;800&#8221; caption=&#8221;返回&#8221;]<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-16.07.11.jpg"><img class="size-full wp-image-121" title="返回" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/09/2012-09-15-16.07.11.jpg" alt="返回" width="800" height="600" /></a>[/caption]
+
+一般我们一周去一次大超市，所以一次要买很多东西，回来时把地方都占满了。其实这才是糟糕的开始。从车站到我们的住处有二十分钟路程，所以我们需要拎着一车东西走二十多分钟，里面包括一加仑的牛奶、果汁、花生油。到了宿舍，都累瘫了。
+
+就先写到这里吧，太长了都写不动了。
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Neil的2012前半个月]]></title>
+    <link href="http://GingerBear.github.io/blog/2012/01/14/neil%25e7%259a%25842012%25e5%2589%258d%25e5%258d%258a%25e4%25b8%25aa%25e6%259c%2588/"/>
+    <updated>2012-01-14T00:00:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2012/01/14/neil%e7%9a%842012%e5%89%8d%e5%8d%8a%e4%b8%aa%e6%9c%88</id>
+    <content type="html"><![CDATA[距离上一篇日记已经有半个月了，这半个月基本上就是在改善PS和提交网申，然后催老师发推荐信。PS还真是麻烦，有的要求1000字，有的要求500字，有的居然200字，让我改了又改。但感到庆幸的是，有勺山的帮我改逻辑，有老妈找的一个老美教授帮我改语言，谢谢你们，软条件上确实有不少提升。
+
+改PS的过程中，有一点体会，就是中文和英文的差别不止是在文章语言上，整体结构上也有不同。我先把中文的PS写好，直接翻译成英文，就觉得很奇怪：不只是表达方式上，还在语句的衔接与逻辑上。同样句子与句子，段落与段落之间的转换，中文版的就读起来很顺，英文就觉得不同。为什么会这样，也许需要阅读量与实践的积累我才能搞清楚。
+
+老爸买了个单反相机（基本上被我怂恿的），佳能600D，算是入门相机里不错的。最近在看Lynda.com的曝光教程，听这一个呆呆的大叔讲单反的原理，虽然讲得挺好，但还是有些枯燥。一直没有出门采光，就期待着过几天回黄陂了拍拍乡里的人和景。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/01/Untitled.png"><img class="aligncenter size-full wp-image-31" title="Untitled" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/01/Untitled.png" alt="" width="979" height="577" /></a>
+<p style="text-align:center;">Lynda.com的曝光摄影教程 Ben Long</p>
+另外，把手机刷成了xda论坛上的<a title="HTC Desire S Android 4.0 Rom beta" href="http://forum.xda-developers.com/showthread.php?t=1373449" target="_blank">大牛做的Android4.0</a>，细节上感觉很好（新UI、页面的过度效果、滑动的加速度），习惯了有快捷方式的Launcher后，就不需要像MIUI那种所有App放桌面的麻烦桌面布局了，除了桌面，其他都要比MIUI顺滑一些（可能是因为MIUI的桌面用了低质量的绘图）。虽然相机还没法用，不过先玩几天。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/01/IMG_0260.jpg"><img class="aligncenter size-full wp-image-32" title="IMG_0260" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2012/01/IMG_0260.jpg" alt="" width="519" height="346" /></a>
+<p style="text-align:center;">HTC Desire S on Android 4.0 Ice Cream Sandwich</p>
+&#8212;&#8212;&#8212;
+
+看豆瓣日志坚持的最好的还是<a title="顾蘑菇的微博" href="http://www.douban.com/people/Annie-gu/" target="_blank">@顾蘑菇</a> ，膜拜。
+不禁想起一个问题，我这日志是写给谁看的呢？
+应该不只是自己看的，应该是不是完全写改别人看的（这部分是自己看的，不然应该用“写给你们看的”）。持这两种心态写出来的日志应该是很不同的，有时还是矛盾的，微博也是一样。可以看得出来，很多人写的明显是给别人看的，有些人写的明显是给自己看的。
+
+那么我是写给自己看的呢？还是别人看的呢？一个很容易的答案就是“都是”。但是似乎写起来比起说起来就没那么简单那了，有时候经常碰到自己问自己“写这个干嘛？”，那写什么呢？
+
+或者说，想那么多干嘛？只管写就是了，想写什么就写什么。好像很多事情都是这样。
+
+（End | by Neil）
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[我的托福那点破事儿]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/"/>
+    <updated>2011-12-02T00:00:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/12/02/%e6%88%91%e7%9a%84%e6%89%98%e7%a6%8f%e9%82%a3%e7%82%b9%e7%a0%b4%e4%ba%8b%e5%84%bf</id>
+    <content type="html"><![CDATA[&nbsp;
+
+<a style="font-style:normal;line-height:24px;text-decoration:underline;" href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg"><img class="aligncenter size-full wp-image-26" style="border-style:initial;border-color:initial;margin-top:.4em;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#eeeeee;" title="download" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg" alt="" /></a>
+
+托福成绩刚刚出来了，96分，总体来说勉强还算是个decent的分数（太低也不会写这玩意儿）。
+所以今天主要说说托福那些破事儿。
+
+Reading(R), Listening(L), Speaking(S), Writing(W)
+第一次考试2010年5月16日：R:19 L:19 S:20 W:22 Total:80
+第二次考试2011年8月13日：R:25 L:24 S:20 W:21 Total:90
+第三次考试011年11月20日：R:21 L:28 S:23 W:24 Total:96<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg">
+</a>
+
+<strong>阅读：状态最重要</strong>
+就是把GRE从70年代开始所有的题都做完两遍以上，考托福照样不行，第二次25的原因是考前猛准备3周，把17个TPO的阅读做它两遍，才勉强达到25。第一次19考前做了两三套巴朗就受不了了。第三次就草草做了TPO的19、20、21、22、23、24，没掐时间，没定时间。所以阅读考前状态太重要了。
+
+<strong>听力：要多练，与多练</strong>
+丢掉笔记，要完全理解。就算貌似很难记住的细节，只要能搞清楚描写这个细节的目的，其实问到的时候是能回想起来的。
+
+<strong>口语：使Trick</strong>
+抛弃机经，坑人（所谓预测就是列出二三十个题目，那么大范围还不一定准）加给人心里负担（没准备到好就心神不宁的）。
+Trick 1. 在考试的间隙（题与题之间不要点跳过，等自动跳过）把事先准备好的6个题目的模板抄到草稿纸上，考的时候，照着念。避免紧张导致忘了。
+Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，听别人的口语回答，猜出题目，笃定地填入模板，考试时笃定的念就是了。（由于我拖太久了，以至于我休息的时候念的人太多，听不清楚题目）
+
+<strong>作文：丢弃模板，注重表达方式</strong>
+第三次作文，与前两次不同的是，由于基本没准备，所以感觉当时写作有点意识流，没有遵照严格和清晰的结构，但试图让表达流畅。
+字数也不是想象中的那么重要，第二次字数最多，但分数最低。
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django项目小记]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/"/>
+    <updated>2011-11-05T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/11/05/django%e9%a1%b9%e7%9b%ae%e5%b0%8f%e8%ae%b0</id>
+    <content type="html"><![CDATA[<p style="text-align:center;"><a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png"><img class="size-full wp-image-19 aligncenter" title="Untitled" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png" alt="" width="834" height="314" />图</a>：通过Django编写的表单提交操作，使用Jpype调用Java类，运行Web-Harvest抓取新浪微博，存入MySQL的过程中，Web-Harvest的运行状态。</p>
+<p style="text-align:left;">每次能看到这幅图片，就感到特别欣慰，特别是刚才的那次，感觉就像走完了一片沙漠看到了绿洲。</p>
+<p style="text-align:left;">从三天前大致学会Django的基本原理，到现在集成Web-Harvest，MySQL，PyMining到Django并成功运行。的确是费了不少周折。下面罗列出能够回想起的问题与解决方法。</p>
+<p style="text-align:left;"><strong>（1）问题：SQLite连接Web-Harvest中文乱码，databse插件无法执行多句SQL</strong></p>
+<p style="text-align:left;">未解决：放弃SQLite，改用MySQL</p>
+<p style="text-align:left;"><strong>（2）问题：XQuery输出SQL语句的格式MySQL读取失败</strong></p>
+<p style="text-align:left;">解决：用XQuery的concat方法链接字符串与变量，使之构成完整SQL字符串。经过仔细追求，修改WebHarvest源代码，还是发现WebHarvest的database插件只支持执行依据SQL语句，于是退而求其次，用了笨办法，把database插件包含到loops里，也就是说，每执行一次SQL，就连接一次MySQL。这是没有办法的办法，不过考虑到系统不会有很多人使用，并且爬虫速度的短板在http的读取上，这还是勉强能接受的。</p>
+<p style="text-align:left;"><strong>（3）问题：Web-Harvest连接MySQL，出现中文乱码</strong></p>
+<p style="text-align:left;">解决：乱码无非是文件编码、数据库编码、连接的编码三者不一致导致的。所以，确定文件编码、数据库编码都是utf-8后，只有是连接的编码没有设置好了，记得在PHP里是用一句语句设置连接编码的，但Web-Harvest里没有这种设置，database的参数里也没有。Google了很久后发现，在链接字符串里可以加入编码设置参数，于是连接字符串加上：</p>
+
+<pre>jdbc:mysql://127.0.0.1:3306/OpinionMonitor<span style="color:#ff0000;">?useUnicode=true&amp;amp;characterEncoding=UTF-8</span></pre>
+<p style="text-align:left;">这样就解决了乱码问题。</p>
+<p style="text-align:left;">另外，Django连接MySQL很方便，在settings.py里更改DATABASES，再syncdb即可。</p>
+<p style="text-align:left;"><strong>（4）问题：把PyMining集成到Django</strong></p>
+<p style="text-align:left;">解决：很方便，把conf, data, dict, mining四个文件复制到Project目录下，在App的views.py里加入原先的运行程序，最后加上return HttpResponse(&#8230;)，就可以运行了。</p>
+<p style="text-align:left;"><strong>（5）问题：把Web-Harvest集成到Django，并用表单传入爬虫运行参数</strong></p>
+<p style="text-align:left;">解决：十分纠结。首先第一个子问题出现了插入数据的问题：</p>
+
+<pre>Incorrect integer value: '' for column 'ReNum' at row 1”</pre>
+<p style="text-align:left;">也就是空（‘’）不能插入到integer型字段里。</p>
+<p style="text-align:left;">想到的解决方法一，用XQuery自定义函数把空转成0，理应很简单，但是中通不过语法检查，Google了很多样本，按照里面的各种格式不断修改尝试，但还是不行，最终放弃。</p>
+<p style="text-align:left;">想到的解决方法二，可能是MySQL的字段不允许为空，或者可能有自动转空为0的设置。但是设置允许为空之后，没有任何变化。Google之后，MySQL的确有转空为0的设置，在my.ini的safe_mode里设置，但奇怪的是，我的XAMPP里的mysql没有这个设置。只能放弃。</p>
+<p style="text-align:left;">最后的解决方法：在XQuery的return里加上判断$WeiboReNum != &#8220;&#8221; ，然后修改SQL语句。（依然是笨办法）奇怪的是，新浪微博里居然出了被转发的微博的转发数居然是0的，逻辑不通，但防止报错，改成了更丑陋的代码。如下：</p>
+
+<pre><span style="color:#ff0000;">return</span>	<span style="color:#008000;">if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum = "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum = "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
+<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '",0 , "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
+<span style="color:#008000;">else</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", 0, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")</pre>
+<p style="text-align:left;">然后第二个子问题是，如何在不用eclipse的情况下，加入classpath，解决方法是在系统的classpath里加入mysql-connector-java-5.1.18-bin.jar与webharvest_all_2.jar。并且在JPype的启动JVM的方法里，加入参数classpath（在加一遍系统参数）。</p>
+<p style="text-align:left;">第三个子问题是，JPype传参数到Java类里，一直报错：</p>
+
+<pre>No matching overloads found. at src/native/common/jp_method.cpp:121</pre>
+<p style="text-align:left;">看了很多论坛的解答后，发现似乎是实例化的问题，需要构造函数，果然在最早的JavaHello示例中，类里面故意写了一个空的构造函数（可能是为了满足JPype的特殊要求），于是在WebHarvestTest.java里加入了“形式上”的构造函数。经过不断的模仿与尝试，终于成功了。呼呼，颇为纠结。</p>
+<p style="text-align:left;">第四个子问题是，JPype只能运行一次，具体说来就是，shutdownJVM之后就不能再startJVM了，而且startJVM之后也不能再startJVM了，不然就报错：</p>
+
+<pre>RuntimeError: Unable to start JVM at src/native/common/jp_env.cpp:54</pre>
+<p style="text-align:left;">奇怪的问题，Google中无法发现jpype.isJVMStarted()这个方法，很好，如果判断已经启动，就不再启动了，果然问题解决。</p>
+
+<pre>if not jpype.isJVMStarted():
+    startJVM(getDefaultJVMPath(),"classpath")</pre>
+<p style="text-align:left;">（问题结束）</p>
+<p style="text-align:left;">随着问题的出现，烦恼，解决，心情也是起起伏伏。现在很平静，因为前期的基本问题已经解决，后面却还有更多问题要解决。主要涉及算法的应用与数据的表现，这可能就不是简单的Google几下就能解决的了，但不会像这么纠结在小问题上。</p>
+<p style="text-align:left;">（End | by Neil）</p>
+<p style="text-align:center;"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django学习小记]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/"/>
+    <updated>2011-11-03T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/11/03/django%e5%ad%a6%e4%b9%a0%e5%b0%8f%e8%ae%b0</id>
+    <content type="html"><![CDATA[总体来说，看官方的<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">Polls 教程</a>，还是比较清楚的。写个小记，加深记忆。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006.jpg"><img class="alignnone size-medium wp-image-15" title="bear-vs-snake-deathmatch-2006" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006-300x257.jpg" alt="" width="300" height="257" /></a>
+
+<strong>安装：</strong>
+
+命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。
+
+<strong>建立工程：</strong>
+
+<strong></strong>命令行cd到目录，运行django-admin.py startproject mysite建立名为mysite的工程。里面自动生成四个文件：__init__.py没用到，manage.py执行各种操作，settings.py配置文件，urls处理url。
+
+<strong>配置数据库：</strong>
+
+<strong></strong>修改settings,py里的DATABASES的参数，改了两个：（1）&#8217;ENGINE&#8217;里选sqlite3，（2）‘NAME’里写sqlite.db的地址。因为用的是SQLite，所以其他参数不管。然后运行python manage.py syncdb，意思是按照settings.py里的INSTALLED_APPS来建立数据库。
+
+<strong>建立应用：</strong>
+
+<strong></strong>在工程目录下，命令行运行python manage.py startapp polls建立名为polls的投票应用。里面自动生成四个文件：__init__.py没用到，models.py用类写成的数据库，tests.py没用到，views.py根据urls.py传来的参数，作出相应的操作，然后显示出来。
+
+<strong>创建应用models：</strong>
+
+<strong></strong>在models.py里写两个类（建数据表），并在settings.py里的INSTALLED_APPS加入（称为“注册”更合适）这个应用，完了别忘了运行python manage.py syncdb。Django里还有各种Database API对数据库进行<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial01/#playing-with-the-api" target="_blank">各种操作</a>。
+
+<strong>建立应用的管理后台：</strong>
+
+<strong></strong>实际上是使用Django自带的后台管理应用，方便对数据进行操作。步骤同上：settings.py里注册应用，syncdb，修改urls.py，然后就可以运行了（惊喜）。命令行运行python manage.py runserver，浏览器输入地址可以很不错的管理界面，并且能够<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin" target="_blank">定制界面</a>。
+
+<strong>配置应用的url：</strong>
+
+<strong></strong>修改urls.py，主要写url的正则表达式，以及负责接收的view。这里有些技巧（1）在patterns里写规则，减少重复的代码。（2）分开工程的urls.py和应用的urls.py，提高可拓展性。
+
+<strong>建立应用的views：</strong>
+
+<strong></strong>这一步是最花精力的。负责实现应用的逻辑。用def写各种方法，对应url的指示，比如index负责首页显示的东西，detail负责每一次投票（表单）等。通常现实的布局，由views交给templates处理，views只把所以要显示的数据给template，而template则是HTML，布局很容易。
+
+到这一步，一个应用基本上就完成了。其中还有各种减少代码的方法，不一一列出，具体参见<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">官方教程</a>。
+
+（End | by Neil）
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello, Asia]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/10/30/hello-asia/"/>
+    <updated>2011-10-30T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/10/30/hello-asia</id>
+    <content type="html"><![CDATA[这是我刚刚开启的独立博客，在Sina App Engine的服务下搭建。
+
+&nbsp;
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js和MongoDB]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/09/node-js%25e5%2592%258cmongodb/"/>
+    <updated>2011-07-09T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/09/node-js%e5%92%8cmongodb</id>
+    <content type="html"><![CDATA[<p>&nbsp;</p>
+<p><strong>Node.js和MongoDB</strong></p>
+<p>这是 <a href="http://nodeknockout.com/" target="_blank">Node.js Knockout</a> 系列学习使用<a href="http://nodejs.org/" target="_blank">node.js</a>的第六篇。这篇文章的作者是<a href="http://mongodb.org/" target="_blank">10gen</a>，并从他的博客中<a href="http://blog.mongodb.org/post/812003773/node-js-and-mongodb" target="_blank">转发</a>。</p>
+<p><a href="http://www.10gen.com/" target="_blank">10gen</a>是<a href="http://www.mongodb.org/" target="_blank">MongoDB</a>的企业赞助人。MongoDB在键值存储（key-value stores）（高速并且高度可扩展）和传统的关系数据库（提供大量查询和深度功能）之间的缺口上建立了桥梁。</p>
+<p><strong>Node 和 MongoDB</strong></p>
+<p>Node.js是建立各种实时应用程序（从分析系统到聊天服务器到地理位置追踪服务）的一种框架的选择之一。如果你对于Node还一无所知，请看<a href="http://simonwillison.net/2009/Nov/23/node/" target="_blank">Simon Willson 的出色介绍</a>。如果你已经在使用Node，那么你可能需要一个数据库，并且你正在考虑是否使用MongoDB。</p>
+<p>基本原理已经存在。使用Node Javascript意味着MongoDB文件取得了最自然的代表（就如JSON）存在于应用层。在你的应用与MongoDB的外壳（shell）之间存在着很大的一致性，因为外壳是JavaScript的解释器，所以你不必更换语言或者把应用移到数据库里。</p>
+<p><strong>Node.js MongodB Driver</strong></p>
+<p>在10gen，对于Node.js和MongoDB的支持让我印象非常深刻。首先，有Christian Kvalheim&#8217;s优秀的<a href="http://github.com/christkv/node-mongodb-native" target="_blank">mongodb-node-native项目</a>，一个完全通过JavaScript使用Node.js系统库的无障碍MongoDB驱动。这个项目是与<a href="http://www.mongodb.org/display/DOCS/Ruby+Language+Center" target="_blank">MongoDB Ruby驱动</a>非常接近的端口，使得已经使用的驱动能够轻松转换到10gen支持的驱动。如果你刚刚开始，<a href="http://groups.google.com/group/node-mongodb-native" target="_blank">mongodb-node-native mailing list</a>对你会非常有用。</p>
+<p><strong>Hummingbird</strong></p>
+<p>需要一个真实的例子吗？看看<a href="http://mnutt.github.com/hummingbird/" target="_blank">Hummingbird</a>吧，Michael Nutt&#8217;s 的实施分析应用。它建立在MongoDB上使用Node.js和mongodb-node-native驱动。Hummingbird是一个用于<a href="http://www.gilt.com/" target="_blank">Gilt Group</a>的产品，使用了一系列给人印象深刻的技术；它使用了<a href="http://expressjs.com/" target="_blank">express.js</a>应用框架，在websockets的帮助下炫耀了一个灵敏的接口。绝对值得一试。</p>
+<p><strong>Mongoose</strong></p>
+<p>当然，一个使用Node.js的公认困难是关于深奥回收结构。如果你遇到了问题，或者你需要一个更丰富的数据模型库，那么<a href="http://www.learnboost.com/mongoose/" target="_blank">Mongoose</a>就是答案。由<a href="http://www.learnboost.com/" target="_blank">Learnboost</a>创造的Mongoose建立在mongodb-node-native上，为建立你的引用提供了一个优秀的API。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://howtonode.org/node-and-mongo">http://howtonode.org/node-and-mongo</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[本周最佳Android软件]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/06/%25e6%259c%25ac%25e5%2591%25a8%25e6%259c%2580%25e4%25bd%25b3android%25e8%25bd%25af%25e4%25bb%25b6/"/>
+    <updated>2011-07-06T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/06/%e6%9c%ac%e5%91%a8%e6%9c%80%e4%bd%b3android%e8%bd%af%e4%bb%b6</id>
+    <content type="html"><![CDATA[<p>&nbsp;</p>
+<p>本周最佳Android软件</p>
+<p>Casey Chan 6月1日</p>
+<p><strong>Google+</strong>：Google+很不错吗？的确。Google+的首页上四个图标启动四个主要功能：Circles, Stream, Huddle 和 Photos。Circles让你在你选的组群里分享东西。Stream是一个按时间显示的朋友最近分享，与Facebook的新鲜事（news feed）差不多。Huddle一个类似于Groupme的群聊天工具，通过它你可以即时组一个群，谈论计划一个晚会或者假期之类。Photos很不错，因为它有一个&ldquo;即时上传&rdquo;的 功能，能够自动把照片上传到云中，让分享很方便。免费</p>
+<p><strong>Pool Party</strong>：Pool Party由Slide设计，big G的子公司。它类似于Instagram，因为它们都是社会化照片分享应用，但这也只是唯一的相似点。Instagram主要针对是个人的表达（有它的时髦过滤器（hipster-ish filters）为证），Pool Party更注重社交聚会（party）。它更重视组群的分享，在这里个人用户为一个组群相册（一个pool）做贡献，只有你愿意。在这方面，它有点像Color，除了它是基于朋友群的，而非地理位置。</p>
+<p><strong>Background Check - Been认证</strong>：Been认证的背景查看第一次到达Android平台。只要根据名字或者Email地址，你可以查看任何人的背景（包括亲戚、财产记录、犯罪记录以及社会媒体的足迹）。你能每周获得一份免费报告。增强版售价$.99，或者$.99二十包。</p>
+<p><strong>Skype</strong>：Skype已经在Android上已经更新到了2.0版本，使Android手机、iPhone，Macs、Windows和TV之间能够实现视频聊天。它在3G和WIFI网络上都可以工作，并且它是免费的。</p>
+<p><strong>HoneyGram</strong>: 特别为Android Honeycomb开发，HoneyGram是一个Android上的虚拟Instagram应用。它利用了扫屏和手势去看时髦的照片。所有的用户都很偷看Instagram的图片，附近的图片，标签搜索，在你的控制板上放一个小部件。当你登录的话似乎，你将看到朋友的新鲜事，添加更多的小部件到控制板上。</p>
+<p><strong>Kona&#8217;s Crate</strong>：一个物理游戏（之前只有iOS版本），游戏中，你控制一座喷气发动的平台，把箱子放到指定的地点。躲避障碍完成任务的速度越快，分越高！很有趣也很靠技巧。$1</p>
+<p><strong>Proint Center</strong>：来自OfficeMax的程序，它能让你发生文件到他们的商店打印。你能够定制打印，打印eamil，文档，图片已经存放在你的Google Docs里的其他文件。当打印请求完成时，你也会收到提醒。对那些附近有OfficeMax的的人很有帮助。</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://gizmodo.com/5817542/">http://gizmodo.com/5817542/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[伴随着顶级银行，金融服务商Yodlee的用户达到3千万]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/06/%25e4%25bc%25b4%25e9%259a%258f%25e7%259d%2580%25e9%25a1%25b6%25e7%25ba%25a7%25e9%2593%25b6%25e8%25a1%258c%25ef%25bc%258c%25e9%2587%2591%25e8%259e%258d%25e6%259c%258d%25e5%258a%25a1%25e5%2595%2586yodlee%25e7%259a%2584%25e7%2594%25a8%25e6%2588%25b7%25e8%25be%25be%25e5%2588%25b03%25e5%258d%2583%25e4%25b8%2587/"/>
+    <updated>2011-07-06T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/06/%e4%bc%b4%e9%9a%8f%e7%9d%80%e9%a1%b6%e7%ba%a7%e9%93%b6%e8%a1%8c%ef%bc%8c%e9%87%91%e8%9e%8d%e6%9c%8d%e5%8a%a1%e5%95%86yodlee%e7%9a%84%e7%94%a8%e6%88%b7%e8%be%be%e5%88%b03%e5%8d%83%e4%b8%87</id>
+    <content type="html"><![CDATA[<p>
+<div style="overflow-x:auto;overflow-y:auto;font:normal normal normal 14px/normal Verdana;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#ffffff;cursor:text;margin:0;padding:2px 4px 0;">
+<div>
+<div>
+<div><span style="line-height:21px;">伴随着顶级银行，金融服务商Yodlee的用户达到3千万</span></div>
+<div><span style="line-height:21px;">Rip Empson</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">Yodlee，一家以帐户聚集而著名的个人金融管理服务提供商今天宣布他们跨过了3千万用户这一里程碑。1999年建立的Yodlee已经筹集了1亿美元的资金，并悄悄地建立了一套金融管理的解决方案，帮助了很多大型的金融机构和门户，包括美国银行、Fidelity和Amex。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">然而，由于筹集了大量资本，并在十年的金融动荡中存活了下来，Yodlee依然处在危险之中（under the radar），尽管Yodlee给所有Y Combinator的启动项目提供服务，并且最初提供后端技术给Mint.com，直到Mint 2009年被Intuit获得。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">正如Mike Arrington当时写道，Yodlee在它早期提供它的帐户聚集服务给Mint，让Mint把注意里集中在用户体验以及大型市场运动上。它的启动在业界造成的很大的反应，几乎使它的先辈黯然失色。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">正如之前所说，Yodlee继续超过Mint.com的5百万用户，因为它已经建立了一个平台，作为了大部分在线个人金融管理服务的后端。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">Yodlee跨越了3千万用户这一里程碑，似乎印证了这样一个事实：网上银行已经过渡到个人金融管理，因为用户越来越希望能通过一个可定制的平台管理他们所有的的资金。加上基于app的移动功能，通过它的FinApp Store开放API给开发人员建立apps来启动各种产品，这已经使Yodlee变成了更受关注的在线金融服务提供商之一。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">然而，虽然Yodlee最近获得了它的第45个专利，美国最大10家银行中五家是它的客户，已经注册用户达到3千万，它依然在寻找那个逃生口（Mint.com在几年之前已经找到）。</span></div>
+<div><span style="line-height:21px;"><br /></span></div>
+<div><span style="line-height:21px;">也许随着45个专利的发布，专利包含数据聚合分类，即时帐户认证，个人资产管理，Yodlee智力资产的投资已经开始取得成效。</span></div>
+<div><br /></div>
+<div><span style="line-height:21px;">原文：</span><a href="http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/">http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/</a></div>
+</div>
+</div>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.JS，LAMP，和未来]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/"/>
+    <updated>2011-07-04T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/04/node-js%ef%bc%8clamp%ef%bc%8c%e5%92%8c%e6%9c%aa%e6%9d%a5</id>
+    <content type="html"><![CDATA[<p>
+<p><strong>Node.JS，LAMP，和未来</strong></p>
+<p><span style="font-family:mceinline;">2011年4月29日</span></p>
+<p>我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了，并且使用服务器端JavaScript建立了他们的仪表盘。你能够用它做很多很酷的事实，而且它也很有潜力。它的安装和运行很容易，就像Redis也一样。下面是对那篇文章的摘要：</p>
+<p>我做出这句决定是因为我意识到：LAMP已经死亡。自从它诞生的时候的二十年里，Web的构成（内容、协议、服务器、客户端）已经发生了根本的转变。总的来说，有这么三个时期：</p>
+<div style="padding-left:10px;margin-left:10px;border-left:5px #eee solid;">
+<p>I. 1991-1999: HTML时代。</p>
+<p>HTML时代是关于文件的，印证了Tim Berners-Lee&rsquo;s 最初的愿景：&ldquo;一个大的，虚拟的，空中的文件系统&rdquo;。Web被静态的手输代码的文件所主导，Web客户端被严格的格式化（甚至违背了最温和排版）。静态文件用于静态客户端。</p>
+<p>II. 2000-2009: LAMP时代。</p>
+<p>LAMP时代是关于数据库的，而非文件，主导的web组合上LAMP或者类似LAMP的。无论CGI，PHP，Ruby on Rails, 或者 Django，主导的模式是用数据库的值填入HTML的模板。内容动态的存于服务器端，但在客户端仍然是静态的。</p>
+<p>III. 2010-??: Javascript时代.</p>
+<p>Javascript时代是关于事件流的。现代的Web页面部在是页面，他们是事件驱动的应用程序，信息通过它们流动。Web的核心容器&mdash;&mdash;文件对象模型&mdash;&mdash;依然存在，但不像HTML标记。DOM（文件对象模型）是一个，由JavaScript产生，内存中的，高效编码的数据结构。</p>
+<p>LAMP架构已经死亡因为很少的应用会为了响应一个很小的事件而进行全部标记的的重载；他们只想更新DOM的一小部分，通过JavaScript。AJAX做到了，但当你的服务器端LAMP模板是10%的HTML和90%的JavaScript时，很明显你在做一件错误的事情。</p>
+</div>
+<p><strong>宣称LAMP死亡的时候已经到了</strong></p>
+<p>对与类似LAMP架构死亡的解释正在进行。我会想，这是一个非常狂热的观点，需要把它放到某一个视角下来看：</p>
+<p>在每一个&ldquo;时代&rdquo;期间，新开发的技术是为了解决问题的。人们创造HTML为了创造内联的信息。当需求增加并且变得越来越难管理时，类似LAMP的工具，如PHP, Django, Ruby on Rails等等被开发出来帮助信息更容易传递。与其说替代了老技术，倒不如说在老技术上添加新东西。有时候你想用新一些的技术更管老技术，但我们仍然在使用HTML和CSS，并且当需要时，增家对他们的使用。</p>
+<p>但是类似LAMP的系统部署在所有的地方的产品上，使有些经常被访问的网站变得跟加有强大。虽然有些人正在使用Node.JS，比如Yammer，但Node.JS并没有提供与PHP, Ruby, Python, 甚至.NET相同的内容量。</p>
+<p><strong>什么是Node.JS？</strong></p>
+<p>基本上，它是围绕着Google&lsquo;s V8 JavaScript引擎的一个轻量级框架。V8是运转Google的开源浏览器Chrome的JavaScript引擎，另外一方面，Node.JS是事件驱动，并且更加快速高效。</p>
+<p>我已经捣鼓Node.JS好几周了，它很有趣也很有潜力。它是对JavaScript的独特地运用，它的基于事件的方法能很轻松德完成某些事情（通常更难用传统工具实现）。Node.JS还拥有很多很酷的库，比如Socket.IO，一个使用了特征探测的支持多重传输的库。所以，如果你的浏览器支持WebSocket或者Adobe Flash Socket，你就能使用它，或是AJAX长查询，多方流，甚至Forever Iframe技术。因为，你的程序使用任何类型的传输都会变得最有效。</p>
+<p><strong>现实一些的审视</strong></p>
+<p>不过，现在让我们更加诚实地想想吧，Node.JS发明与2010年。它依然非常非常年轻。首页上关于Node.JS的视频讲的是发明者对于PHP用户群关于Node和谨慎使用的陈述。作为一个工具，它还需要很长时间成熟。尽管如此，基于V8引擎带给这个项目不少的成熟。</p>
+<p>至于那些被替代的技术如PHP, Ruby, 和Django，我不相信他们已经&ldquo;死亡&rdquo;，相反我认为Node.JS增强了现存的技术。就像当MySQL不很适合时，我使用Redis作为数据存储工具，我认为会在未来的网站的实时通信技术上起作用。</p>
+<p>我希望写一些更多的关于Node.JS的文章，并希望能用它解决新的或者特殊的问题。但我不会去用Node.JS重写我的网站，那可能会是个噩梦。所以就像NoSQL和云计算一样，它确实是一个新技术，但它不会从根本上移除所有其他相关的东西。就像使用Redis，我不会放弃MySQL，我只是当Redis更合适时才使用。</p>
+<p>原文：<a style="outline-style:none;outline-width:initial;outline-color:initial;text-decoration:underline;cursor:pointer;color:#1e5494;" href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/" target="_blank">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CouchDB能为HTML5，Web Apps做什么？]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/"/>
+    <updated>2011-07-04T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/04/couchdb%e8%83%bd%e4%b8%bahtml5%ef%bc%8cweb-apps%e5%81%9a%e4%bb%80%e4%b9%88%ef%bc%9f</id>
+    <content type="html"><![CDATA[<p>&nbsp;</p>
+<p><strong>CouchDB能为HTML5，Web Apps做什么？</strong></p>
+<p><strong>CouchAPps的功效与CouchDB能如何决定移动</strong></p>
+<p>CouchApps是直接由面向文件的数据库CouchDB服务的JavaScript和HTML5应用。在下面的采访中，Found Line联合创始人以及OSCON发言人Bradley Holt (@BradleyHolt) 谈论CouchApps的功效，CouchDB能提供给开发者什么，以及数据库如何与HTML5一起工作。</p>
+<p><strong>CouchApps如何工作？</strong></p>
+<p>Bradley Holt: CouchApps是用CouchDB，JavaScript，HTML5建立的web应用.它们避免了中间层，允许web应用直接与数据库对话&mdash;&mdash;CouchDB数据库甚至能够运行在用户的机器上或者Android/iOS设备。</p>
+<p><strong>建立CouchApps的好处？</strong></p>
+<p>Bradley Holt: 使你的代码库的效率跟高（没有中间层）、可重复、根据应用程序的数据部署/复制程序的能力、由于&#8221;顺理&#8221;的web工作方式带来的好处（come with going &#8220;with the grain&#8221; of how the web works）是建立CouchApps的好处。</p>
+<p>非常坦率的说，我认为CouchApps已经适合大范围的采纳使用。最大的障碍是工具。目前的开发工具集需要改进，有时建立CouchApps的过程有点困难。&ldquo;CouchApp&ldquo;这一术语也有很多不同的理解。这意味着CouchApps的好处是引人注意的，并且工具会很快赶上。</p>
+<p><strong>HTML5引发了很多存储问题，CouchDB会融入哪儿？</strong></p>
+<p>Bradley Holt: HTML5的Web存储特性描述了用户浏览器对于关键键值的本地持续存储的API。与之前浏览器本地存储特性的尝试不同，HTML5的存储特性已经取得了重大的跨浏览器支持。</p>
+<p>然而，有一点是HTML5本地存储API缺乏的，即除了指定键，使用其他形式查询值的方法。你不能穿过一套键或值查询。IndexedDB能够处理这种情况，并允许索化的数据库查询，但IndexedDB并非当前HTML5特性的一部分，并且只在一小部分浏览器中应用。</p>
+<p>如果你需要的不仅仅是键/值存储，那么你需要到HTML5特性外面看看。和HTML5 Web存储一样，CouchDB存储键/值对。在CouchDB里，键/值对的键部分是一个文件ID，值部分是一个变现单一文件的JSON对象。与HTML5 Web存储不一样的是，CouchDB提供了一种索引和查询数据方法&mdash;&mdash;使用MapReduce&ldquo;试图&rdquo;。因为CouchDB使用了RESTful HTTP API和JSON对象最为存储文件，HTML5/JavaScript Web应用能够很容易地直接与CouchDB一起工作。</p>
+<p><strong>CouchDB的可重复特性如何与HTML5工作？</strong></p>
+<p>Bradley Holt: 同样，CouchDB不是与HTML5特性直接关联，但CouchDB的可重复特性创造了独特的机会，使CouchApps使用JavaScript和HTML5建立（而且，其他使用CouchDB建立的应用也如此）。</p>
+<p>我听说J. Chris Anderson使用&ldquo;地面计算&rdquo;（ground computing）这一术语与&ldquo;云计算&rdquo;相对。这一思想是尽可能把用户的数据存放得离用户近&mdash;&mdash;不能比用户的计算机和手机更近的了！CouchDB的可重复性使得这变成可能。使用CouchDB的增量重复，与特定用户相关的数据能够被复制到用户自己的计算机与手机（或者从上面复制出）。这允许更快地的访问用户（因为他/她的应用程序访问的是本地的数据库），离线访问、数据便携性，以及潜在对于他/她的数据更好的控制。</p>
+<p><strong>既然CouchDB在移动设备上运行，它是如何决定移动应用开发的？</strong></p>
+<p>Bradley Holt: 虽然Android是一个出色的平台，但移动应用的最大渠道还是苹果的iOS。现在CouchDB已经在Android上发布了一段时间了，但在iOS上它还是先对新的。既然CouchDB已经能用来建立iPhone/iPad应用了，我们将会很确定地看到更多的移动应用程序建立在CouchDB上，为了利用CouchDB独特的优势&mdash;&mdash;尤其是可复制性。</p>
+<p>最大的问题是，这些应用会作为本地应用建立，还是最为CouchApps建立？我也不知道答案，但我更想看到这些程序建立在CouchApps这边。通过CouchApps，开发者能够更容易地跨平台输出他们的应用，并且他们能够使用显存的HTML5，JavaScript，CSS技能集合。</p>
+<p>这一采访被编辑和缩减过。</p>
+<p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[数据可视化-维基百科的定义]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/03/%25e6%2595%25b0%25e6%258d%25ae%25e5%258f%25af%25e8%25a7%2586%25e5%258c%2596-%25e7%25bb%25b4%25e5%259f%25ba%25e7%2599%25be%25e7%25a7%2591%25e7%259a%2584%25e5%25ae%259a%25e4%25b9%2589/"/>
+    <updated>2011-07-03T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/03/%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96-%e7%bb%b4%e5%9f%ba%e7%99%be%e7%a7%91%e7%9a%84%e5%ae%9a%e4%b9%89</id>
+    <content type="html"><![CDATA[<p>
+<p>数据可视化</p>
+<p>来自维基百科，免费的百科全书</p>
+<p>数据可视化是对数据的视觉表现的研究，意思是&ldquo;以图解的形式对信息进行摘要，包括单位信息的属性与变量&rdquo;。根据Friedman（2008），数据可视化的主要目的是通过图像清楚有效的传播信息。这不意味着数据可视化为了功能需要而看起很无趣，抑或为了看起来美观就变得特别复杂。为了有效地传递思想，美观的形式与功能性需要密切地关联，通过以一种更直观的方式传播关键部分，提供对相当分散和复杂的数据集的洞悉。尽管设计者常常不能在设计与功能之间取得一个很好的平衡，创造华丽的数据可视化效果，但没有很好地完成他们的主要目的&mdash;&mdash;传播信息。&rdquo;</p>
+<p>的确，Fernanda Viegas和Martin M. Wattenberg已经建议：一个理想的可视化应该不仅仅清楚地传播，而且应该激发观看的参与感与注意力。</p>
+<p>数据可视化与信息图形、信息可视化、科学可视化和统计图形都有密切相关。在新的千年里，数据可视化已经变成了研究、教学与开发的热点。 根据Post et al.(2002) ，它已经和科学与信息可视化领域结合。KPI库已经开发出了&ldquo;可视化方法的周期表&rdquo;，一张显示了不同数据可视化方法的交互表【下图】。它详细展示了6中数据可视化方法：数据，信息，概念，策略，象征和复合。</p>
+<p><img src="http://filer.blogbus.com/6302357/6302357_13096257018.png" border="0" alt="" /></p>
+<p>原文：<a href="http://en.wikipedia.org/wiki/Data_visualization">http://en.wikipedia.org/wiki/Data_visualization</a></p>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js与服务器端脚本的未来]]></title>
+    <link href="http://GingerBear.github.io/blog/2011/07/02/node-js%25e4%25b8%258e%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25e7%25ab%25af%25e8%2584%259a%25e6%259c%25ac%25e7%259a%2584%25e6%259c%25aa%25e6%259d%25a5/"/>
+    <updated>2011-07-02T00:00:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2011/07/02/node-js%e4%b8%8e%e6%9c%8d%e5%8a%a1%e5%99%a8%e7%ab%af%e8%84%9a%e6%9c%ac%e7%9a%84%e6%9c%aa%e6%9d%a5</id>
+    <content type="html"><![CDATA[<p>
+<p>Node.js与服务器端脚本的未来</p>
+<p><span style="color:#aaaaaa;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:21px;">Posted by&nbsp;<a style="outline-width:0;outline-style:initial;outline-color:initial;font-size:11px;text-decoration:none;color:#999999;padding:0;margin:0;border:0 initial initial;" href="http://notjoelshapiro.com/index.php/author/admin/">Joel</a>&nbsp;on May 9, 2011 at 1:30am</span></p>
+<p>典型的web技术可以分为两类：前端和后端。根据前端代码的收入，后端代码被执行并且运行在服务器上。前端技术与后端技术被创造了不同的次数，但是在它们诞生的时候便产出了不同的要求与思想。结果，在语法，反馈，资源利用，易用性上两类语言都很很大的不同。当人们试图去掌握着两种Web开发技术时，那些选择前端的人常常发现自己处在不利的位置。亲爱的读者，跟着我去到Node.js和服务器端脚本的世界里。</p>
+<p>&nbsp;</p>
+<p>在最基本的水平，Node.js是一个把Javascript作为服务器端编程语言的框架。我不会讲述具体的应用细节（并非我不够格），但我会告诉大家用它的好处。</p>
+<p>&nbsp;</p>
+<p>最流行的服务器端语言是PHP（处理变量），通常与MySQL一起工作（一个为了长期保存了数据的数据库）。Node.js一般处在PHP的位置，扮演你的用户与数据库的中间人的角色。你的服务器端语言的替换，引起了一个有趣的地方：你已经避免了PHP，因为你不想学习一门新的语言，但你需要学习Javascript与数据库如何一起工作，这是原本的Javacript做不到的。你为什么要这么做，而不直接学习PHP呢？很多开发者已经有足够的理由去选择&ldquo;正确&rdquo;的路并采用PHP，但用熟悉的语言编程的好处又使学习如Node.js的中间工具也有一定优势。</p>
+<p>&nbsp;</p>
+<p>如果你是选择了后者，你会发现有大量的有用插件存在。在其他的功能中有插件连接流行的API，绘图，解释XML。Node.js开发者甚至写了一个服务器与客户端之间进行实时共享变量与方法的插件（未来的文章会提到）。当你试图把这些工具和他们的特点结合在一起时，使用共享语言和平台的价值就大大增加了。你不仅拥有了一个让前端开发者开发的快速方便的环境，而且你已经使得很多人不必话费大量的学习成本就可以建立Web应用和服务。</p>
+<p>&nbsp;</p>
+<p>说到这里，很多人会问，为什么很多人不用完整可行的技术，而会投身于这个变通方案。答案很简单：创新和拥有。Node.js是一个贯穿Web的闪亮创新，给了那些一无所有的人能力，并且他的作用已经开始显现。专门的服务器端语言会就此消亡吗？可能不会。客户端语言会成为服务器端脚本的主力吗？很难说。有一件事情上确定的，对于前端开发者来说，传统的客户端开发的日子已经结束了，对于另外那些受限制的开发者，一个新的世界已经开始建立。</p>
+</p>
+<p>&nbsp;</p>
+<p>原文：<a href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
 ]]></content>
   </entry>
   
