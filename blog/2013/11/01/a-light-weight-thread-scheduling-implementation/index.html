@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A User Level Light-weight Thread Scheduling Implementation  - Neil Ding's Blog</title>
+  <meta name="author" content="Neil Ding">
+
+  
+  <meta name="description" content="In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Neil Ding's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45202460-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Neil Ding's Blog</a></h1>
+  
+    <h2>Keep the memory forever.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A User Level Light-weight Thread Scheduling Implementation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T14:55:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
+
+<h2>Description and Requirement</h2>
+
+<p>The whole requirement is <a href="https://drive.google.com/file/d/1oWoWm2MAQf7uEw0U8gwXLUK0ufQHAlexupOlO0o6QZTG3Z67kM7GrRFsV0a7LK1mHObatCizd_Y4_8RD/edit?usp=sharing">here</a>. In short, the scheduler have</p>
+
+<pre><code>lwt_init(int quantum)
+</code></pre>
+
+<p>to set up the main thread, the global thread, the signal hander and thread running intervel with the a period of time as parameter (quantum).</p>
+
+<pre><code>lwt_create(char *name, void *argv, fun_type fn)
+</code></pre>
+
+<p>to create a thread with name, argument pointer and function pointer. and run it immediatly. return thread indentifier.</p>
+
+<pre><code>lwt_sleep(int seconds)
+</code></pre>
+
+<p>to put current thread into sleep for seconds.</p>
+
+<pre><code>thrd_wait(lwt *t)
+</code></pre>
+
+<p>to put current thread into wait until the input thread (child thread) exit.</p>
+
+<pre><code>smphr_create(int size)
+</code></pre>
+
+<p>to create a semaphore with a input size, and init a thread queue for waiting list.</p>
+
+<pre><code>P(smphr *s)
+</code></pre>
+
+<p>to acquire semaphore if avaible, if not, put current thread into queue</p>
+
+<pre><code>V(smphr *s)
+</code></pre>
+
+<p>to release semaphore, and dequeue the front thread in queue</p>
+
+<h2>How to achieve multi-thread</h2>
+
+<p>The idea is pretty similar with multi-processes running on a single processor. Threads are switched in a fast speed with a process, making it like they are served simultaneously. But how to make the switch? Use <em>alarm signal</em> to interrupt running thread, <em>setjmp</em> to save its running environment and <em>longjmp</em> to restore to its that environment. Here is the code :</p>
+
+<pre><code>lwt_init() 
+{
+    /* ... */
+
+    signal(SIGALRM, alarm_handler);
+    ualarm(lwt_quantum, 0);
+
+    /* ... */
+}
+
+void alarm_handler () 
+{
+    /* ... */
+
+    if (setjmp(sys_t.curr-&gt;env) == 0) { // interrupted, save current thread's runing environment. if get here from longjmp(), setjmp will return no-zero
+        do {
+            sys_t.curr = sys_t.curr-&gt;next; // set next thread as current thread
+
+            /* ... check state of current thread here */
+
+        } while (sys_t.curr-&gt;state != lwt_READY);
+
+        ualarm(sys_t.interval + sys_t.curr-&gt;prior, 0);
+        longjmp(sys_t.curr-&gt;env, 1);    // after switch, continue running environment where it was saved
+    }
+
+    /* ... */
+}
+</code></pre>
+
+<p>There is a serious problem here. Thread are created on main thread (actually process), so when they run, a stack will be allocated on the top of main stack. The stack will be remove if the thread run is over (returned). There is no problem if thread run one by one. But in this case, they are running simultaneously (not precisely simultaneous, but running without end of others). The result is that all these threads are using a same stack. We know that when we perform of a setjmp, env save the stack pointer of the thread. So it comes to the situation that switching will make thread go back to its stack pointer, but the content of that stack will not its content. Stack is all messed.</p>
+
+<p>A way to solve this is to give each thread its own stack when they created. This is achieve by a statement of assembly language. Code is there:</p>
+
+<pre><code>#ifdef _X86
+__asm__("mov %0, %%esp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#else
+__asm__("mov %0, %%rsp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#endif
+</code></pre>
+
+<p>I don&rsquo;t know jack about assembly language. But I was told that it move the stack pointer to a new stack.</p>
+
+<h2>How to implement Semaphore</h2>
+
+<p>Semaphore actually is quite sample (the reason I say this, because I thought it was hard). It is like a gate keeper having a list of available rooms. It will tell the visitor if any room available. If yes, gate keeper will allow the visitor to use the room and reduce the number of available rooms. If no, put the visiter on the waiting list.</p>
+
+<p>If the visitor has done with the room, gate keeper will make that room available again, and give it to the first visitor on the waiting list, and sure remove him from waiting list.</p>
+
+<p>P() is for thread to achieve the first part (check and gain semaphore), V() is for the second part (release semaphore and give to to front waiting list). Here is the code:</p>
+
+<pre><code>typedef struct smphr_t {
+    int     smphr_size;
+    Queue   queue;              // queue store thread waiting for semophore
+} smphr;
+
+smphr * smphr_create(int smphr_size){
+    smphr *s;
+    s = malloc(sizeof(smphr));
+    s-&gt;smphr_size = smphr_size;
+    s-&gt;queue = CreateQueue();                   // use a queue to store waiting list
+    return s;
+}
+
+void P(smphr *s){
+    int left = ualarm(0, 0);                    // disable the context switch, by clear the alarm
+    if(s-&gt;smphr_size &gt; 0){                      
+        s-&gt;smphr_size -= 1;                     // semaphore offered
+        ualarm(left, 0);                        // restore context switch
+    } else {                                    // no more semaphore, blocked
+        s-&gt;smphr_size -= 1;                     // TRICK! semaphore still need to be reduced one, in order to avoid fullCount getting too large. 
+        sys_t.curr-&gt;state = sem_WAIT;
+        Enqueue(sys_t.curr, s-&gt;queue);          // put into queue
+        raise(SIGALRM);
+    }
+}
+
+void V(smphr *s){
+    int left = ualarm(0, 0);
+    s-&gt;smphr_size += 1;                         // release semaphore
+    if (!IsEmpty(s-&gt;queue)) {                   
+        Front(s-&gt;queue)-&gt;state = lwt_READY;     // dequeue front and set to READY, if not empty
+        Dequeue(s-&gt;queue);
+    }
+    ualarm(left, 0);
+}
+</code></pre>
+
+<h2>Test with Producer-Consumer Problem</h2>
+
+<p>The LWT can be tested by a classical Producer-Consumer problem. Producer produce item, Consumer consume item produced. If item buffer is full, producer should wait (producer trying to produce should be put on the waiting list) until item is consumed and buffer is not full. Consumer, similarly, should wait if item buffer is empty (put on waiting list), until item is produced and buffer is not empty.</p>
+
+<p>So we need a fullCount Semaphore (max size of buffer) to decide if full, a emptyCount Semaphore (max size of buffer) to decide if empty and a useLock to only let one producer/consumer access to buffer at one time. Here is the code:</p>
+
+<pre><code>void producer(){
+    srand(time(NULL));  // Initializes random number generator
+    int item = 0;
+    while(1){        
+        item = rand();
+        P(emptyCount);
+        P(useQueue);
+        if (current &lt; N) {
+            buffer[current++] = item;
+        }
+        V(useQueue);
+        V(fullCount);
+        printf("Producer: %s\tproduce: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+    }
+}
+
+void consumer(){
+    int item = 0;
+    int i = 0;
+    while(i &lt; 30){ 
+        P(fullCount);
+        P(useQueue);
+        if (current &gt; 0) {
+            item = buffer[--current];
+        }
+        V(useQueue);
+        V(emptyCount);
+        printf("Consumer: %s\tconsume: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+        i++;
+    }
+}
+
+int main(int argc, char *argv[]){
+    int i,j;
+    lwt *t;
+    emptyCount  = smphr_create(N);
+    fullCount   = smphr_create(0);
+    useQueue    = smphr_create(1);
+
+    lwt_init(QUANTUM);
+
+    lwt_create("p1", 0, NULL, producer);  
+    lwt_create("p2", 0, NULL, producer);  
+    lwt_create("p3", 0, NULL, producer);  
+    lwt_create("p4", 0, NULL, producer);  
+    lwt_create("c1", 0, NULL, consumer);     
+    t = lwt_create("c2", 0, NULL, consumer);     
+
+    thrd_wait(t);
+    printf("Two Consumers consume 30 items!\n");
+    printf("Done!\n");
+}
+</code></pre>
+
+<p>The full code is on <a href="https://github.com/GingerBear/LWT">github</a>. Thanks to <a href="https://github.com/cadmuxe">cadmuxe</a> and <a href="https://github.com/liyangbin">liyangbin</a> for the help.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Neil Ding</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T14:55:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>, <a class='category' href='/blog/categories/os/'>os,</a>, <a class='category' href='/blog/categories/project/'>project,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/" data-via="LoadingBear" data-counturl="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/10/28/building-the-is-reader/" title="Previous Post: Building the IS Reader">&laquo; Building the IS Reader</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/GingerBear">@GingerBear</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'GingerBear',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Neil Ding -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'neildingsblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/';
+        var disqus_url = 'http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

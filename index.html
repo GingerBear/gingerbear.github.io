@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="It has been a few weeks that I am thinking about writing a blog on the IS Reader project. In this post, I will try to answer: Why did I start the &hellip;">
+  <meta name="description" content="In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,248 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T14:55:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
+        
+           | <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
+
+<h2>Description and Requirement</h2>
+
+<p>The whole requirement is <a href="https://drive.google.com/file/d/1oWoWm2MAQf7uEw0U8gwXLUK0ufQHAlexupOlO0o6QZTG3Z67kM7GrRFsV0a7LK1mHObatCizd_Y4_8RD/edit?usp=sharing">here</a>. In short, the scheduler have</p>
+
+<pre><code>lwt_init(int quantum)
+</code></pre>
+
+<p>to set up the main thread, the global thread, the signal hander and thread running intervel with the a period of time as parameter (quantum).</p>
+
+<pre><code>lwt_create(char *name, void *argv, fun_type fn)
+</code></pre>
+
+<p>to create a thread with name, argument pointer and function pointer. and run it immediatly. return thread indentifier.</p>
+
+<pre><code>lwt_sleep(int seconds)
+</code></pre>
+
+<p>to put current thread into sleep for seconds.</p>
+
+<pre><code>thrd_wait(lwt *t)
+</code></pre>
+
+<p>to put current thread into wait until the input thread (child thread) exit.</p>
+
+<pre><code>smphr_create(int size)
+</code></pre>
+
+<p>to create a semaphore with a input size, and init a thread queue for waiting list.</p>
+
+<pre><code>P(smphr *s)
+</code></pre>
+
+<p>to acquire semaphore if avaible, if not, put current thread into queue</p>
+
+<pre><code>V(smphr *s)
+</code></pre>
+
+<p>to release semaphore, and dequeue the front thread in queue</p>
+
+<h2>How to achieve multi-thread</h2>
+
+<p>The idea is pretty similar with multi-processes running on a single processor. Threads are switched in a fast speed with a process, making it like they are served simultaneously. But how to make the switch? Use <em>alarm signal</em> to interrupt running thread, <em>setjmp</em> to save its running environment and <em>longjmp</em> to restore to its that environment. Here is the code :</p>
+
+<pre><code>lwt_init() 
+{
+    /* ... */
+
+    signal(SIGALRM, alarm_handler);
+    ualarm(lwt_quantum, 0);
+
+    /* ... */
+}
+
+void alarm_handler () 
+{
+    /* ... */
+
+    if (setjmp(sys_t.curr-&gt;env) == 0) { // interrupted, save current thread's runing environment. if get here from longjmp(), setjmp will return no-zero
+        do {
+            sys_t.curr = sys_t.curr-&gt;next; // set next thread as current thread
+
+            /* ... check state of current thread here */
+
+        } while (sys_t.curr-&gt;state != lwt_READY);
+
+        ualarm(sys_t.interval + sys_t.curr-&gt;prior, 0);
+        longjmp(sys_t.curr-&gt;env, 1);    // after switch, continue running environment where it was saved
+    }
+
+    /* ... */
+}
+</code></pre>
+
+<p>There is a serious problem here. Thread are created on main thread (actually process), so when they run, a stack will be allocated on the top of main stack. The stack will be remove if the thread run is over (returned). There is no problem if thread run one by one. But in this case, they are running simultaneously (not precisely simultaneous, but running without end of others). The result is that all these threads are using a same stack. We know that when we perform of a setjmp, env save the stack pointer of the thread. So it comes to the situation that switching will make thread go back to its stack pointer, but the content of that stack will not its content. Stack is all messed.</p>
+
+<p>A way to solve this is to give each thread its own stack when they created. This is achieve by a statement of assembly language. Code is there:</p>
+
+<pre><code>#ifdef _X86
+__asm__("mov %0, %%esp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#else
+__asm__("mov %0, %%rsp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#endif
+</code></pre>
+
+<p>I don&rsquo;t know jack about assembly language. But I was told that it move the stack pointer to a new stack.</p>
+
+<h2>How to implement Semaphore</h2>
+
+<p>Semaphore actually is quite sample (the reason I say this, because I thought it was hard). It is like a gate keeper having a list of available rooms. It will tell the visitor if any room available. If yes, gate keeper will allow the visitor to use the room and reduce the number of available rooms. If no, put the visiter on the waiting list.</p>
+
+<p>If the visitor has done with the room, gate keeper will make that room available again, and give it to the first visitor on the waiting list, and sure remove him from waiting list.</p>
+
+<p>P() is for thread to achieve the first part (check and gain semaphore), V() is for the second part (release semaphore and give to to front waiting list). Here is the code:</p>
+
+<pre><code>typedef struct smphr_t {
+    int     smphr_size;
+    Queue   queue;              // queue store thread waiting for semophore
+} smphr;
+
+smphr * smphr_create(int smphr_size){
+    smphr *s;
+    s = malloc(sizeof(smphr));
+    s-&gt;smphr_size = smphr_size;
+    s-&gt;queue = CreateQueue();                   // use a queue to store waiting list
+    return s;
+}
+
+void P(smphr *s){
+    int left = ualarm(0, 0);                    // disable the context switch, by clear the alarm
+    if(s-&gt;smphr_size &gt; 0){                      
+        s-&gt;smphr_size -= 1;                     // semaphore offered
+        ualarm(left, 0);                        // restore context switch
+    } else {                                    // no more semaphore, blocked
+        s-&gt;smphr_size -= 1;                     // TRICK! semaphore still need to be reduced one, in order to avoid fullCount getting too large. 
+        sys_t.curr-&gt;state = sem_WAIT;
+        Enqueue(sys_t.curr, s-&gt;queue);          // put into queue
+        raise(SIGALRM);
+    }
+}
+
+void V(smphr *s){
+    int left = ualarm(0, 0);
+    s-&gt;smphr_size += 1;                         // release semaphore
+    if (!IsEmpty(s-&gt;queue)) {                   
+        Front(s-&gt;queue)-&gt;state = lwt_READY;     // dequeue front and set to READY, if not empty
+        Dequeue(s-&gt;queue);
+    }
+    ualarm(left, 0);
+}
+</code></pre>
+
+<h2>Test with Producer-Consumer Problem</h2>
+
+<p>The LWT can be tested by a classical Producer-Consumer problem. Producer produce item, Consumer consume item produced. If item buffer is full, producer should wait (producer trying to produce should be put on the waiting list) until item is consumed and buffer is not full. Consumer, similarly, should wait if item buffer is empty (put on waiting list), until item is produced and buffer is not empty.</p>
+
+<p>So we need a fullCount Semaphore (max size of buffer) to decide if full, a emptyCount Semaphore (max size of buffer) to decide if empty and a useLock to only let one producer/consumer access to buffer at one time. Here is the code:</p>
+
+<pre><code>void producer(){
+    srand(time(NULL));  // Initializes random number generator
+    int item = 0;
+    while(1){        
+        item = rand();
+        P(emptyCount);
+        P(useQueue);
+        if (current &lt; N) {
+            buffer[current++] = item;
+        }
+        V(useQueue);
+        V(fullCount);
+        printf("Producer: %s\tproduce: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+    }
+}
+
+void consumer(){
+    int item = 0;
+    int i = 0;
+    while(i &lt; 30){ 
+        P(fullCount);
+        P(useQueue);
+        if (current &gt; 0) {
+            item = buffer[--current];
+        }
+        V(useQueue);
+        V(emptyCount);
+        printf("Consumer: %s\tconsume: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+        i++;
+    }
+}
+
+int main(int argc, char *argv[]){
+    int i,j;
+    lwt *t;
+    emptyCount  = smphr_create(N);
+    fullCount   = smphr_create(0);
+    useQueue    = smphr_create(1);
+
+    lwt_init(QUANTUM);
+
+    lwt_create("p1", 0, NULL, producer);  
+    lwt_create("p2", 0, NULL, producer);  
+    lwt_create("p3", 0, NULL, producer);  
+    lwt_create("p4", 0, NULL, producer);  
+    lwt_create("c1", 0, NULL, consumer);     
+    t = lwt_create("c2", 0, NULL, consumer);     
+
+    thrd_wait(t);
+    printf("Two Consumers consume 30 items!\n");
+    printf("Done!\n");
+}
+</code></pre>
+
+<p>The full code is on <a href="https://github.com/GingerBear/LWT">github</a>. Thanks to <a href="https://github.com/cadmuxe">cadmuxe</a> and <a href="https://github.com/liyangbin">liyangbin</a> for the help.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -968,71 +1210,6 @@ Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/">我的托福那点破事儿</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-02T00:00:00-05:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2011</time>
-        
-           | <a href="/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">&nbsp;
-
-<a style="font-style:normal;line-height:24px;text-decoration:underline;" href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg"><img class="aligncenter size-full wp-image-26" style="border-style:initial;border-color:initial;margin-top:.4em;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#eeeeee;" title="download" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg" alt="" /></a>
-
-托福成绩刚刚出来了，96分，总体来说勉强还算是个decent的分数（太低也不会写这玩意儿）。
-所以今天主要说说托福那些破事儿。
-
-Reading(R), Listening(L), Speaking(S), Writing(W)
-第一次考试2010年5月16日：R:19 L:19 S:20 W:22 Total:80
-第二次考试2011年8月13日：R:25 L:24 S:20 W:21 Total:90
-第三次考试011年11月20日：R:21 L:28 S:23 W:24 Total:96<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg">
-</a>
-
-<strong>阅读：状态最重要</strong>
-就是把GRE从70年代开始所有的题都做完两遍以上，考托福照样不行，第二次25的原因是考前猛准备3周，把17个TPO的阅读做它两遍，才勉强达到25。第一次19考前做了两三套巴朗就受不了了。第三次就草草做了TPO的19、20、21、22、23、24，没掐时间，没定时间。所以阅读考前状态太重要了。
-
-<strong>听力：要多练，与多练</strong>
-丢掉笔记，要完全理解。就算貌似很难记住的细节，只要能搞清楚描写这个细节的目的，其实问到的时候是能回想起来的。
-
-<strong>口语：使Trick</strong>
-抛弃机经，坑人（所谓预测就是列出二三十个题目，那么大范围还不一定准）加给人心里负担（没准备到好就心神不宁的）。
-Trick 1. 在考试的间隙（题与题之间不要点跳过，等自动跳过）把事先准备好的6个题目的模板抄到草稿纸上，考的时候，照着念。避免紧张导致忘了。
-Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，听别人的口语回答，猜出题目，笃定地填入模板，考试时笃定的念就是了。（由于我拖太久了，以至于我休息的时候念的人太多，听不清楚题目）
-
-<strong>作文：丢弃模板，注重表达方式</strong>
-第三次作文，与前两次不同的是，由于基本没准备，所以感觉当时写作有点意识流，没有遵照严格和清晰的结构，但试图让表达流畅。
-字数也不是想象中的那么重要，第二次字数最多，但分数最低。
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1048,6 +1225,10 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
       </li>
     
@@ -1061,10 +1242,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
     
       <li class="post">
         <a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-10-29T00:38:16-04:00</updated>
+  <updated>2013-11-02T03:22:49-04:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,218 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A User Level Light-weight Thread Scheduling Implementation ]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/"/>
+    <updated>2013-11-01T14:55:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation</id>
+    <content type="html"><![CDATA[<p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
+
+<h2>Description and Requirement</h2>
+
+<p>The whole requirement is <a href="https://drive.google.com/file/d/1oWoWm2MAQf7uEw0U8gwXLUK0ufQHAlexupOlO0o6QZTG3Z67kM7GrRFsV0a7LK1mHObatCizd_Y4_8RD/edit?usp=sharing">here</a>. In short, the scheduler have</p>
+
+<pre><code>lwt_init(int quantum)
+</code></pre>
+
+<p>to set up the main thread, the global thread, the signal hander and thread running intervel with the a period of time as parameter (quantum).</p>
+
+<pre><code>lwt_create(char *name, void *argv, fun_type fn)
+</code></pre>
+
+<p>to create a thread with name, argument pointer and function pointer. and run it immediatly. return thread indentifier.</p>
+
+<pre><code>lwt_sleep(int seconds)
+</code></pre>
+
+<p>to put current thread into sleep for seconds.</p>
+
+<pre><code>thrd_wait(lwt *t)
+</code></pre>
+
+<p>to put current thread into wait until the input thread (child thread) exit.</p>
+
+<pre><code>smphr_create(int size)
+</code></pre>
+
+<p>to create a semaphore with a input size, and init a thread queue for waiting list.</p>
+
+<pre><code>P(smphr *s)
+</code></pre>
+
+<p>to acquire semaphore if avaible, if not, put current thread into queue</p>
+
+<pre><code>V(smphr *s)
+</code></pre>
+
+<p>to release semaphore, and dequeue the front thread in queue</p>
+
+<h2>How to achieve multi-thread</h2>
+
+<p>The idea is pretty similar with multi-processes running on a single processor. Threads are switched in a fast speed with a process, making it like they are served simultaneously. But how to make the switch? Use <em>alarm signal</em> to interrupt running thread, <em>setjmp</em> to save its running environment and <em>longjmp</em> to restore to its that environment. Here is the code :</p>
+
+<pre><code>lwt_init() 
+{
+    /* ... */
+
+    signal(SIGALRM, alarm_handler);
+    ualarm(lwt_quantum, 0);
+
+    /* ... */
+}
+
+void alarm_handler () 
+{
+    /* ... */
+
+    if (setjmp(sys_t.curr-&gt;env) == 0) { // interrupted, save current thread's runing environment. if get here from longjmp(), setjmp will return no-zero
+        do {
+            sys_t.curr = sys_t.curr-&gt;next; // set next thread as current thread
+
+            /* ... check state of current thread here */
+
+        } while (sys_t.curr-&gt;state != lwt_READY);
+
+        ualarm(sys_t.interval + sys_t.curr-&gt;prior, 0);
+        longjmp(sys_t.curr-&gt;env, 1);    // after switch, continue running environment where it was saved
+    }
+
+    /* ... */
+}
+</code></pre>
+
+<p>There is a serious problem here. Thread are created on main thread (actually process), so when they run, a stack will be allocated on the top of main stack. The stack will be remove if the thread run is over (returned). There is no problem if thread run one by one. But in this case, they are running simultaneously (not precisely simultaneous, but running without end of others). The result is that all these threads are using a same stack. We know that when we perform of a setjmp, env save the stack pointer of the thread. So it comes to the situation that switching will make thread go back to its stack pointer, but the content of that stack will not its content. Stack is all messed.</p>
+
+<p>A way to solve this is to give each thread its own stack when they created. This is achieve by a statement of assembly language. Code is there:</p>
+
+<pre><code>#ifdef _X86
+__asm__("mov %0, %%esp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#else
+__asm__("mov %0, %%rsp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#endif
+</code></pre>
+
+<p>I don&rsquo;t know jack about assembly language. But I was told that it move the stack pointer to a new stack.</p>
+
+<h2>How to implement Semaphore</h2>
+
+<p>Semaphore actually is quite sample (the reason I say this, because I thought it was hard). It is like a gate keeper having a list of available rooms. It will tell the visitor if any room available. If yes, gate keeper will allow the visitor to use the room and reduce the number of available rooms. If no, put the visiter on the waiting list.</p>
+
+<p>If the visitor has done with the room, gate keeper will make that room available again, and give it to the first visitor on the waiting list, and sure remove him from waiting list.</p>
+
+<p>P() is for thread to achieve the first part (check and gain semaphore), V() is for the second part (release semaphore and give to to front waiting list). Here is the code:</p>
+
+<pre><code>typedef struct smphr_t {
+    int     smphr_size;
+    Queue   queue;              // queue store thread waiting for semophore
+} smphr;
+
+smphr * smphr_create(int smphr_size){
+    smphr *s;
+    s = malloc(sizeof(smphr));
+    s-&gt;smphr_size = smphr_size;
+    s-&gt;queue = CreateQueue();                   // use a queue to store waiting list
+    return s;
+}
+
+void P(smphr *s){
+    int left = ualarm(0, 0);                    // disable the context switch, by clear the alarm
+    if(s-&gt;smphr_size &gt; 0){                      
+        s-&gt;smphr_size -= 1;                     // semaphore offered
+        ualarm(left, 0);                        // restore context switch
+    } else {                                    // no more semaphore, blocked
+        s-&gt;smphr_size -= 1;                     // TRICK! semaphore still need to be reduced one, in order to avoid fullCount getting too large. 
+        sys_t.curr-&gt;state = sem_WAIT;
+        Enqueue(sys_t.curr, s-&gt;queue);          // put into queue
+        raise(SIGALRM);
+    }
+}
+
+void V(smphr *s){
+    int left = ualarm(0, 0);
+    s-&gt;smphr_size += 1;                         // release semaphore
+    if (!IsEmpty(s-&gt;queue)) {                   
+        Front(s-&gt;queue)-&gt;state = lwt_READY;     // dequeue front and set to READY, if not empty
+        Dequeue(s-&gt;queue);
+    }
+    ualarm(left, 0);
+}
+</code></pre>
+
+<h2>Test with Producer-Consumer Problem</h2>
+
+<p>The LWT can be tested by a classical Producer-Consumer problem. Producer produce item, Consumer consume item produced. If item buffer is full, producer should wait (producer trying to produce should be put on the waiting list) until item is consumed and buffer is not full. Consumer, similarly, should wait if item buffer is empty (put on waiting list), until item is produced and buffer is not empty.</p>
+
+<p>So we need a fullCount Semaphore (max size of buffer) to decide if full, a emptyCount Semaphore (max size of buffer) to decide if empty and a useLock to only let one producer/consumer access to buffer at one time. Here is the code:</p>
+
+<pre><code>void producer(){
+    srand(time(NULL));  // Initializes random number generator
+    int item = 0;
+    while(1){        
+        item = rand();
+        P(emptyCount);
+        P(useQueue);
+        if (current &lt; N) {
+            buffer[current++] = item;
+        }
+        V(useQueue);
+        V(fullCount);
+        printf("Producer: %s\tproduce: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+    }
+}
+
+void consumer(){
+    int item = 0;
+    int i = 0;
+    while(i &lt; 30){ 
+        P(fullCount);
+        P(useQueue);
+        if (current &gt; 0) {
+            item = buffer[--current];
+        }
+        V(useQueue);
+        V(emptyCount);
+        printf("Consumer: %s\tconsume: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+        i++;
+    }
+}
+
+int main(int argc, char *argv[]){
+    int i,j;
+    lwt *t;
+    emptyCount  = smphr_create(N);
+    fullCount   = smphr_create(0);
+    useQueue    = smphr_create(1);
+
+    lwt_init(QUANTUM);
+
+    lwt_create("p1", 0, NULL, producer);  
+    lwt_create("p2", 0, NULL, producer);  
+    lwt_create("p3", 0, NULL, producer);  
+    lwt_create("p4", 0, NULL, producer);  
+    lwt_create("c1", 0, NULL, consumer);     
+    t = lwt_create("c2", 0, NULL, consumer);     
+
+    thrd_wait(t);
+    printf("Two Consumers consume 30 items!\n");
+    printf("Done!\n");
+}
+</code></pre>
+
+<p>The full code is on <a href="https://github.com/GingerBear/LWT">github</a>. Thanks to <a href="https://github.com/cadmuxe">cadmuxe</a> and <a href="https://github.com/liyangbin">liyangbin</a> for the help.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building the IS Reader]]></title>
@@ -938,29 +1150,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 <p><img src="http://filer.blogbus.com/6302357/6302357_13096257018.png" border="0" alt="" /></p>
 <p>原文：<a href="http://en.wikipedia.org/wiki/Data_visualization">http://en.wikipedia.org/wiki/Data_visualization</a></p>
 </p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Node.js与服务器端脚本的未来]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/02/node-js%25e4%25b8%258e%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25e7%25ab%25af%25e8%2584%259a%25e6%259c%25ac%25e7%259a%2584%25e6%259c%25aa%25e6%259d%25a5/"/>
-    <updated>2011-07-02T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/02/node-js%e4%b8%8e%e6%9c%8d%e5%8a%a1%e5%99%a8%e7%ab%af%e8%84%9a%e6%9c%ac%e7%9a%84%e6%9c%aa%e6%9d%a5</id>
-    <content type="html"><![CDATA[<p>
-<p>Node.js与服务器端脚本的未来</p>
-<p><span style="color:#aaaaaa;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:21px;">Posted by&nbsp;<a style="outline-width:0;outline-style:initial;outline-color:initial;font-size:11px;text-decoration:none;color:#999999;padding:0;margin:0;border:0 initial initial;" href="http://notjoelshapiro.com/index.php/author/admin/">Joel</a>&nbsp;on May 9, 2011 at 1:30am</span></p>
-<p>典型的web技术可以分为两类：前端和后端。根据前端代码的收入，后端代码被执行并且运行在服务器上。前端技术与后端技术被创造了不同的次数，但是在它们诞生的时候便产出了不同的要求与思想。结果，在语法，反馈，资源利用，易用性上两类语言都很很大的不同。当人们试图去掌握着两种Web开发技术时，那些选择前端的人常常发现自己处在不利的位置。亲爱的读者，跟着我去到Node.js和服务器端脚本的世界里。</p>
-<p>&nbsp;</p>
-<p>在最基本的水平，Node.js是一个把Javascript作为服务器端编程语言的框架。我不会讲述具体的应用细节（并非我不够格），但我会告诉大家用它的好处。</p>
-<p>&nbsp;</p>
-<p>最流行的服务器端语言是PHP（处理变量），通常与MySQL一起工作（一个为了长期保存了数据的数据库）。Node.js一般处在PHP的位置，扮演你的用户与数据库的中间人的角色。你的服务器端语言的替换，引起了一个有趣的地方：你已经避免了PHP，因为你不想学习一门新的语言，但你需要学习Javascript与数据库如何一起工作，这是原本的Javacript做不到的。你为什么要这么做，而不直接学习PHP呢？很多开发者已经有足够的理由去选择&ldquo;正确&rdquo;的路并采用PHP，但用熟悉的语言编程的好处又使学习如Node.js的中间工具也有一定优势。</p>
-<p>&nbsp;</p>
-<p>如果你是选择了后者，你会发现有大量的有用插件存在。在其他的功能中有插件连接流行的API，绘图，解释XML。Node.js开发者甚至写了一个服务器与客户端之间进行实时共享变量与方法的插件（未来的文章会提到）。当你试图把这些工具和他们的特点结合在一起时，使用共享语言和平台的价值就大大增加了。你不仅拥有了一个让前端开发者开发的快速方便的环境，而且你已经使得很多人不必话费大量的学习成本就可以建立Web应用和服务。</p>
-<p>&nbsp;</p>
-<p>说到这里，很多人会问，为什么很多人不用完整可行的技术，而会投身于这个变通方案。答案很简单：创新和拥有。Node.js是一个贯穿Web的闪亮创新，给了那些一无所有的人能力，并且他的作用已经开始显现。专门的服务器端语言会就此消亡吗？可能不会。客户端语言会成为服务器端脚本的主力吗？很难说。有一件事情上确定的，对于前端开发者来说，传统的客户端开发的日子已经结束了，对于另外那些受限制的开发者，一个新的世界已经开始建立。</p>
-</p>
-<p>&nbsp;</p>
-<p>原文：<a href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
 ]]></content>
   </entry>
   

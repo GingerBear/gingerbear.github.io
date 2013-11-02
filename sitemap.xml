@@ -215,12 +215,18 @@
         <lastmod>2013-10-28T03:57:41-04:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/
+        </loc>
+        <lastmod>2013-11-02T03:20:55-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://GingerBear.github.io/blog/archives/</loc>
-        <lastmod>2013-10-28T03:57:41-04:00</lastmod>
+        <lastmod>2013-11-02T03:20:55-04:00</lastmod>
     </url>
     <url>
         <loc>http://GingerBear.github.io/</loc>
-        <lastmod>2013-10-28T03:57:41-04:00</lastmod>
+        <lastmod>2013-11-02T03:20:55-04:00</lastmod>
     </url>
     <url>
         <loc>http://GingerBear.github.io/robots.txt</loc>
