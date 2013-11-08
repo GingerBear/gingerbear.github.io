@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-11-02T03:32:11-04:00</updated>
+  <updated>2013-11-08T02:56:57-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[First Two Weeks using MacBook Pro 13 inch with Retina display 2013 late version]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/"/>
+    <updated>2013-11-08T02:03:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version</id>
+    <content type="html"><![CDATA[<p>I bought the new macbook pro right after the latest release of MBP on Apple&rsquo;s event. I was so existed about the new macbook pro, and I becoming more and more display my PC. There are a lot to talk about my loving on the new macbook pro, and lot of dis-lovness of my samsung PC. It&rsquo;s too late and I want to post this blog before sleep. So let me be short for the most important benefit.</p>
+
+<p>Oh, by the way, Apple just release the Bug fix for this macbook I using, which happens to be freeze on daily usage on a large set of new users. It is quite annoying for my mac freezing in the way I am using. What&rsquo;s worse is that I make me feel unsafe to use this machine, and always feeling it&rsquo;s gonna stuck. But finally, it is fixed. No freezing after tonight&rsquo;s update.</p>
+
+<h2>No.1 Shortcuts</h2>
+
+<p>What really make my working with mac effective is its massive and make-sense shortcuts. With command key combined with another key, I can operate faster than using mouse and trackpad. The most I use is</p>
+
+<ul>
+<li>cmd + q for close window or tab</li>
+<li>cmd + q for quick application</li>
+<li>cmd + l to select the address bar in browser</li>
+<li>cmd + t to open a new tab</li>
+<li>cmd + left/right arrow to the begin/end of line</li>
+<li>option + left/right move cursor word by word</li>
+<li>cmd + shift + 4 to screenshot</li>
+</ul>
+
+
+<p>I believe there are even more shortcuts to boost my usage.</p>
+
+<p>In addition, Alfred, of course, let me open application, file and directory without open folder and folder in finder. Which speed up my productivity a lot.</p>
+
+<h2>No.2 Trackpad</h2>
+
+<p>I have not using mouse for two weeks. The trackpad is super responsive and really magic with those gestures. The most useful one is multi-screen by four finger swipe left/right. It make good to organizing my applications when I open a lot. And four finger swipe up, to organize my my application automatically. I feel very comfortable and easier with different functional separated screens.</p>
+
+<h2>No.3 Screen</h2>
+
+<p>When I see an non-retina screen now, I will feel a lot blur. This screen is very precise and with great color. The display resolution is actually 1280x800, making 4 pixels to render 1 pixel. I cannot see the pixel in the screen, or I can see pixel clearly those application without retina-display optimization. I feel very comfortable coding with this screen.</p>
+
+<h2>No.4 keyboard</h2>
+
+<p>A lot of laptops try to make their keyboard looks like macbook&rsquo;s. But they failed to make their keyboards type like macbook&rsquo;s. This keyboard&rsquo;s type feel is neat. Each key is well separate and with a little curve in from the middle of key, which make you feel explicitly typing right on the key. And the keys&#8217; positions are well set. Make my muscle feel nature and comfortable when I am typing. My last PC&rsquo;s keys are really bad-positioned.</p>
+
+<h2>No.5 Light</h2>
+
+<p>I don&rsquo;t have to carry a so-heavy PC and charger to library everyday.</p>
+
+<h2>No.6 Misc</h2>
+
+<p>I call them miscellaneous not because they are not important, but they are not the greatest impact for me now. First is the batter life. I can working on it for a whole after without a charge. Second, good looking, yes, it looks beautiful like a art work. Then the charger, very well design. Cable can be well rolled on the charger. The port is magnetic and works for both direction.</p>
+
+<h2>Summary</h2>
+
+<p>The main things in mac is fast, clean and beautiful. I believe I won&rsquo;t change it in the following three years. Like the Julio, PhD Student of Peter, said, when I get the macbook (a old white plastic one), my life changed. I can feel that it is already change my life.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A User Level Light-weight Thread Scheduling Implementation ]]></title>
@@ -1133,23 +1187,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 <p>这一采访被编辑和缩减过。</p>
 <p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
 <p>&nbsp;</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[数据可视化-维基百科的定义]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/03/%25e6%2595%25b0%25e6%258d%25ae%25e5%258f%25af%25e8%25a7%2586%25e5%258c%2596-%25e7%25bb%25b4%25e5%259f%25ba%25e7%2599%25be%25e7%25a7%2591%25e7%259a%2584%25e5%25ae%259a%25e4%25b9%2589/"/>
-    <updated>2011-07-03T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/03/%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96-%e7%bb%b4%e5%9f%ba%e7%99%be%e7%a7%91%e7%9a%84%e5%ae%9a%e4%b9%89</id>
-    <content type="html"><![CDATA[<p>
-<p>数据可视化</p>
-<p>来自维基百科，免费的百科全书</p>
-<p>数据可视化是对数据的视觉表现的研究，意思是&ldquo;以图解的形式对信息进行摘要，包括单位信息的属性与变量&rdquo;。根据Friedman（2008），数据可视化的主要目的是通过图像清楚有效的传播信息。这不意味着数据可视化为了功能需要而看起很无趣，抑或为了看起来美观就变得特别复杂。为了有效地传递思想，美观的形式与功能性需要密切地关联，通过以一种更直观的方式传播关键部分，提供对相当分散和复杂的数据集的洞悉。尽管设计者常常不能在设计与功能之间取得一个很好的平衡，创造华丽的数据可视化效果，但没有很好地完成他们的主要目的&mdash;&mdash;传播信息。&rdquo;</p>
-<p>的确，Fernanda Viegas和Martin M. Wattenberg已经建议：一个理想的可视化应该不仅仅清楚地传播，而且应该激发观看的参与感与注意力。</p>
-<p>数据可视化与信息图形、信息可视化、科学可视化和统计图形都有密切相关。在新的千年里，数据可视化已经变成了研究、教学与开发的热点。 根据Post et al.(2002) ，它已经和科学与信息可视化领域结合。KPI库已经开发出了&ldquo;可视化方法的周期表&rdquo;，一张显示了不同数据可视化方法的交互表【下图】。它详细展示了6中数据可视化方法：数据，信息，概念，策略，象征和复合。</p>
-<p><img src="http://filer.blogbus.com/6302357/6302357_13096257018.png" border="0" alt="" /></p>
-<p>原文：<a href="http://en.wikipedia.org/wiki/Data_visualization">http://en.wikipedia.org/wiki/Data_visualization</a></p>
-</p>
 ]]></content>
   </entry>
   
