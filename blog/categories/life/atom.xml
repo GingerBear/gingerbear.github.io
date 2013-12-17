@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: life | Neil Ding's Blog]]></title>
+  <title><![CDATA[Category: life, | Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-11-08T02:56:57-05:00</updated>
+  <updated>2013-12-17T16:47:15-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -14,56 +14,45 @@
 
   
   <entry>
-    <title type="html"><![CDATA[First Two Weeks using MacBook Pro 13 inch with Retina display 2013 late version]]></title>
-    <link href="http://GingerBear.github.io/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/"/>
-    <updated>2013-11-08T02:03:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version</id>
-    <content type="html"><![CDATA[<p>I bought the new macbook pro right after the latest release of MBP on Apple&rsquo;s event. I was so existed about the new macbook pro, and I becoming more and more display my PC. There are a lot to talk about my loving on the new macbook pro, and lot of dis-lovness of my samsung PC. It&rsquo;s too late and I want to post this blog before sleep. So let me be short for the most important benefit.</p>
+    <title type="html"><![CDATA[Some thoughts one day after graduate]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/12/14/some-thoughts-one-day-after-graduate/"/>
+    <updated>2013-12-14T23:47:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/12/14/some-thoughts-one-day-after-graduate</id>
+    <content type="html"><![CDATA[<p>Now is day one after graduate. In fact I have to do my operating system project now, I too much thought are stoping me. So I decide to do project tommorrow and write all these thoughts down. Ok, use Chinese.</p>
 
-<p>Oh, by the way, Apple just release the Bug fix for this macbook I using, which happens to be freeze on daily usage on a large set of new users. It is quite annoying for my mac freezing in the way I am using. What&rsquo;s worse is that I make me feel unsafe to use this machine, and always feeling it&rsquo;s gonna stuck. But finally, it is fixed. No freezing after tonight&rsquo;s update.</p>
+<h2>莫扎特的Clarinet Concerto In A, K.622: 2. Adagio</h2>
 
-<h2>No.1 Shortcuts</h2>
+<p>我正在反复听莫扎特的(Clarinet Concerto In A, K.622: 2. Adagio)[<a href="http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH">http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH</a>]，这首曲子能让人沉静下来能想想自己的事情。第一次听是在一个莫扎特的纪录片的片头曲听到，当时一听到那个单簧管吹出的旋律就很感动。</p>
 
-<p>What really make my working with mac effective is its massive and make-sense shortcuts. With command key combined with another key, I can operate faster than using mouse and trackpad. The most I use is</p>
+<h2>毕业中</h2>
 
-<ul>
-<li>cmd + q for close window or tab</li>
-<li>cmd + q for quick application</li>
-<li>cmd + l to select the address bar in browser</li>
-<li>cmd + t to open a new tab</li>
-<li>cmd + left/right arrow to the begin/end of line</li>
-<li>option + left/right move cursor word by word</li>
-<li>cmd + shift + 4 to screenshot</li>
-</ul>
+<h3>甘同学的包</h3>
 
+<p>说说昨晚的一个事儿。昨天晚上与甘同学小聚，因为他要就要去加州了，月黑风高的去了匹兹堡市中心逛了逛聊了聊，回来的时候已经很晚了（或者说很早了，因为是早上六点），迷迷糊糊到了家马上就睡了，刚睡一会收到个电话说他包找不到了，里面有个两千多刀的单反，问我看看记不记得放哪儿了，我起来看了看包，发现是我自己包（恰好跟他的包除了颜色都是一样的），然后去门外看了看下车的地方也没有。我告诉他可能是放到原来的车里地上了，但他手机又没电了，钥匙在那包里也回不去。那个焦急的情景，我很能体会。中间他没有办法去买了个充电器去咖啡店充了电，又租了车去了躺路过的地方找，找不到，又打了911，甚至直接下单买了一台新的单反。到了早上我又收到了电话问我再确定一下路上有没有，尽管我很确定但还是去看了看，依旧什么都没有。我回到了房间坐再床上睡了，突然看到了我椅子下还有个包，就是他的包…… 看来是我昨晚下车的时候顺手把他的包当成我的包就直接拿走了，但是我完全不记得了。这事儿我感到十分抱歉，自己的一个犯傻导致他人身心具疲。</p>
 
-<p>I believe there are even more shortcuts to boost my usage.</p>
+<h3>学院三楼</h3>
 
-<p>In addition, Alfred, of course, let me open application, file and directory without open folder and folder in finder. Which speed up my productivity a lot.</p>
+<p>学院三楼一直是个热闹的地方，长期有邦邦同学把守，每次去那儿都挺欢乐。我平时不怎么去，直到这个学期的后半段去的比较多，一是由于图书馆人太多，位子不好找，二是跟认识的同学还能聊聊天，又是还能讨论讨论项目，运气好甚至还有免费的食物。在这段时间里也熟悉了不少新朋友，每次学习到后面就成了茶话会，大家还都听能聊的，还挺开心的。学院三楼的那个桌儿仿佛成了一个我们专业小伙伴们的据点，每天都会有小伙伴来首先将其霸占。</p>
 
-<h2>No.2 Trackpad</h2>
+<h3>Trees Hall</h3>
 
-<p>I have not using mouse for two weeks. The trackpad is super responsive and really magic with those gestures. The most useful one is multi-screen by four finger swipe left/right. It make good to organizing my applications when I open a lot. And four finger swipe up, to organize my my application automatically. I feel very comfortable and easier with different functional separated screens.</p>
+<p>打篮球的地儿，虽然比起国内的强多了，但地板还是不可避免的滑，我也不可避免的打得没有外场好。每周我都会来这里打两次球，认识了一堆小伙伴，真的有些不舍得离开。如果能找到匹兹堡大学的工作，最大的好处就是能继续在这儿打篮球。刚来的那会儿真是谁都不认识，很傻很天真的跟跟几个老黑打起半场来。后来打起全场第一次就更清华哥吵起来了（后来还是关系不错），狗腿后来把我拉近了他们的篮球队，每周二周五晚上都非常认真的在这里练联防和战术，当时的那几个在一队真的挺厉害的，甚至在trees都很难找到能打赢我们的队。首先我们的防守特别好，我们守的是联防，外线的补位非常及时，内线有狗腿的强硬防守。对手在进攻的时候除了投三分，几乎很难突破进来。在进攻端，大神的组织非常合理，他知道该怎么打，并且总能打出一些战术。我们还有生哥的三分球，以及非常好的快攻意识，我更像是个小前锋，进攻方式多是中投和三分，偶尔有一些挡拆的配合。后来对篮球最执着的狗腿回国了，大家似乎就没有当时的那种练球的劲头了，大家都有各自忙的事情，晚上来打球更多是为了消遣。我之前一直是做他们车过来，后面也逐渐的自己走过来了，渐渐跟他们也走得不是那么近了，更多的是想自己多发挥一些个人能力，因为说实话在之前强大打团队里，打球的方式非常单一，个人能力都退化了。总之这是一个值得回忆的地方，如果我留下，我想我需要去练练身体，把个人能力提上去。</p>
 
-<h2>No.3 Screen</h2>
+<h4>(待续)</h4>
 
-<p>When I see an non-retina screen now, I will feel a lot blur. This screen is very precise and with great color. The display resolution is actually 1280x800, making 4 pixels to render 1 pixel. I cannot see the pixel in the screen, or I can see pixel clearly those application without retina-display optimization. I feel very comfortable coding with this screen.</p>
+<h3>加州</h3>
 
-<h2>No.4 keyboard</h2>
+<h3>回国</h3>
 
-<p>A lot of laptops try to make their keyboard looks like macbook&rsquo;s. But they failed to make their keyboards type like macbook&rsquo;s. This keyboard&rsquo;s type feel is neat. Each key is well separate and with a little curve in from the middle of key, which make you feel explicitly typing right on the key. And the keys' positions are well set. Make my muscle feel nature and comfortable when I am typing. My last PC&rsquo;s keys are really bad-positioned.</p>
+<h3>分手</h3>
 
-<h2>No.5 Light</h2>
+<h2>毕业后</h2>
 
-<p>I don&rsquo;t have to carry a so-heavy PC and charger to library everyday.</p>
+<h3>学校工作</h3>
 
-<h2>No.6 Misc</h2>
+<h3>空闲的日子</h3>
 
-<p>I call them miscellaneous not because they are not important, but they are not the greatest impact for me now. First is the batter life. I can working on it for a whole after without a charge. Second, good looking, yes, it looks beautiful like a art work. Then the charger, very well design. Cable can be well rolled on the charger. The port is magnetic and works for both direction.</p>
-
-<h2>Summary</h2>
-
-<p>The main things in mac is fast, clean and beautiful. I believe I won&rsquo;t change it in the following three years. Like the Julio, PhD Student of Peter, said, when I get the macbook (a old white plastic one), my life changed. I can feel that it is already change my life.</p>
+<h3>朋友</h3>
 ]]></content>
   </entry>
   

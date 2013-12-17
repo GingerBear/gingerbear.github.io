@@ -4,7 +4,7 @@
   <title><![CDATA[Category: os, | Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/blog/categories/os/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-11-08T02:56:57-05:00</updated>
+  <updated>2013-12-17T16:47:15-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CS2510: Project 2 - MiniGoogle Final Report]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/"/>
+    <updated>2013-12-17T16:42:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report</id>
+    <content type="html"><![CDATA[<p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
+
+<h5>Guanxiong Ding (gud7)</h5>
+
+<p>12/17/2013</p>
+
+<h2>General Workflow</h2>
+
+<ul>
+<li><p>Indexing workflow</p>
+
+<ul>
+<li><p>client send the documents to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker split the file and send to ma ppers</p></li>
+<li><p>each mapper count word for its split</p></li>
+<li><p>mapper partition the word count result and send to reducer</p></li>
+<li><p>reducer aggregate the result and append to master index files</p></li>
+</ul>
+</li>
+<li><p>Querying workflow</p>
+
+<ul>
+<li><p>client send keywords to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker send each keyword to each mapper</p></li>
+<li><p>each mapper get a set of document &ndash; occurrence pairs by the keyword</p></li>
+<li><p>mapper send result set to reducer</p></li>
+<li><p>reducer gather all sets from mappers and calculate the total occurrence</p></li>
+<li><p>reducer sort the document by total occurrence and send back to client</p></li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Client</h2>
+
+<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
+
+<h3>Mini-google</h3>
+
+<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
+
+<h3>Worker</h3>
+
+<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
+
+<ul>
+<li><p>split file name</p></li>
+<li><p>document name</p></li>
+<li><p>number of mappers // to let reducer know when to start reducing</p></li>
+<li><p>address and ports of all reducers</p></li>
+</ul>
+
+
+<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
+
+<h3>Mapper helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
+
+<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
+
+<h3>Reducer helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
+
+<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
+
+<h3>Name Server</h3>
+
+<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
+
+<h3>Master index</h3>
+
+<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A User Level Light-weight Thread Scheduling Implementation ]]></title>

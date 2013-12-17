@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="数据可视化 来自维基百科，免费的百科全书 数据可视化是对数据的视觉表现的研究，意思是&ldquo;以图解的形式对信息进行摘要，包括单位信息的属性与变量&rdquo;。根据Friedman（2008），数据可视化的主要目的是通过图像清楚有效的传播信息。这不意味着数据可视化为了功能需要而看起很无趣， &hellip;">
+  <meta name="description" content="Node.JS，LAMP，和未来 2011年4月29日 我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,131 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/">Node.JS，LAMP，和未来</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+        
+           | <a href="/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<p><strong>Node.JS，LAMP，和未来</strong></p>
+<p><span style="font-family:mceinline;">2011年4月29日</span></p>
+<p>我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了，并且使用服务器端JavaScript建立了他们的仪表盘。你能够用它做很多很酷的事实，而且它也很有潜力。它的安装和运行很容易，就像Redis也一样。下面是对那篇文章的摘要：</p>
+<p>我做出这句决定是因为我意识到：LAMP已经死亡。自从它诞生的时候的二十年里，Web的构成（内容、协议、服务器、客户端）已经发生了根本的转变。总的来说，有这么三个时期：</p>
+<div style="padding-left:10px;margin-left:10px;border-left:5px #eee solid;">
+<p>I. 1991-1999: HTML时代。</p>
+<p>HTML时代是关于文件的，印证了Tim Berners-Lee&rsquo;s 最初的愿景：&ldquo;一个大的，虚拟的，空中的文件系统&rdquo;。Web被静态的手输代码的文件所主导，Web客户端被严格的格式化（甚至违背了最温和排版）。静态文件用于静态客户端。</p>
+<p>II. 2000-2009: LAMP时代。</p>
+<p>LAMP时代是关于数据库的，而非文件，主导的web组合上LAMP或者类似LAMP的。无论CGI，PHP，Ruby on Rails, 或者 Django，主导的模式是用数据库的值填入HTML的模板。内容动态的存于服务器端，但在客户端仍然是静态的。</p>
+<p>III. 2010-??: Javascript时代.</p>
+<p>Javascript时代是关于事件流的。现代的Web页面部在是页面，他们是事件驱动的应用程序，信息通过它们流动。Web的核心容器&mdash;&mdash;文件对象模型&mdash;&mdash;依然存在，但不像HTML标记。DOM（文件对象模型）是一个，由JavaScript产生，内存中的，高效编码的数据结构。</p>
+<p>LAMP架构已经死亡因为很少的应用会为了响应一个很小的事件而进行全部标记的的重载；他们只想更新DOM的一小部分，通过JavaScript。AJAX做到了，但当你的服务器端LAMP模板是10%的HTML和90%的JavaScript时，很明显你在做一件错误的事情。</p>
+</div>
+<p><strong>宣称LAMP死亡的时候已经到了</strong></p>
+<p>对与类似LAMP架构死亡的解释正在进行。我会想，这是一个非常狂热的观点，需要把它放到某一个视角下来看：</p>
+<p>在每一个&ldquo;时代&rdquo;期间，新开发的技术是为了解决问题的。人们创造HTML为了创造内联的信息。当需求增加并且变得越来越难管理时，类似LAMP的工具，如PHP, Django, Ruby on Rails等等被开发出来帮助信息更容易传递。与其说替代了老技术，倒不如说在老技术上添加新东西。有时候你想用新一些的技术更管老技术，但我们仍然在使用HTML和CSS，并且当需要时，增家对他们的使用。</p>
+<p>但是类似LAMP的系统部署在所有的地方的产品上，使有些经常被访问的网站变得跟加有强大。虽然有些人正在使用Node.JS，比如Yammer，但Node.JS并没有提供与PHP, Ruby, Python, 甚至.NET相同的内容量。</p>
+<p><strong>什么是Node.JS？</strong></p>
+<p>基本上，它是围绕着Google&lsquo;s V8 JavaScript引擎的一个轻量级框架。V8是运转Google的开源浏览器Chrome的JavaScript引擎，另外一方面，Node.JS是事件驱动，并且更加快速高效。</p>
+<p>我已经捣鼓Node.JS好几周了，它很有趣也很有潜力。它是对JavaScript的独特地运用，它的基于事件的方法能很轻松德完成某些事情（通常更难用传统工具实现）。Node.JS还拥有很多很酷的库，比如Socket.IO，一个使用了特征探测的支持多重传输的库。所以，如果你的浏览器支持WebSocket或者Adobe Flash Socket，你就能使用它，或是AJAX长查询，多方流，甚至Forever Iframe技术。因为，你的程序使用任何类型的传输都会变得最有效。</p>
+<p><strong>现实一些的审视</strong></p>
+<p>不过，现在让我们更加诚实地想想吧，Node.JS发明与2010年。它依然非常非常年轻。首页上关于Node.JS的视频讲的是发明者对于PHP用户群关于Node和谨慎使用的陈述。作为一个工具，它还需要很长时间成熟。尽管如此，基于V8引擎带给这个项目不少的成熟。</p>
+<p>至于那些被替代的技术如PHP, Ruby, 和Django，我不相信他们已经&ldquo;死亡&rdquo;，相反我认为Node.JS增强了现存的技术。就像当MySQL不很适合时，我使用Redis作为数据存储工具，我认为会在未来的网站的实时通信技术上起作用。</p>
+<p>我希望写一些更多的关于Node.JS的文章，并希望能用它解决新的或者特殊的问题。但我不会去用Node.JS重写我的网站，那可能会是个噩梦。所以就像NoSQL和云计算一样，它确实是一个新技术，但它不会从根本上移除所有其他相关的东西。就像使用Redis，我不会放弃MySQL，我只是当Redis更合适时才使用。</p>
+<p>原文：<a style="outline-style:none;outline-width:initial;outline-color:initial;text-decoration:underline;cursor:pointer;color:#1e5494;" href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/" target="_blank">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/">CouchDB能为HTML5，Web Apps做什么？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-04T00:00:00-04:00" pubdate data-updated="true">Jul 4<span>th</span>, 2011</time>
+        
+           | <a href="/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&nbsp;</p>
+<p><strong>CouchDB能为HTML5，Web Apps做什么？</strong></p>
+<p><strong>CouchAPps的功效与CouchDB能如何决定移动</strong></p>
+<p>CouchApps是直接由面向文件的数据库CouchDB服务的JavaScript和HTML5应用。在下面的采访中，Found Line联合创始人以及OSCON发言人Bradley Holt (@BradleyHolt) 谈论CouchApps的功效，CouchDB能提供给开发者什么，以及数据库如何与HTML5一起工作。</p>
+<p><strong>CouchApps如何工作？</strong></p>
+<p>Bradley Holt: CouchApps是用CouchDB，JavaScript，HTML5建立的web应用.它们避免了中间层，允许web应用直接与数据库对话&mdash;&mdash;CouchDB数据库甚至能够运行在用户的机器上或者Android/iOS设备。</p>
+<p><strong>建立CouchApps的好处？</strong></p>
+<p>Bradley Holt: 使你的代码库的效率跟高（没有中间层）、可重复、根据应用程序的数据部署/复制程序的能力、由于&#8221;顺理&#8221;的web工作方式带来的好处（come with going &#8220;with the grain&#8221; of how the web works）是建立CouchApps的好处。</p>
+<p>非常坦率的说，我认为CouchApps已经适合大范围的采纳使用。最大的障碍是工具。目前的开发工具集需要改进，有时建立CouchApps的过程有点困难。&ldquo;CouchApp&ldquo;这一术语也有很多不同的理解。这意味着CouchApps的好处是引人注意的，并且工具会很快赶上。</p>
+<p><strong>HTML5引发了很多存储问题，CouchDB会融入哪儿？</strong></p>
+<p>Bradley Holt: HTML5的Web存储特性描述了用户浏览器对于关键键值的本地持续存储的API。与之前浏览器本地存储特性的尝试不同，HTML5的存储特性已经取得了重大的跨浏览器支持。</p>
+<p>然而，有一点是HTML5本地存储API缺乏的，即除了指定键，使用其他形式查询值的方法。你不能穿过一套键或值查询。IndexedDB能够处理这种情况，并允许索化的数据库查询，但IndexedDB并非当前HTML5特性的一部分，并且只在一小部分浏览器中应用。</p>
+<p>如果你需要的不仅仅是键/值存储，那么你需要到HTML5特性外面看看。和HTML5 Web存储一样，CouchDB存储键/值对。在CouchDB里，键/值对的键部分是一个文件ID，值部分是一个变现单一文件的JSON对象。与HTML5 Web存储不一样的是，CouchDB提供了一种索引和查询数据方法&mdash;&mdash;使用MapReduce&ldquo;试图&rdquo;。因为CouchDB使用了RESTful HTTP API和JSON对象最为存储文件，HTML5/JavaScript Web应用能够很容易地直接与CouchDB一起工作。</p>
+<p><strong>CouchDB的可重复特性如何与HTML5工作？</strong></p>
+<p>Bradley Holt: 同样，CouchDB不是与HTML5特性直接关联，但CouchDB的可重复特性创造了独特的机会，使CouchApps使用JavaScript和HTML5建立（而且，其他使用CouchDB建立的应用也如此）。</p>
+<p>我听说J. Chris Anderson使用&ldquo;地面计算&rdquo;（ground computing）这一术语与&ldquo;云计算&rdquo;相对。这一思想是尽可能把用户的数据存放得离用户近&mdash;&mdash;不能比用户的计算机和手机更近的了！CouchDB的可重复性使得这变成可能。使用CouchDB的增量重复，与特定用户相关的数据能够被复制到用户自己的计算机与手机（或者从上面复制出）。这允许更快地的访问用户（因为他/她的应用程序访问的是本地的数据库），离线访问、数据便携性，以及潜在对于他/她的数据更好的控制。</p>
+<p><strong>既然CouchDB在移动设备上运行，它是如何决定移动应用开发的？</strong></p>
+<p>Bradley Holt: 虽然Android是一个出色的平台，但移动应用的最大渠道还是苹果的iOS。现在CouchDB已经在Android上发布了一段时间了，但在iOS上它还是先对新的。既然CouchDB已经能用来建立iPhone/iPad应用了，我们将会很确定地看到更多的移动应用程序建立在CouchDB上，为了利用CouchDB独特的优势&mdash;&mdash;尤其是可复制性。</p>
+<p>最大的问题是，这些应用会作为本地应用建立，还是最为CouchApps建立？我也不知道答案，但我更想看到这些程序建立在CouchApps这边。通过CouchApps，开发者能够更容易地跨平台输出他们的应用，并且他们能够使用显存的HTML5，JavaScript，CSS技能集合。</p>
+<p>这一采访被编辑和缩减过。</p>
+<p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -540,178 +665,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/01/26/my-new-cellphone/">My New Cellphone</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-26T00:00:00-05:00" pubdate data-updated="true">Jan 26<span>th</span>, 2011</time>
-        
-           | <a href="/blog/2011/01/26/my-new-cellphone/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/01/26/my-new-cellphone/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://filer.blogbus.com/6302357/6302357_1296020647x.jpg" border="0" alt="" /></p>
-<p>It&#8217;s the NOKIA 1616, One of the most Fundamental phone in the recent products.</p>
-<p>Why do I thoose this one? but not some Android phone, or Symbian phone? Serveral factors I take into account.&nbsp;</p>
-<p>The first one, which is the most fatal one, is the time I will spent on it. If I choose some Andorid phone(actually, I do have some target like samsung 5700, HTC wildfire&#8230;), I will not only take a lot of time on setuping lots of apps and refresh it to the latest OS version, but also spend timet to use these apps, then SNS, Weibo, renren&#8230;. However, if I those NOKIA 1616, there will be no such functions avalible. No SNS, no UCWeb, maybe QQ is also gone.&nbsp;</p>
-<p>According to the last term,&nbsp;Let me make a evaluation.Suppose I spend&nbsp;15min on Sina Weibo,&nbsp;15min&nbsp;on QQ, 15min&nbsp;on renren, 15min&nbsp;on RSS. Total time is 1 hour. Considering the preparing time for GRE, there remains 60 day left. Then there wil be 60 hours wasted on cellphone, equivallently 5 days, almost a week. This time cost is unaffordable, so I do not choose Android or Symbian 60.&nbsp;</p>
-<p>The second factor is the cost. Compared with&nbsp;￥191 the price of NOKIA 1616, the cheapest Symbain60 phone is NOKIA 6120c, whose price is ￥800, nearly 4 times. Similarly, the prcies of Android phones are almost higher than ￥1000.</p>
-<p>The third fator is power. It is said the the 1616 can be online for 6 weeks at best without charging. This sayings may be&nbsp;aggrandized, but for one week is a shock to me, because my service SAMSUNG i450 can will be out of power in half of a day with normal using. The power issue is the one of the deadly shortage of the Smart phone like Andorid and Symbian, which must be charge everyday.</p>
-<p>The last reason is Updating of the Smart phone. If I spend one or two thousand yuan buying an android phone, it is definite thing that this phone is out of date. Now in the market, the newly relesed products are almost very expensive, ususly higher than ￥3000. Even though I bought the latest products with my bloodly money, newer tech is surging, higher CPU is manufacted, larger RAM is maked in half of a year. Especially in China, a unmatured smart phone envirnments, smart phone can not entirly do what thay can do. So why not save the money just wait for the real revolutionary moment, and revolutionary product.&nbsp;</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/28/some-thought-about-design/">Some Thought About DESIGN</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-28T00:00:00-05:00" pubdate data-updated="true">Dec 28<span>th</span>, 2010</time>
-        
-           | <a href="/blog/2010/12/28/some-thought-about-design/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2010/12/28/some-thought-about-design/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://filer.blogbus.com/6302357/6302357_1293955870x.jpg" border="0" alt="" /></p>
-<p>In the lasest reading salon of Loading, Wu presented his reading experience on the book, <em>The Non-designer&#8217;s Design Book</em>
- by Robin Williams. In the public room of Institute, where we all were enthusiastic in this discussion, rather than in East Nine classroom. </p>
-<p>In this salon, Wu introduced a lot of theories about designing, which I remember few of them except Contrast, Conhesive&#8230;</p>
-<p>Actually I don&#8217;t like these kinds of theories, through I don&#8217;t mean I belittle the authorities of this book or these theories. I would rather believe is a kind of ARTISTIC things. All theories is just the thirsting for the form of arts, which are as meaningless as the appendix of a human body. The exact Achilles&#8217; Ankle is the feeling occured when we saw it, which is head to discribed by common persons like us.</p>
-<p>Nevertheless, since we design for realistic purpose, that design a produce for people to use, and we do not comperhensively  provide spiritual enjoyment as well as the paintings hunged on the wall of museum or galleries. </p>
-<p>In term of the kind of view, several principles have to be observed, before we do the artisitic part in design. With these fundamental principles, it can be used without any problem, said by my little programic selfhood. </p>
-<p>There are principles , or concepts, or theory expressed by Robin Williams, the writer, anyway should be followed in design process:</p>
-<p><span class="Apple-style-span" style="border-collapse:separate;color:#000000;font-family:'Times New Roman';font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-indent:0;text-transform:none;white-space:normal;widows:2;word-spacing:0;font-size:medium;">
-<p><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">One of the elements of<span class="Apple-converted-space">&nbsp;</span>
-<strong><span style="color:#ff0c11;">good web design</span>
-</strong>
-<span class="Apple-converted-space">&nbsp;</span>
-is a lack of the elements that make bad web design. If you stay away from everything listed on the page about<span class="Apple-converted-space">&nbsp;</span>
-<a href="http://www.ratz.com/featuresbad.html">dorky web pages,</a>
-<span class="Apple-converted-space">&nbsp;</span>
-you&#8217;ve probably got a pretty nice web site. In addition, keep these concepts in mind:</span>
-</p>
-<dl><dt><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;color:#ff0c11;font-size:small;">Text</span>
-</dt>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Background does not interrupt the text</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Text is big enough to read, but not too big</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">The hierarchy of information is perfectly clear</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Columns of text are narrower than in a book to make reading easier on the screen</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">&nbsp;</span>
-</dd>
-<dt><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;color:#ff0c11;font-size:small;">Navigation</span>
-</dt>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Navigation buttons and bars are easy to understand and use</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Navigation is consistent throughout web site</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Navigation buttons and bars provide the visitor with a clue as to where they are, what page of the site they are currently on</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Frames, if used, are not obtrusive</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">A large site has an index or site map</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">&nbsp;</span>
-</dd>
-<dt><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;color:#ff0c11;font-size:small;">Links</span>
-</dt>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Link colors coordinate with page colors</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Links are underlined so they are instantly clear to the visitor</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">&nbsp;</span>
-</dd>
-<dt><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;color:#ff0c11;font-size:small;">Graphics</span>
-</dt>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Buttons are not big and dorky</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Every graphic has an alt label</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Every graphic link has a matching text link</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Graphics and backgrounds use browser-safe colors</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Animated graphics turn off by themselves</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">&nbsp;</span>
-</dd>
-<dt><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;color:#ff0c11;font-size:small;">General Design</span>
-</dt>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Pages download quickly</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">First page and home page fit into 800 x 600 pixel space</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">All of the other pages have the immediate visual impact within 800 x 600 pixels</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Good use of graphic elements (photos, subheads, pull quotes) to break up large areas of text</span>
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">Every web page in the site looks like it belongs to the same site; there are repetitive elements that carry throughout the pages</span>
-</dd>
-<dd><br />
-</dd>
-<dd><br />
-</dd>
-<dd><span style="font-family:Trebuchet MS, Verdana, Arial, sans-serif;font-size:small;">These are not complicated, especially for us, who with the ambition to be an artist. Actually I think any one can be an artist, may not be accepted by the public, but by his own heart, as long as he or she designs with his or her soul. <br />
-</span>
-</dd>
-</dl>
-</span>
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -729,6 +682,14 @@ you&#8217;ve probably got a pretty nice web site. In addition, keep these concep
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/">Some Thoughts One Day After Graduate</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/">First Two Weeks Using MacBook Pro 13 Inch With Retina Display 2013 Late Version</a>
       </li>
     
@@ -738,14 +699,6 @@ you&#8217;ve probably got a pretty nice web site. In addition, keep these concep
     
       <li class="post">
         <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a>
       </li>
     
   </ul>

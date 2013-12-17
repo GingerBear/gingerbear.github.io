@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>CS2510: Project 2 - MiniGoogle Final Report - Neil Ding's Blog</title>
+  <meta name="author" content="Neil Ding">
+
+  
+  <meta name="description" content="CS2510: Project 2 &ndash; MiniGoogle Final Report Guanxiong Ding (gud7) 12/17/2013 General Workflow Indexing workflow client send the documents to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Neil Ding's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45202460-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Neil Ding's Blog</a></h1>
+  
+    <h2>Keep the memory forever.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://www.linkedin.com/in/gxding">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">CS2510: Project 2 - MiniGoogle Final Report</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-17T16:42:00-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
+
+<h5>Guanxiong Ding (gud7)</h5>
+
+<p>12/17/2013</p>
+
+<h2>General Workflow</h2>
+
+<ul>
+<li><p>Indexing workflow</p>
+
+<ul>
+<li><p>client send the documents to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker split the file and send to ma ppers</p></li>
+<li><p>each mapper count word for its split</p></li>
+<li><p>mapper partition the word count result and send to reducer</p></li>
+<li><p>reducer aggregate the result and append to master index files</p></li>
+</ul>
+</li>
+<li><p>Querying workflow</p>
+
+<ul>
+<li><p>client send keywords to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker send each keyword to each mapper</p></li>
+<li><p>each mapper get a set of document &ndash; occurrence pairs by the keyword</p></li>
+<li><p>mapper send result set to reducer</p></li>
+<li><p>reducer gather all sets from mappers and calculate the total occurrence</p></li>
+<li><p>reducer sort the document by total occurrence and send back to client</p></li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Client</h2>
+
+<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
+
+<h3>Mini-google</h3>
+
+<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
+
+<h3>Worker</h3>
+
+<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
+
+<ul>
+<li><p>split file name</p></li>
+<li><p>document name</p></li>
+<li><p>number of mappers // to let reducer know when to start reducing</p></li>
+<li><p>address and ports of all reducers</p></li>
+</ul>
+
+
+<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
+
+<h3>Mapper helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
+
+<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
+
+<h3>Reducer helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
+
+<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
+
+<h3>Name Server</h3>
+
+<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
+
+<h3>Master index</h3>
+
+<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Neil Ding</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-17T16:42:00-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c/'>c,</a>, <a class='category' href='/blog/categories/desperate/'>desperate,</a>, <a class='category' href='/blog/categories/mapreduce/'>mapreduce,</a>, <a class='category' href='/blog/categories/os/'>os,</a>, <a class='category' href='/blog/categories/pitt/'>pitt,</a>, <a class='category' href='/blog/categories/project/'>project</a>, <a class='category' href='/blog/categories/socket/'>socket,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/" data-via="LoadingBear" data-counturl="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/" title="Previous Post: Some thoughts one day after graduate">&laquo; Some thoughts one day after graduate</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/">Some Thoughts One Day After Graduate</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/">First Two Weeks Using MacBook Pro 13 Inch With Retina Display 2013 Late Version</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/GingerBear">@GingerBear</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'GingerBear',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Neil Ding -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'neildingsblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/';
+        var disqus_url = 'http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

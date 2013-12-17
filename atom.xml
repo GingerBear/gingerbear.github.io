@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-11-08T02:56:57-05:00</updated>
+  <updated>2013-12-17T16:47:15-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,135 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CS2510: Project 2 - MiniGoogle Final Report]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/"/>
+    <updated>2013-12-17T16:42:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report</id>
+    <content type="html"><![CDATA[<p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
+
+<h5>Guanxiong Ding (gud7)</h5>
+
+<p>12/17/2013</p>
+
+<h2>General Workflow</h2>
+
+<ul>
+<li><p>Indexing workflow</p>
+
+<ul>
+<li><p>client send the documents to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker split the file and send to ma ppers</p></li>
+<li><p>each mapper count word for its split</p></li>
+<li><p>mapper partition the word count result and send to reducer</p></li>
+<li><p>reducer aggregate the result and append to master index files</p></li>
+</ul>
+</li>
+<li><p>Querying workflow</p>
+
+<ul>
+<li><p>client send keywords to minigoogle server</p></li>
+<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
+<li><p>worker lookup mappers and reducers</p></li>
+<li><p>worker send each keyword to each mapper</p></li>
+<li><p>each mapper get a set of document &ndash; occurrence pairs by the keyword</p></li>
+<li><p>mapper send result set to reducer</p></li>
+<li><p>reducer gather all sets from mappers and calculate the total occurrence</p></li>
+<li><p>reducer sort the document by total occurrence and send back to client</p></li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Client</h2>
+
+<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
+
+<h3>Mini-google</h3>
+
+<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
+
+<h3>Worker</h3>
+
+<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
+
+<ul>
+<li><p>split file name</p></li>
+<li><p>document name</p></li>
+<li><p>number of mappers // to let reducer know when to start reducing</p></li>
+<li><p>address and ports of all reducers</p></li>
+</ul>
+
+
+<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
+
+<h3>Mapper helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
+
+<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
+
+<h3>Reducer helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
+
+<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
+
+<h3>Name Server</h3>
+
+<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
+
+<h3>Master index</h3>
+
+<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Some thoughts one day after graduate]]></title>
+    <link href="http://GingerBear.github.io/blog/2013/12/14/some-thoughts-one-day-after-graduate/"/>
+    <updated>2013-12-14T23:47:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2013/12/14/some-thoughts-one-day-after-graduate</id>
+    <content type="html"><![CDATA[<p>Now is day one after graduate. In fact I have to do my operating system project now, I too much thought are stoping me. So I decide to do project tommorrow and write all these thoughts down. Ok, use Chinese.</p>
+
+<h2>莫扎特的Clarinet Concerto In A, K.622: 2. Adagio</h2>
+
+<p>我正在反复听莫扎特的(Clarinet Concerto In A, K.622: 2. Adagio)[<a href="http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH">http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH</a>]，这首曲子能让人沉静下来能想想自己的事情。第一次听是在一个莫扎特的纪录片的片头曲听到，当时一听到那个单簧管吹出的旋律就很感动。</p>
+
+<h2>毕业中</h2>
+
+<h3>甘同学的包</h3>
+
+<p>说说昨晚的一个事儿。昨天晚上与甘同学小聚，因为他要就要去加州了，月黑风高的去了匹兹堡市中心逛了逛聊了聊，回来的时候已经很晚了（或者说很早了，因为是早上六点），迷迷糊糊到了家马上就睡了，刚睡一会收到个电话说他包找不到了，里面有个两千多刀的单反，问我看看记不记得放哪儿了，我起来看了看包，发现是我自己包（恰好跟他的包除了颜色都是一样的），然后去门外看了看下车的地方也没有。我告诉他可能是放到原来的车里地上了，但他手机又没电了，钥匙在那包里也回不去。那个焦急的情景，我很能体会。中间他没有办法去买了个充电器去咖啡店充了电，又租了车去了躺路过的地方找，找不到，又打了911，甚至直接下单买了一台新的单反。到了早上我又收到了电话问我再确定一下路上有没有，尽管我很确定但还是去看了看，依旧什么都没有。我回到了房间坐再床上睡了，突然看到了我椅子下还有个包，就是他的包…… 看来是我昨晚下车的时候顺手把他的包当成我的包就直接拿走了，但是我完全不记得了。这事儿我感到十分抱歉，自己的一个犯傻导致他人身心具疲。</p>
+
+<h3>学院三楼</h3>
+
+<p>学院三楼一直是个热闹的地方，长期有邦邦同学把守，每次去那儿都挺欢乐。我平时不怎么去，直到这个学期的后半段去的比较多，一是由于图书馆人太多，位子不好找，二是跟认识的同学还能聊聊天，又是还能讨论讨论项目，运气好甚至还有免费的食物。在这段时间里也熟悉了不少新朋友，每次学习到后面就成了茶话会，大家还都听能聊的，还挺开心的。学院三楼的那个桌儿仿佛成了一个我们专业小伙伴们的据点，每天都会有小伙伴来首先将其霸占。</p>
+
+<h3>Trees Hall</h3>
+
+<p>打篮球的地儿，虽然比起国内的强多了，但地板还是不可避免的滑，我也不可避免的打得没有外场好。每周我都会来这里打两次球，认识了一堆小伙伴，真的有些不舍得离开。如果能找到匹兹堡大学的工作，最大的好处就是能继续在这儿打篮球。刚来的那会儿真是谁都不认识，很傻很天真的跟跟几个老黑打起半场来。后来打起全场第一次就更清华哥吵起来了（后来还是关系不错），狗腿后来把我拉近了他们的篮球队，每周二周五晚上都非常认真的在这里练联防和战术，当时的那几个在一队真的挺厉害的，甚至在trees都很难找到能打赢我们的队。首先我们的防守特别好，我们守的是联防，外线的补位非常及时，内线有狗腿的强硬防守。对手在进攻的时候除了投三分，几乎很难突破进来。在进攻端，大神的组织非常合理，他知道该怎么打，并且总能打出一些战术。我们还有生哥的三分球，以及非常好的快攻意识，我更像是个小前锋，进攻方式多是中投和三分，偶尔有一些挡拆的配合。后来对篮球最执着的狗腿回国了，大家似乎就没有当时的那种练球的劲头了，大家都有各自忙的事情，晚上来打球更多是为了消遣。我之前一直是做他们车过来，后面也逐渐的自己走过来了，渐渐跟他们也走得不是那么近了，更多的是想自己多发挥一些个人能力，因为说实话在之前强大打团队里，打球的方式非常单一，个人能力都退化了。总之这是一个值得回忆的地方，如果我留下，我想我需要去练练身体，把个人能力提上去。</p>
+
+<h4>(待续)</h4>
+
+<h3>加州</h3>
+
+<h3>回国</h3>
+
+<h3>分手</h3>
+
+<h2>毕业后</h2>
+
+<h3>学校工作</h3>
+
+<h3>空闲的日子</h3>
+
+<h3>朋友</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[First Two Weeks using MacBook Pro 13 inch with Retina display 2013 late version]]></title>
@@ -1122,71 +1251,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 </div>
 </div>
 </p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Node.JS，LAMP，和未来]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/"/>
-    <updated>2011-07-04T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/04/node-js%ef%bc%8clamp%ef%bc%8c%e5%92%8c%e6%9c%aa%e6%9d%a5</id>
-    <content type="html"><![CDATA[<p>
-<p><strong>Node.JS，LAMP，和未来</strong></p>
-<p><span style="font-family:mceinline;">2011年4月29日</span></p>
-<p>我刚刚读到一篇关于&ldquo;Node.JS和Javascript的历史&rdquo;的文章。这篇文章的观点很有&ldquo;热情&rdquo;。我猜他们已经捣鼓Node.JS已经很久了，并且使用服务器端JavaScript建立了他们的仪表盘。你能够用它做很多很酷的事实，而且它也很有潜力。它的安装和运行很容易，就像Redis也一样。下面是对那篇文章的摘要：</p>
-<p>我做出这句决定是因为我意识到：LAMP已经死亡。自从它诞生的时候的二十年里，Web的构成（内容、协议、服务器、客户端）已经发生了根本的转变。总的来说，有这么三个时期：</p>
-<div style="padding-left:10px;margin-left:10px;border-left:5px #eee solid;">
-<p>I. 1991-1999: HTML时代。</p>
-<p>HTML时代是关于文件的，印证了Tim Berners-Lee&rsquo;s 最初的愿景：&ldquo;一个大的，虚拟的，空中的文件系统&rdquo;。Web被静态的手输代码的文件所主导，Web客户端被严格的格式化（甚至违背了最温和排版）。静态文件用于静态客户端。</p>
-<p>II. 2000-2009: LAMP时代。</p>
-<p>LAMP时代是关于数据库的，而非文件，主导的web组合上LAMP或者类似LAMP的。无论CGI，PHP，Ruby on Rails, 或者 Django，主导的模式是用数据库的值填入HTML的模板。内容动态的存于服务器端，但在客户端仍然是静态的。</p>
-<p>III. 2010-??: Javascript时代.</p>
-<p>Javascript时代是关于事件流的。现代的Web页面部在是页面，他们是事件驱动的应用程序，信息通过它们流动。Web的核心容器&mdash;&mdash;文件对象模型&mdash;&mdash;依然存在，但不像HTML标记。DOM（文件对象模型）是一个，由JavaScript产生，内存中的，高效编码的数据结构。</p>
-<p>LAMP架构已经死亡因为很少的应用会为了响应一个很小的事件而进行全部标记的的重载；他们只想更新DOM的一小部分，通过JavaScript。AJAX做到了，但当你的服务器端LAMP模板是10%的HTML和90%的JavaScript时，很明显你在做一件错误的事情。</p>
-</div>
-<p><strong>宣称LAMP死亡的时候已经到了</strong></p>
-<p>对与类似LAMP架构死亡的解释正在进行。我会想，这是一个非常狂热的观点，需要把它放到某一个视角下来看：</p>
-<p>在每一个&ldquo;时代&rdquo;期间，新开发的技术是为了解决问题的。人们创造HTML为了创造内联的信息。当需求增加并且变得越来越难管理时，类似LAMP的工具，如PHP, Django, Ruby on Rails等等被开发出来帮助信息更容易传递。与其说替代了老技术，倒不如说在老技术上添加新东西。有时候你想用新一些的技术更管老技术，但我们仍然在使用HTML和CSS，并且当需要时，增家对他们的使用。</p>
-<p>但是类似LAMP的系统部署在所有的地方的产品上，使有些经常被访问的网站变得跟加有强大。虽然有些人正在使用Node.JS，比如Yammer，但Node.JS并没有提供与PHP, Ruby, Python, 甚至.NET相同的内容量。</p>
-<p><strong>什么是Node.JS？</strong></p>
-<p>基本上，它是围绕着Google&lsquo;s V8 JavaScript引擎的一个轻量级框架。V8是运转Google的开源浏览器Chrome的JavaScript引擎，另外一方面，Node.JS是事件驱动，并且更加快速高效。</p>
-<p>我已经捣鼓Node.JS好几周了，它很有趣也很有潜力。它是对JavaScript的独特地运用，它的基于事件的方法能很轻松德完成某些事情（通常更难用传统工具实现）。Node.JS还拥有很多很酷的库，比如Socket.IO，一个使用了特征探测的支持多重传输的库。所以，如果你的浏览器支持WebSocket或者Adobe Flash Socket，你就能使用它，或是AJAX长查询，多方流，甚至Forever Iframe技术。因为，你的程序使用任何类型的传输都会变得最有效。</p>
-<p><strong>现实一些的审视</strong></p>
-<p>不过，现在让我们更加诚实地想想吧，Node.JS发明与2010年。它依然非常非常年轻。首页上关于Node.JS的视频讲的是发明者对于PHP用户群关于Node和谨慎使用的陈述。作为一个工具，它还需要很长时间成熟。尽管如此，基于V8引擎带给这个项目不少的成熟。</p>
-<p>至于那些被替代的技术如PHP, Ruby, 和Django，我不相信他们已经&ldquo;死亡&rdquo;，相反我认为Node.JS增强了现存的技术。就像当MySQL不很适合时，我使用Redis作为数据存储工具，我认为会在未来的网站的实时通信技术上起作用。</p>
-<p>我希望写一些更多的关于Node.JS的文章，并希望能用它解决新的或者特殊的问题。但我不会去用Node.JS重写我的网站，那可能会是个噩梦。所以就像NoSQL和云计算一样，它确实是一个新技术，但它不会从根本上移除所有其他相关的东西。就像使用Redis，我不会放弃MySQL，我只是当Redis更合适时才使用。</p>
-<p>原文：<a style="outline-style:none;outline-width:initial;outline-color:initial;text-decoration:underline;cursor:pointer;color:#1e5494;" href="http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/" target="_blank">http://www.justincarmony.com/blog/2011/04/29/node-js-lamp-and-the-future/</a></p>
-</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CouchDB能为HTML5，Web Apps做什么？]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/"/>
-    <updated>2011-07-04T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/04/couchdb%e8%83%bd%e4%b8%bahtml5%ef%bc%8cweb-apps%e5%81%9a%e4%bb%80%e4%b9%88%ef%bc%9f</id>
-    <content type="html"><![CDATA[<p>&nbsp;</p>
-<p><strong>CouchDB能为HTML5，Web Apps做什么？</strong></p>
-<p><strong>CouchAPps的功效与CouchDB能如何决定移动</strong></p>
-<p>CouchApps是直接由面向文件的数据库CouchDB服务的JavaScript和HTML5应用。在下面的采访中，Found Line联合创始人以及OSCON发言人Bradley Holt (@BradleyHolt) 谈论CouchApps的功效，CouchDB能提供给开发者什么，以及数据库如何与HTML5一起工作。</p>
-<p><strong>CouchApps如何工作？</strong></p>
-<p>Bradley Holt: CouchApps是用CouchDB，JavaScript，HTML5建立的web应用.它们避免了中间层，允许web应用直接与数据库对话&mdash;&mdash;CouchDB数据库甚至能够运行在用户的机器上或者Android/iOS设备。</p>
-<p><strong>建立CouchApps的好处？</strong></p>
-<p>Bradley Holt: 使你的代码库的效率跟高（没有中间层）、可重复、根据应用程序的数据部署/复制程序的能力、由于&#8221;顺理&#8221;的web工作方式带来的好处（come with going &#8220;with the grain&#8221; of how the web works）是建立CouchApps的好处。</p>
-<p>非常坦率的说，我认为CouchApps已经适合大范围的采纳使用。最大的障碍是工具。目前的开发工具集需要改进，有时建立CouchApps的过程有点困难。&ldquo;CouchApp&ldquo;这一术语也有很多不同的理解。这意味着CouchApps的好处是引人注意的，并且工具会很快赶上。</p>
-<p><strong>HTML5引发了很多存储问题，CouchDB会融入哪儿？</strong></p>
-<p>Bradley Holt: HTML5的Web存储特性描述了用户浏览器对于关键键值的本地持续存储的API。与之前浏览器本地存储特性的尝试不同，HTML5的存储特性已经取得了重大的跨浏览器支持。</p>
-<p>然而，有一点是HTML5本地存储API缺乏的，即除了指定键，使用其他形式查询值的方法。你不能穿过一套键或值查询。IndexedDB能够处理这种情况，并允许索化的数据库查询，但IndexedDB并非当前HTML5特性的一部分，并且只在一小部分浏览器中应用。</p>
-<p>如果你需要的不仅仅是键/值存储，那么你需要到HTML5特性外面看看。和HTML5 Web存储一样，CouchDB存储键/值对。在CouchDB里，键/值对的键部分是一个文件ID，值部分是一个变现单一文件的JSON对象。与HTML5 Web存储不一样的是，CouchDB提供了一种索引和查询数据方法&mdash;&mdash;使用MapReduce&ldquo;试图&rdquo;。因为CouchDB使用了RESTful HTTP API和JSON对象最为存储文件，HTML5/JavaScript Web应用能够很容易地直接与CouchDB一起工作。</p>
-<p><strong>CouchDB的可重复特性如何与HTML5工作？</strong></p>
-<p>Bradley Holt: 同样，CouchDB不是与HTML5特性直接关联，但CouchDB的可重复特性创造了独特的机会，使CouchApps使用JavaScript和HTML5建立（而且，其他使用CouchDB建立的应用也如此）。</p>
-<p>我听说J. Chris Anderson使用&ldquo;地面计算&rdquo;（ground computing）这一术语与&ldquo;云计算&rdquo;相对。这一思想是尽可能把用户的数据存放得离用户近&mdash;&mdash;不能比用户的计算机和手机更近的了！CouchDB的可重复性使得这变成可能。使用CouchDB的增量重复，与特定用户相关的数据能够被复制到用户自己的计算机与手机（或者从上面复制出）。这允许更快地的访问用户（因为他/她的应用程序访问的是本地的数据库），离线访问、数据便携性，以及潜在对于他/她的数据更好的控制。</p>
-<p><strong>既然CouchDB在移动设备上运行，它是如何决定移动应用开发的？</strong></p>
-<p>Bradley Holt: 虽然Android是一个出色的平台，但移动应用的最大渠道还是苹果的iOS。现在CouchDB已经在Android上发布了一段时间了，但在iOS上它还是先对新的。既然CouchDB已经能用来建立iPhone/iPad应用了，我们将会很确定地看到更多的移动应用程序建立在CouchDB上，为了利用CouchDB独特的优势&mdash;&mdash;尤其是可复制性。</p>
-<p>最大的问题是，这些应用会作为本地应用建立，还是最为CouchApps建立？我也不知道答案，但我更想看到这些程序建立在CouchApps这边。通过CouchApps，开发者能够更容易地跨平台输出他们的应用，并且他们能够使用显存的HTML5，JavaScript，CSS技能集合。</p>
-<p>这一采访被编辑和缩减过。</p>
-<p><span style="font-family:Verdana;line-height:21px;"><span style="font-family:Verdana, Arial, Helvetica, sans-serif;">原文：</span><span style="font-family:Verdana, Arial, Helvetica, sans-serif;line-height:22px;"><a href="http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html">http://radar.oreilly.com/2011/06/couchdb-couchapps-html5-mobile.html</a></span></span></p>
-<p>&nbsp;</p>
 ]]></content>
   </entry>
   
