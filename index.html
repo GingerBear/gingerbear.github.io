@@ -118,32 +118,30 @@
 
 <h2>General Workflow</h2>
 
-<ul>
-<li><p>Indexing workflow</p>
+<h4>Indexing workflow</h4>
 
 <ul>
-<li><p>client send the documents to minigoogle server</p></li>
-<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
-<li><p>worker lookup mappers and reducers</p></li>
-<li><p>worker split the file and send to ma ppers</p></li>
-<li><p>each mapper count word for its split</p></li>
-<li><p>mapper partition the word count result and send to reducer</p></li>
-<li><p>reducer aggregate the result and append to master index files</p></li>
+<li>client send the documents to minigoogle server</li>
+<li>mingoogle server dispatch socket connections to worker by fork a process</li>
+<li>worker lookup mappers and reducers</li>
+<li>worker split the file and send to ma ppers</li>
+<li>each mapper count word for its split</li>
+<li>mapper partition the word count result and send to reducer</li>
+<li>reducer aggregate the result and append to master index files</li>
 </ul>
-</li>
-<li><p>Querying workflow</p>
+
+
+<h4>Querying workflow</h4>
 
 <ul>
-<li><p>client send keywords to minigoogle server</p></li>
-<li><p>mingoogle server dispatch socket connections to worker by fork a process</p></li>
-<li><p>worker lookup mappers and reducers</p></li>
-<li><p>worker send each keyword to each mapper</p></li>
-<li><p>each mapper get a set of document &ndash; occurrence pairs by the keyword</p></li>
-<li><p>mapper send result set to reducer</p></li>
-<li><p>reducer gather all sets from mappers and calculate the total occurrence</p></li>
-<li><p>reducer sort the document by total occurrence and send back to client</p></li>
-</ul>
-</li>
+<li>client send keywords to minigoogle server</li>
+<li>mingoogle server dispatch socket connections to worker by fork a process</li>
+<li>worker lookup mappers and reducers</li>
+<li>worker send each keyword to each mapper</li>
+<li>each mapper get a set of document &ndash; occurrence pairs by the keyword</li>
+<li>mapper send result set to reducer</li>
+<li>reducer gather all sets from mappers and calculate the total occurrence</li>
+<li>reducer sort the document by total occurrence and send back to client</li>
 </ul>
 
 
@@ -160,10 +158,10 @@
 <p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
 
 <ul>
-<li><p>split file name</p></li>
-<li><p>document name</p></li>
-<li><p>number of mappers // to let reducer know when to start reducing</p></li>
-<li><p>address and ports of all reducers</p></li>
+<li>split file name</li>
+<li>document name</li>
+<li>number of mappers // to let reducer know when to start reducing</li>
+<li>address and ports of all reducers</li>
 </ul>
 
 
