@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="CS2510: Project 2 &ndash; MiniGoogle Final Report Guanxiong Ding (gud7) 12/17/2013 General Workflow Indexing workflow client send the documents to &hellip;">
+  <meta name="description" content="I used to void learning regular expression, because they looks too dry to digest. And in most case when I wanna use them, I can find existing ones on &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-10T16:11:00-05:00" pubdate data-updated="true">Jan 10<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io/blog/2014/01/10/a-phone-number-matching-regular-expression/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I used to void learning regular expression, because they looks too dry to digest. And in most case when I wanna use them, I can find existing ones on the web. But there are always a shadow in my mind that it is important. The shadow forms from when I found a lot of JavaScript books spending a whole chapter introducing Regular Expression. Weeks ago when I was reading Jeff Atwood&rsquo;s <em>Effective Programming: More Than Writing Code</em>, I read a chapter talking about phone screen. It point out five main part in phone screen.</p>
+
+<ul>
+<li>Coding</li>
+<li>OO Programming</li>
+<li>Scripting and Regular Expression</li>
+<li>Data Structure</li>
+<li>Bits and Bytes</li>
+</ul>
+
+
+<p>The <strong>Regular Expression</strong> hits me, and make me starting learn it. After reading the recommanded <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions?redirectlocale=en-US&amp;redirectslug=JavaScript%2FGuide%2FRegular_Expressions">MDN Article</a> and a <a href="https://www.youtube.com/watch?v=EkluES9Rvak">video</a> presented by Lea Verou, I start to do the sample task on Jeff&rsquo;s book about Regular Expression.</p>
+
+<h3>A phone number match</h3>
+
+<p>Two kinds of phone should be matched: (123)-321-4321 and 123-321-4321.</p>
+
+<p>First, the method I use is</p>
+
+<pre><code>Regex.test(String)
+</code></pre>
+
+<p>it will return ture if match, false if not.</p>
+
+<p>Let&rsquo;s do the first case. a &ldquo;(&rdquo; at the begining, so /(/. Then three number and a &ldquo;}&rdquo;, so /(\d{3})/. Then just &ldquo;&ndash;&rdquo; and three and four numbers, so</p>
+
+<pre><code>/\(\d{3}\)-\d{3}-\d{4}/.
+</code></pre>
+
+<p>In the second case, there is not &ldquo;(&rdquo;. So &ldquo;(&rdquo; should occure once or not, so add a &ldquo;?&rdquo;.</p>
+
+<pre><code>/\(?\d{3}\)?-\d{3}-\d{4}/.
+</code></pre>
+
+<p>However there is a false positive for something like 123)-321-4321. The solution is make it occur for both &ldquo;(&rdquo; and &ldquo;)&rdquo;, OR neither of them. so</p>
+
+<pre><code>/((\d{3})|(\(\d{3}\)))-\d{3}-\d{4}/
+</code></pre>
+
+<p>Everyone told me how powerful Regular Expressiuon is, so I guess there are much more for me to discover.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1082,75 +1160,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">备忘ebay的一个讲座</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-           | <a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><strong>演讲人</strong>：Brain Johnson@ebay
-
-<strong>主题</strong>：ebay的大数据
-
-<strong>最大印象</strong>：努力很大，投入很多，但效果一般（5% better / year）
-
-<strong>片段</strong>：
-
-&#8220;big is not the case, detail is.&#8221;
-
-关于 搜索key word expansion，他讲了很多情况中是不是要把搜索关键词的相关词也纳入搜索范围，比如加s的复数。但在会出现加了s就是毫不相关的东西，例子忘了。另外，在人们搜索diary的时候，很多人想找的是吸血鬼日记，而不是笔记本。在人们搜索basketball的时候，大多数人想找的是篮球鞋，而不是篮球。我的第一影响力可以用搜索后，点击商品的类别来自动划分不同key word的expansion。
-
-他还略过了一句话，其实也是我很想问的。那就是他说算法不重要（大概意思），数据更重要。为啥？
-
-刚开发的时候，ebay投了几千万美元（具体忘了），结果由于所带来的改进，几个月（具体忘了）就赚回来了。看来有和无的差别是巨大的。
-<div>
-<div>他还分享了任务的data flow pipeline:</div>
-<div>
-<ul>
-	<li>production</li>
-	<li>behavioral item data analysisi</li>
-	<li>feature generation</li>
-	<li>classification prediction</li>
-	<li>offline analysis</li>
-	<li>human judgment</li>
-	<li>a/b test</li>
-</ul>
-（完）
-
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1166,6 +1175,10 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
       </li>
     
@@ -1179,10 +1192,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
     
       <li class="post">
         <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a>
       </li>
     
   </ul>
@@ -1227,7 +1236,7 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Neil Ding -
+  Copyright &copy; 2014 - Neil Ding -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

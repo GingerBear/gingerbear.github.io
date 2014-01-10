@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: learn | Neil Ding's Blog]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/learn/atom.xml" rel="self"/>
+  <title><![CDATA[Category: regex, | Neil Ding's Blog]]></title>
+  <link href="http://GingerBear.github.io/blog/categories/regex/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
   <updated>2014-01-10T16:55:42-05:00</updated>
   <id>http://GingerBear.github.io/</id>

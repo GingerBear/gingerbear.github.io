@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2013-12-17T16:58:55-05:00</updated>
+  <updated>2014-01-10T16:55:42-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A phone number matching regular expression]]></title>
+    <link href="http://GingerBear.github.io/blog/2014/01/10/a-phone-number-matching-regular-expression/"/>
+    <updated>2014-01-10T16:11:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2014/01/10/a-phone-number-matching-regular-expression</id>
+    <content type="html"><![CDATA[<p>I used to void learning regular expression, because they looks too dry to digest. And in most case when I wanna use them, I can find existing ones on the web. But there are always a shadow in my mind that it is important. The shadow forms from when I found a lot of JavaScript books spending a whole chapter introducing Regular Expression. Weeks ago when I was reading Jeff Atwood&rsquo;s <em>Effective Programming: More Than Writing Code</em>, I read a chapter talking about phone screen. It point out five main part in phone screen.</p>
+
+<ul>
+<li>Coding</li>
+<li>OO Programming</li>
+<li>Scripting and Regular Expression</li>
+<li>Data Structure</li>
+<li>Bits and Bytes</li>
+</ul>
+
+
+<p>The <strong>Regular Expression</strong> hits me, and make me starting learn it. After reading the recommanded <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions?redirectlocale=en-US&amp;redirectslug=JavaScript%2FGuide%2FRegular_Expressions">MDN Article</a> and a <a href="https://www.youtube.com/watch?v=EkluES9Rvak">video</a> presented by Lea Verou, I start to do the sample task on Jeff&rsquo;s book about Regular Expression.</p>
+
+<h3>A phone number match</h3>
+
+<p>Two kinds of phone should be matched: (123)-321-4321 and 123-321-4321.</p>
+
+<p>First, the method I use is</p>
+
+<pre><code>Regex.test(String)
+</code></pre>
+
+<p>it will return ture if match, false if not.</p>
+
+<p>Let&rsquo;s do the first case. a &ldquo;(&rdquo; at the begining, so /(/. Then three number and a &ldquo;}&rdquo;, so /(\d{3})/. Then just &ldquo;&ndash;&rdquo; and three and four numbers, so</p>
+
+<pre><code>/\(\d{3}\)-\d{3}-\d{4}/.
+</code></pre>
+
+<p>In the second case, there is not &ldquo;(&rdquo;. So &ldquo;(&rdquo; should occure once or not, so add a &ldquo;?&rdquo;.</p>
+
+<pre><code>/\(?\d{3}\)?-\d{3}-\d{4}/.
+</code></pre>
+
+<p>However there is a false positive for something like 123)-321-4321. The solution is make it occur for both &ldquo;(&rdquo; and &ldquo;)&rdquo;, OR neither of them. so</p>
+
+<pre><code>/((\d{3})|(\(\d{3}\)))-\d{3}-\d{4}/
+</code></pre>
+
+<p>Everyone told me how powerful Regular Expressiuon is, so I guess there are much more for me to discover.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CS2510: Project 2 - MiniGoogle Final Report]]></title>
@@ -1215,40 +1263,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 <p><strong>Proint Center</strong>：来自OfficeMax的程序，它能让你发生文件到他们的商店打印。你能够定制打印，打印eamil，文档，图片已经存放在你的Google Docs里的其他文件。当打印请求完成时，你也会收到提醒。对那些附近有OfficeMax的的人很有帮助。</p>
 <p>&nbsp;</p>
 <p>原文：<a href="http://gizmodo.com/5817542/">http://gizmodo.com/5817542/</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[伴随着顶级银行，金融服务商Yodlee的用户达到3千万]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/06/%25e4%25bc%25b4%25e9%259a%258f%25e7%259d%2580%25e9%25a1%25b6%25e7%25ba%25a7%25e9%2593%25b6%25e8%25a1%258c%25ef%25bc%258c%25e9%2587%2591%25e8%259e%258d%25e6%259c%258d%25e5%258a%25a1%25e5%2595%2586yodlee%25e7%259a%2584%25e7%2594%25a8%25e6%2588%25b7%25e8%25be%25be%25e5%2588%25b03%25e5%258d%2583%25e4%25b8%2587/"/>
-    <updated>2011-07-06T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/06/%e4%bc%b4%e9%9a%8f%e7%9d%80%e9%a1%b6%e7%ba%a7%e9%93%b6%e8%a1%8c%ef%bc%8c%e9%87%91%e8%9e%8d%e6%9c%8d%e5%8a%a1%e5%95%86yodlee%e7%9a%84%e7%94%a8%e6%88%b7%e8%be%be%e5%88%b03%e5%8d%83%e4%b8%87</id>
-    <content type="html"><![CDATA[<p>
-<div style="overflow-x:auto;overflow-y:auto;font:normal normal normal 14px/normal Verdana;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#ffffff;cursor:text;margin:0;padding:2px 4px 0;">
-<div>
-<div>
-<div><span style="line-height:21px;">伴随着顶级银行，金融服务商Yodlee的用户达到3千万</span></div>
-<div><span style="line-height:21px;">Rip Empson</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">Yodlee，一家以帐户聚集而著名的个人金融管理服务提供商今天宣布他们跨过了3千万用户这一里程碑。1999年建立的Yodlee已经筹集了1亿美元的资金，并悄悄地建立了一套金融管理的解决方案，帮助了很多大型的金融机构和门户，包括美国银行、Fidelity和Amex。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">然而，由于筹集了大量资本，并在十年的金融动荡中存活了下来，Yodlee依然处在危险之中（under the radar），尽管Yodlee给所有Y Combinator的启动项目提供服务，并且最初提供后端技术给Mint.com，直到Mint 2009年被Intuit获得。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">正如Mike Arrington当时写道，Yodlee在它早期提供它的帐户聚集服务给Mint，让Mint把注意里集中在用户体验以及大型市场运动上。它的启动在业界造成的很大的反应，几乎使它的先辈黯然失色。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">正如之前所说，Yodlee继续超过Mint.com的5百万用户，因为它已经建立了一个平台，作为了大部分在线个人金融管理服务的后端。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">Yodlee跨越了3千万用户这一里程碑，似乎印证了这样一个事实：网上银行已经过渡到个人金融管理，因为用户越来越希望能通过一个可定制的平台管理他们所有的的资金。加上基于app的移动功能，通过它的FinApp Store开放API给开发人员建立apps来启动各种产品，这已经使Yodlee变成了更受关注的在线金融服务提供商之一。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">然而，虽然Yodlee最近获得了它的第45个专利，美国最大10家银行中五家是它的客户，已经注册用户达到3千万，它依然在寻找那个逃生口（Mint.com在几年之前已经找到）。</span></div>
-<div><span style="line-height:21px;"><br /></span></div>
-<div><span style="line-height:21px;">也许随着45个专利的发布，专利包含数据聚合分类，即时帐户认证，个人资产管理，Yodlee智力资产的投资已经开始取得成效。</span></div>
-<div><br /></div>
-<div><span style="line-height:21px;">原文：</span><a href="http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/">http://techcrunch.com/2011/07/06/with-top-banks-in-tow-financial-service-provider-yodlee-hits-30-million-users/</a></div>
-</div>
-</div>
-</div>
-</p>
 ]]></content>
   </entry>
   
