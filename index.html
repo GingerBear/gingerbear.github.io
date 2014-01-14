@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="I used to void learning regular expression, because they looks too dry to digest. And in most case when I wanna use them, I can find existing ones on &hellip;">
+  <meta name="description" content="Since many friends and me are trying to hunting job in the US. I realize there should be a place for us to discuss and share. I am think if I could &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">A Plan to Hunting Job as a TEAM (Deprecated)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-14T18:13:00-05:00" pubdate data-updated="true">Jan 14<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/#disqus_thread"
+             data-disqus-identifier="http://GingerBear.github.io/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Since many friends and me are trying to hunting job in the US. I realize there should be a place for us to discuss and share. I am think if I could build some thing that may be used for that. We will benefit from that tool and I will benefit from building that tool. Even some friends may join us building this tool and make it open-source.</p>
+
+<p>Generally, this tool should have serveral parts:</p>
+
+<ul>
+<li>Coding Board</li>
+<li>Discuess Board</li>
+<li>Shared To-Do-List</li>
+</ul>
+
+
+<h2>Coding Board</h2>
+
+<p>Most importantly, users are willing to have a place to post their coding puzzles, for asking help or for sharing good questions. The main page of coding board is a list of post, along with title, poster, participants, tags(help, good stuff), and time.</p>
+
+<p>Clicking into a item in the list, it will go to the this puzzle page. It will show detail info of this puzzle. Next to the page, it will appended by a set of comment or answer to that puzzle. Also they could use @ sign to mention someone. (So far it is just like the github issue).</p>
+
+<p>The editor for create new post should markdown and syntax highlights.</p>
+
+<p>More features like assign helper to solve question and email notification.</p>
+
+<h2>Discuess Board</h2>
+
+<p>Users shared job info on this board. Like a good position opening. Or some interview experience sharing. Basicly, I this lit version of Coding Board. (Why not github)</p>
+
+<h2>Shared To-Do-List</h2>
+
+<p>I found myself can not live without a todo list. And I think it will be more powerful in incenting people to get shit done. Combining the coding board with the todo list, I kinda feel that will promote people to code more. Well, in a second thought, people may not that will to share their todo list. They are just not that enjoy making personal thing pulic to others. And they may feel guilty when they feel not finished the todo list, and don&rsquo;t want others know. So quite a few people may not share their todo list.</p>
+
+<h2>In the End: Just use Github</h2>
+
+<p>In the end of writing this post, I convinced myself not to build a customed tool specifically for this thing. It cost me too much, and just not gain too much, and people won&rsquo;t get too much better from this tool. Github is pretty well builted to fit most of the requirement. So why just make a repo, set a set of rules, and let them to join.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1051,115 +1121,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-           | <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div>
-<h1><strong>背景： </strong></h1>
-</div>
-一个人开发项目到了一半，想多拉几个人过来一起开发。
-<h1><strong>使用顺序： </strong></h1>
-<h2><strong>（一）我先配置好公共的repo。</strong></h2>
-1. 在Dropbox上创建一个文件夹作为共享的空repo：
-<pre><span style="color:#999999;"> $ cd C:/Users/Neil/Dropbox/</span>
-
-<span style="color:#999999;"> $ mkdir Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ cd Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ git init --bare
-
-</span></pre>
-2.  把原来本机上项目放到到那个共享的repo里：
-<pre><span style="color:#999999;"> $ cd C:/User/Neil/Projects/MyProject1</span>
-
-<span style="color:#999999;"> $ git init</span>
-
-<span style="color:#999999;"> $ git remote add origin C:/Users/Neil/Dropbox/Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "first commit."</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-<h2></h2>
-<h2><strong>（二）新加进来的开发们在本机clone一份。</strong></h2>
-<span style="color:#999999;">注意：在操作git之前，先config好自己的user.name和user.email</span>
-
-1. 创建本地目录，把Dropbox共享到的repo clone到里面。
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/</span>
-
-<span style="color:#999999;"> $ git clone C:/Users/Eric/Dropbox/Share/MyProject1.git</span></pre>
-<h2></h2>
-<h2><strong>（三）开始日常开发。</strong></h2>
-1. 获取最新的版本：
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/MyProject1</span>
-
-<span style="color:#999999;"> $ git pull origin master
-
-</span></pre>
-2. 完成一个小功能后，commit一个版本到本地的repo：
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"
-
-</span></pre>
-3. 完成一个大功能后，把本地的repo push到共享的repo里：
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-<h2></h2>
-<h2><strong>另外：</strong></h2>
-可能会遇到冲突，因为在你pull最新版本下来之后，又有人push了更新的版本到共享repo里，而且他修改了跟你相关的代码。因此当你现在push的时候会出错，因为共享repo也不知道用他的代码好还是你的代码好。这时就git就会要求你在push之前再pull一次，并且会告诉你冲突的地方，在具体文件中会以下面这种方式体现：
-<pre><span style="color:#999999;"> &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
-
-<span style="color:#999999;"> 我的代码</span>
-
-<span style="color:#999999;"> ===========</span>
-
-<span style="color:#999999;"> 他的代码</span>
-
-<span style="color:#999999;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span></pre>
-我需要把这段代码解决（跟他商量怎么回事儿）之后在push到共享的repo。
-
-（完）
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1175,6 +1136,10 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">A Plan to Hunting Job as a TEAM (Deprecated)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
       </li>
     
@@ -1188,10 +1153,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
     
       <li class="post">
         <a href="/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/">First Two Weeks Using MacBook Pro 13 Inch With Retina Display 2013 Late Version</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding's Blog]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2014-01-10T16:55:42-05:00</updated>
+  <updated>2014-01-14T18:55:03-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A plan to Hunting Job AS A TEAM (deprecated)]]></title>
+    <link href="http://GingerBear.github.io/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/"/>
+    <updated>2014-01-14T18:13:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2014/01/14/a-plan-to-hunting-job-as-a-team</id>
+    <content type="html"><![CDATA[<p>Since many friends and me are trying to hunting job in the US. I realize there should be a place for us to discuss and share. I am think if I could build some thing that may be used for that. We will benefit from that tool and I will benefit from building that tool. Even some friends may join us building this tool and make it open-source.</p>
+
+<p>Generally, this tool should have serveral parts:</p>
+
+<ul>
+<li>Coding Board</li>
+<li>Discuess Board</li>
+<li>Shared To-Do-List</li>
+</ul>
+
+
+<h2>Coding Board</h2>
+
+<p>Most importantly, users are willing to have a place to post their coding puzzles, for asking help or for sharing good questions. The main page of coding board is a list of post, along with title, poster, participants, tags(help, good stuff), and time.</p>
+
+<p>Clicking into a item in the list, it will go to the this puzzle page. It will show detail info of this puzzle. Next to the page, it will appended by a set of comment or answer to that puzzle. Also they could use @ sign to mention someone. (So far it is just like the github issue).</p>
+
+<p>The editor for create new post should markdown and syntax highlights.</p>
+
+<p>More features like assign helper to solve question and email notification.</p>
+
+<h2>Discuess Board</h2>
+
+<p>Users shared job info on this board. Like a good position opening. Or some interview experience sharing. Basicly, I this lit version of Coding Board. (Why not github)</p>
+
+<h2>Shared To-Do-List</h2>
+
+<p>I found myself can not live without a todo list. And I think it will be more powerful in incenting people to get shit done. Combining the coding board with the todo list, I kinda feel that will promote people to code more. Well, in a second thought, people may not that will to share their todo list. They are just not that enjoy making personal thing pulic to others. And they may feel guilty when they feel not finished the todo list, and don&rsquo;t want others know. So quite a few people may not share their todo list.</p>
+
+<h2>In the End: Just use Github</h2>
+
+<p>In the end of writing this post, I convinced myself not to build a customed tool specifically for this thing. It cost me too much, and just not gain too much, and people won&rsquo;t get too much better from this tool. Github is pretty well builted to fit most of the requirement. So why just make a repo, set a set of rules, and let them to join.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A phone number matching regular expression]]></title>
@@ -1243,26 +1283,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>原文：<a href="http://howtonode.org/node-and-mongo">http://howtonode.org/node-and-mongo</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[本周最佳Android软件]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/07/06/%25e6%259c%25ac%25e5%2591%25a8%25e6%259c%2580%25e4%25bd%25b3android%25e8%25bd%25af%25e4%25bb%25b6/"/>
-    <updated>2011-07-06T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/07/06/%e6%9c%ac%e5%91%a8%e6%9c%80%e4%bd%b3android%e8%bd%af%e4%bb%b6</id>
-    <content type="html"><![CDATA[<p>&nbsp;</p>
-<p>本周最佳Android软件</p>
-<p>Casey Chan 6月1日</p>
-<p><strong>Google+</strong>：Google+很不错吗？的确。Google+的首页上四个图标启动四个主要功能：Circles, Stream, Huddle 和 Photos。Circles让你在你选的组群里分享东西。Stream是一个按时间显示的朋友最近分享，与Facebook的新鲜事（news feed）差不多。Huddle一个类似于Groupme的群聊天工具，通过它你可以即时组一个群，谈论计划一个晚会或者假期之类。Photos很不错，因为它有一个&ldquo;即时上传&rdquo;的 功能，能够自动把照片上传到云中，让分享很方便。免费</p>
-<p><strong>Pool Party</strong>：Pool Party由Slide设计，big G的子公司。它类似于Instagram，因为它们都是社会化照片分享应用，但这也只是唯一的相似点。Instagram主要针对是个人的表达（有它的时髦过滤器（hipster-ish filters）为证），Pool Party更注重社交聚会（party）。它更重视组群的分享，在这里个人用户为一个组群相册（一个pool）做贡献，只有你愿意。在这方面，它有点像Color，除了它是基于朋友群的，而非地理位置。</p>
-<p><strong>Background Check - Been认证</strong>：Been认证的背景查看第一次到达Android平台。只要根据名字或者Email地址，你可以查看任何人的背景（包括亲戚、财产记录、犯罪记录以及社会媒体的足迹）。你能每周获得一份免费报告。增强版售价$.99，或者$.99二十包。</p>
-<p><strong>Skype</strong>：Skype已经在Android上已经更新到了2.0版本，使Android手机、iPhone，Macs、Windows和TV之间能够实现视频聊天。它在3G和WIFI网络上都可以工作，并且它是免费的。</p>
-<p><strong>HoneyGram</strong>: 特别为Android Honeycomb开发，HoneyGram是一个Android上的虚拟Instagram应用。它利用了扫屏和手势去看时髦的照片。所有的用户都很偷看Instagram的图片，附近的图片，标签搜索，在你的控制板上放一个小部件。当你登录的话似乎，你将看到朋友的新鲜事，添加更多的小部件到控制板上。</p>
-<p><strong>Kona&#8217;s Crate</strong>：一个物理游戏（之前只有iOS版本），游戏中，你控制一座喷气发动的平台，把箱子放到指定的地点。躲避障碍完成任务的速度越快，分越高！很有趣也很靠技巧。$1</p>
-<p><strong>Proint Center</strong>：来自OfficeMax的程序，它能让你发生文件到他们的商店打印。你能够定制打印，打印eamil，文档，图片已经存放在你的Google Docs里的其他文件。当打印请求完成时，你也会收到提醒。对那些附近有OfficeMax的的人很有帮助。</p>
-<p>&nbsp;</p>
-<p>原文：<a href="http://gizmodo.com/5817542/">http://gizmodo.com/5817542/</a></p>
 ]]></content>
   </entry>
   
