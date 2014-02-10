@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en" xmlns:wb="http://open.weibo.com/wb"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Neil Ding's Blog</title>
+  <title>Neil Ding</title>
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="背景：  一个人开发项目到了一半，想多拉几个人过来一起开发。 使用顺序：  （一）我先配置好公共的repo。 1. 在Dropbox上创建一个文件夹作为共享的空repo： $ cd C:/Users/Neil/Dropbox/ $ mkdir Git-Repository/MyProject1. &hellip;">
+  <meta name="description" content="积极地说，感觉还不错，虽然做的还远不够好。 由于昨天睡得晚，今天9点才起来，但早晨状态不错，并不困，简单吃了早餐和锻炼后，开始干正事儿。实际上这个时间是一天最佳的时间，所以应该花在最重要的事情上，但惰性使然，导致自己看起了vimeo的教学视频，一看就看了好多。略看了一下已知的知识， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://GingerBear.github.io/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Neil Ding's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Neil Ding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -48,9 +48,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Neil Ding's Blog</a></h1>
+  <h1><a href="/">Neil Ding</a></h1>
   
-    <h2>Keep the memory forever.</h2>
+    <h2>Technical and fun stuff here</h2>
   
 </hgroup>
 
@@ -70,7 +70,7 @@
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="http://www.linkedin.com/in/gxding">About</a></li>
+  <li><a href="/about">About</a></li>
 </ul>
 
 </nav>
@@ -78,6 +78,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-23T00:00:00-04:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">积极地说，感觉还不错，虽然做的还远不够好。
+
+由于昨天睡得晚，今天9点才起来，但早晨状态不错，并不困，简单吃了早餐和锻炼后，开始干正事儿。实际上这个时间是一天最佳的时间，所以应该花在最重要的事情上，但惰性使然，导致自己看起了vimeo的教学视频，一看就看了好多。略看了一下已知的知识，包括sublime tex, wordpress, web font。了解了一种格式语言Markdown，使用在github的readme中，通过ruby能够自动转化成HTML。还了解到了sublime text的package manager，下载的sass的代码高亮。最主要的是学习了一下SASS。
+
+<strong>SASS最主要的是三个功能：变量，方法，循环。</strong>
+
+使用美元符号$定义变量，可以定义统一的颜色，宽度，让CSS更容易维护。
+
+使用@mixin定义方法，在方法体内写入复用CSS，可以传递参数，使用@include调用。这使得按钮，widget很容易实现，配合变量，使得样式的主题很容易修改。
+
+循环的格式为
+<blockquote>@for i from 1 through 9</blockquote>
+缩进的内容为循环体。循环可以实现渐变的样式，但我觉得用处不大。
+
+<strong>另外SASS的使用规则还有：</strong>
+<ul>
+	<li>不需要大括号，使用缩进</li>
+	<li>可用用缩进加$重复利用某一元素，类似于JavaScript的with关键字</li>
+	<li>一些函数darken(#ccc, 10%), lighten(#ccc, 10%)</li>
+</ul>
+从sass &#8211;watch产生了小想法。watch能使.sass每次有变化的时候会自动编译成.css文件，那么，做web开发的时候，每当完成某个页面的时候，当自动保存sublime text后能不能自动刷新浏览器呢？这会带来一些方便。
+
+很快就到午饭时间了，吃了牛肉青椒番茄丁拌米线，半小时搞定。打算下午考驾照permit，开始做题，到了快两点出门结果下大雨，走了不远便打道回府。开始干“正事儿”。进入状态很慢，Java读着读着就容易走神，容易去看别的东西。看着看着觉得Java学习内容太多，太难肯，并且在web方向用的不多。并且越来越觉得Python更加适合，应用更广，更新，与web更近。回头再把Java扔到了一边开始找Python的书看，挑了不少时间结果很不明智地挑一本cookbook，鼓足一股劲开始啃了一起来，终于啃到正题了，结果发现根本就不是我需要的，都是一些细节函数的用法，没法读只能用来查。又扔到了一遍。又找了一圈要么太基础，要么太专，要么太老。我开始上网找网上的学习资料，结果看到了<a href="http://www.learnpython.org/">http://www.learnpython.org/</a> 就又鼓起劲开始学了起来，非常基础但让我熟悉其语法来了，也加上了一些小coding，很快就把基础知识过了一遍。
+
+想尝试做几道leetcode题目但对于Java还是太不熟悉，无从下手。
+
+就这么已经晚上11点了。最正题的JavaScript还没看。
+
+&nbsp;
+
+虽然没完成任务，但状态感觉还是有很大进步的，后面抓紧分配好时间，提前在google calendar上制定好时间。
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -101,9 +167,6 @@
 
 
 <time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-           | <a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Comments</a>
         
       </p>
     
@@ -211,9 +274,6 @@
 
 <time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
         
-           | <a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">Comments</a>
-        
       </p>
     
   </header>
@@ -280,9 +340,6 @@
 
 <time datetime="2012-09-29T00:00:00-04:00" pubdate data-updated="true">Sep 29<span>th</span>, 2012</time>
         
-           | <a href="/blog/2012/09/29/%25e5%2586%2599%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%2594%25e8%25ae%25b0/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2012/09/29/%25e5%2586%2599%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%2594%25e8%25ae%25b0/">Comments</a>
-        
       </p>
     
   </header>
@@ -346,9 +403,6 @@
 
 
 <time datetime="2012-09-17T00:00:00-04:00" pubdate data-updated="true">Sep 17<span>th</span>, 2012</time>
-        
-           | <a href="/blog/2012/09/17/%25e4%25ba%258c%25e6%2589%258b%25e7%259b%25b8%25e6%259c%25ba%25e8%25af%2595%25e6%258b%258d%25e4%25b8%258e%25e6%25b2%2583%25e5%25b0%2594%25e7%258e%259b%25e8%25b4%25ad%25e7%2589%25a9/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2012/09/17/%25e4%25ba%258c%25e6%2589%258b%25e7%259b%25b8%25e6%259c%25ba%25e8%25af%2595%25e6%258b%258d%25e4%25b8%258e%25e6%25b2%2583%25e5%25b0%2594%25e7%258e%259b%25e8%25b4%25ad%25e7%2589%25a9/">Comments</a>
         
       </p>
     
@@ -550,9 +604,6 @@ Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这
 
 <time datetime="2012-01-14T00:00:00-05:00" pubdate data-updated="true">Jan 14<span>th</span>, 2012</time>
         
-           | <a href="/blog/2012/01/14/neil%25e7%259a%25842012%25e5%2589%258d%25e5%258d%258a%25e4%25b8%25aa%25e6%259c%2588/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2012/01/14/neil%25e7%259a%25842012%25e5%2589%258d%25e5%258d%258a%25e4%25b8%25aa%25e6%259c%2588/">Comments</a>
-        
       </p>
     
   </header>
@@ -610,9 +661,6 @@ Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这
 
 
 <time datetime="2011-12-02T00:00:00-05:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2011</time>
-        
-           | <a href="/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/">Comments</a>
         
       </p>
     
@@ -675,9 +723,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 
 
 <time datetime="2011-11-05T00:00:00-04:00" pubdate data-updated="true">Nov 5<span>th</span>, 2011</time>
-        
-           | <a href="/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/">Comments</a>
         
       </p>
     
@@ -761,9 +806,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 
 <time datetime="2011-11-03T00:00:00-04:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2011</time>
         
-           | <a href="/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/">Comments</a>
-        
       </p>
     
   </header>
@@ -838,9 +880,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 
 <time datetime="2011-10-30T00:00:00-04:00" pubdate data-updated="true">Oct 30<span>th</span>, 2011</time>
         
-           | <a href="/blog/2011/10/30/hello-asia/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/10/30/hello-asia/">Comments</a>
-        
       </p>
     
   </header>
@@ -849,60 +888,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
   <div class="entry-content">这是我刚刚开启的独立博客，在Sina App Engine的服务下搭建。
 
 &nbsp;
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/09/node-js%25e5%2592%258cmongodb/">Node.js和MongoDB</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-09T00:00:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2011</time>
-        
-           | <a href="/blog/2011/07/09/node-js%25e5%2592%258cmongodb/#disqus_thread"
-             data-disqus-identifier="http://GingerBear.github.io/blog/2011/07/09/node-js%25e5%2592%258cmongodb/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>&nbsp;</p>
-<p><strong>Node.js和MongoDB</strong></p>
-<p>这是 <a href="http://nodeknockout.com/" target="_blank">Node.js Knockout</a> 系列学习使用<a href="http://nodejs.org/" target="_blank">node.js</a>的第六篇。这篇文章的作者是<a href="http://mongodb.org/" target="_blank">10gen</a>，并从他的博客中<a href="http://blog.mongodb.org/post/812003773/node-js-and-mongodb" target="_blank">转发</a>。</p>
-<p><a href="http://www.10gen.com/" target="_blank">10gen</a>是<a href="http://www.mongodb.org/" target="_blank">MongoDB</a>的企业赞助人。MongoDB在键值存储（key-value stores）（高速并且高度可扩展）和传统的关系数据库（提供大量查询和深度功能）之间的缺口上建立了桥梁。</p>
-<p><strong>Node 和 MongoDB</strong></p>
-<p>Node.js是建立各种实时应用程序（从分析系统到聊天服务器到地理位置追踪服务）的一种框架的选择之一。如果你对于Node还一无所知，请看<a href="http://simonwillison.net/2009/Nov/23/node/" target="_blank">Simon Willson 的出色介绍</a>。如果你已经在使用Node，那么你可能需要一个数据库，并且你正在考虑是否使用MongoDB。</p>
-<p>基本原理已经存在。使用Node Javascript意味着MongoDB文件取得了最自然的代表（就如JSON）存在于应用层。在你的应用与MongoDB的外壳（shell）之间存在着很大的一致性，因为外壳是JavaScript的解释器，所以你不必更换语言或者把应用移到数据库里。</p>
-<p><strong>Node.js MongodB Driver</strong></p>
-<p>在10gen，对于Node.js和MongoDB的支持让我印象非常深刻。首先，有Christian Kvalheim&#8217;s优秀的<a href="http://github.com/christkv/node-mongodb-native" target="_blank">mongodb-node-native项目</a>，一个完全通过JavaScript使用Node.js系统库的无障碍MongoDB驱动。这个项目是与<a href="http://www.mongodb.org/display/DOCS/Ruby+Language+Center" target="_blank">MongoDB Ruby驱动</a>非常接近的端口，使得已经使用的驱动能够轻松转换到10gen支持的驱动。如果你刚刚开始，<a href="http://groups.google.com/group/node-mongodb-native" target="_blank">mongodb-node-native mailing list</a>对你会非常有用。</p>
-<p><strong>Hummingbird</strong></p>
-<p>需要一个真实的例子吗？看看<a href="http://mnutt.github.com/hummingbird/" target="_blank">Hummingbird</a>吧，Michael Nutt&#8217;s 的实施分析应用。它建立在MongoDB上使用Node.js和mongodb-node-native驱动。Hummingbird是一个用于<a href="http://www.gilt.com/" target="_blank">Gilt Group</a>的产品，使用了一系列给人印象深刻的技术；它使用了<a href="http://expressjs.com/" target="_blank">express.js</a>应用框架，在websockets的帮助下炫耀了一个灵敏的接口。绝对值得一试。</p>
-<p><strong>Mongoose</strong></p>
-<p>当然，一个使用Node.js的公认困难是关于深奥回收结构。如果你遇到了问题，或者你需要一个更丰富的数据模型库，那么<a href="http://www.learnboost.com/mongoose/" target="_blank">Mongoose</a>就是答案。由<a href="http://www.learnboost.com/" target="_blank">Learnboost</a>创造的Mongoose建立在mongodb-node-native上，为建立你的引用提供了一个优秀的API。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>原文：<a href="http://howtonode.org/node-and-mongo">http://howtonode.org/node-and-mongo</a></p>
 </div>
   
   
@@ -923,8 +908,39 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 <aside class="sidebar">
   
     <section>
+	<br>
+  <p>I am graduated student from University of Pittsburgh. I am looking for a front-end/full-stack Developer job.</p>
+  <p>I love playing with JavaScript, HTML and CSS. I also familiar with back-end and database. I can finish projects from end to end.</p><br>
+  <p style="text-align: center"><img src="http://www.gravatar.com/avatar/51286f1ee07403b00eb216f3fa58e03f?s=200" alt="Neil Ding"></p>
+
+  <p>
+	  	<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+	  	<wb:follow-button uid="1659277913" type="red_1" width="67" height="24" >@GingerBear</wb:follow-button>
+	  	<a href="https://twitter.com/LoadingBear" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @LoadingBear</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<style>.ig-b- { display: inline-block; }
+		.ig-b- img { visibility: hidden; }
+		.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+		.ig-b-v-24 { width: 137px; height: 24px; background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0; }
+		@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min&#8211;moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+		.ig-b-v-24 { background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png); background-size: 160px 178px; } }</style>
+		<a href="http://instagram.com/loadingbear?ref=badge" class="ig-b- ig-b-v-24"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a><br>
+
+  	<!-- Place this code where you want the badge to render. -->
+		<a href="//plus.google.com/104871708136437408933?prsrc=3"
+		   rel="publisher" target="_top" style="text-decoration:none;display:inline-block;color:#333;text-align:center; font:13px/16px arial,sans-serif;white-space:nowrap;">
+		<span style="display:inline-block;font-weight:bold;vertical-align:top;margin-right:5px; margin-top:0px;">Neil Ding</span><span style="display:inline-block;vertical-align:top;margin-right:13px; margin-top:0px;">on</span>
+		<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+" style="border:0;width:16px;height:16px;"/>
+		</a>
+  </p>
+</section>
+<section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/10/something-about-me/">Something About Me</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">A Plan to Hunting Job as a TEAM (Deprecated)</a>
@@ -940,10 +956,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
     
       <li class="post">
         <a href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/">Some Thoughts One Day After Graduate</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/">First Two Weeks Using MacBook Pro 13 Inch With Retina Display 2013 Late Version</a>
       </li>
     
   </ul>
@@ -969,7 +981,7 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 
         github.showRepos({
             user: 'GingerBear',
-            count: 0,
+            count: 5,
             skip_forks: true,
             target: '#gh_repos'
         });

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: giveup | Neil Ding's Blog]]></title>
+  <title><![CDATA[Category: giveup | Neil Ding]]></title>
   <link href="http://GingerBear.github.io/blog/categories/giveup/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2014-01-14T18:55:03-05:00</updated>
+  <updated>2014-02-10T17:56:58-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
-    
+    <email><![CDATA[bbbear444@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
