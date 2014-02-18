@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en" xmlns:wb="http://open.weibo.com/wb"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A wandering on CSS3 - Neil Ding</title>
+  <meta name="author" content="Neil Ding">
+
+  
+  <meta name="description" content="CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Neil Ding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45202460-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Neil Ding</a></h1>
+  
+    <h2>Technical and fun stuff here</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:GingerBear.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A Wandering on CSS3</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-17T13:19:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly using those main features, or triditional CSS2 features like position, styling, flaoting, etc, and a little bit decorating CSS3 features like border-radius, and box-shadow. CSS is not difficult, and when I think I have master the basic, I stop exploring those new features and believe that they are still on the way on browser compatbility.</p>
+
+<p>Recently front end technique is envolving so fast that experimental CSS3 things now become practical. Also due to the face that I have preparing for the front end job interview, I am going to make a wandering on these new features of CSS3.</p>
+
+<h3>Decoration</h3>
+
+<h4>box-shadow, border-radius, opacity</h4>
+
+<p>Most common used CSS3 features, and they are very well supported by modern browsers. <code>box-shadow</code> make shadow very easy in web pages. There are several paramaters to precisely control shadows, color, offset, blur, speard and inner/outter. It is often use in popup, dropdown. It is already been vendor-prefix freed on my just look on google plus sharing popup. <code>border-radius</code> is a interesting one. It used to be a lot of round coner hack out there. Like background image replacing, pixel mimicing. And I used to get excieted by there hacks. But now, they all gone by the missive adoption of <code>border-radius</code>. It sample to use. We can control four corner by four radius parameters. <code>opacity</code> is intiative that it control the trnasperency of a element with a percentage value, which is very useful in styling, and has no side effect.</p>
+
+<h3>Flexbox and layout</h3>
+
+<p>I heard <code>flexbox</code> very early, with the phrase that it is the most wanted feature in CSS3. From my recent learning, it is used for layout, which is one of the most discuessed topic in css layout. There used to be 3 main layout methods on the market. Table is the note ancient. It put elements into a big table, arrange them by tr, td. It is sample but it not flexible. If we want complex layout, the markup will be massed. Second is using float. It is massively adopted. Elements is arranged horizontally by fix the width and float them. The limitation is that Their width are fixed, or at least one of them is fixed. Besides, it need some tricky way to clear these float. Third is using absolut position to control layout. The advantage is that they are very easy to control. It is more like drawing, rather than arranging. The drawback is that the main flow is breaked. The normal element flow is breaked, which make the layout less extendable.</p>
+
+<p>Here comes the flexbox, it natually arrange the element horizontally in the flex contianer, or vertically. In the flex box container, it is very configrable to layout elements, not matter by horizontal, vertical, alignment, centering, evenly seperated, growing differently, or by custom order. It is like a new box flowing model that completely independent on normal box flow. So the flow item will not be affected by <code>float</code>, <code>clean</code> and <code>vertical-align</code>.</p>
+
+<p>Another things need to be mentioned about layout is Grid system. Grid system is not a native css feature, but a third-party position framework that arrange elements on the page, by specifing a pre-defined class. It is suggested a optimal solution for large scaled page layout. From my personal usage of Bootstrap grid system, I feel it less flexible, but more consistent cross multi-pages. Also by grid system it is easy to implement an integrated responsive solutions.</p>
+
+<h3>Animation</h3>
+
+<h4>transition, animation</h4>
+
+<p>Animation is good feature to make some easy animation. It is fairly sample to use and, more importantly, rendered by GPU, which means more smooth animation. There are two type of animation, transition and animation. Transition is simpler. It is a property of one element that indication some change of property should be gradually made. For example, element&rsquo;s width is changed by hovering. The width will change gradually. Change can only be applied to a set of properties like height/width, opacity, color, padding, margin, border, left/top. Properties that could be changed gradually. These change may triggered by a lot of event, hover, click, media-query, and javascript add class. Some parameter can also be added, like duration, delay, ease/linear, infinite.</p>
+
+<p>Animation is little different. In order to make a animation. We first need to define an keyframe, which is defined by a bunch of properties in a period property. from <code>from</code> to <code>to</code>, or from <code>0%</code> to <code>50%</code> to <code>100%</code>. With keyframe defined, it can be assign to element by animation property, with a bunch of parameters like delay, duration, ease/linear, alternate, infinite to indicate that animation.</p>
+
+<p>Another property is necessary to mention here, which is transform. I used to confuse it with transition. May because they looks like or they are always used together. So transform is just about four things: translate, scale, rotate, skew, and something matrix or 3d stuff. It can change an element&rsquo;s position, scale it, rotate it, and skew it.</p>
+
+<p>TranslateZ(0) could be use as a hack to improve page render performance. It force an element into a new layer, to avoid unnecessary re-paint.</p>
+
+<h3>Media Query</h3>
+
+<p>Media Query is use to deal with different style for differnt devices or different screen size. With a media query, we can define a specific style for screen or print with max/min with of screen, orientation of device, use logic operator like and/or. When critiria meet, browser will load styles in it. This feature make reponsive design happened.</p>
+
+<h3>Pseudo things</h3>
+
+<p>Pseudo things include Pseudo class and Pseudo elements. Pseudo classes refers to most used hover, active, checked, focus. Some newly adoped CSS3 seletor like nth-child(), first-child, root. Pseudo element is more used, which is :before and :after. They literally insert a same element before/after the target element. We could set style on them to add no-sematic content-based style, like quotes, icon. They can also be used to clearfix float, by a after pseudo-element. Pseedo element must have a content property. Its content can be fill dymanically with markup attributes by <code>attr()</code>. There are a lot of interesting pseudo element usage in <a href="http://css-tricks.com/pseudo-element-roundup/">this page</a>.</p>
+
+<ul>
+<li>END &ndash;</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Neil Ding</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-17T13:19:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/css/'>css</a>, <a class='category' href='/blog/categories/css3/'>css3</a>, <a class='category' href='/blog/categories/learn/'>learn</a>, <a class='category' href='/blog/categories/tech/'>tech</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/" data-via="LoadingBear" data-counturl="http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/02/10/something-about-me/" title="Previous Post: Something about me">&laquo; Something about me</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<br>
+  <p>I am graduated student from University of Pittsburgh. I am looking for a front-end/full-stack Developer job.</p>
+  <p>I love playing with JavaScript, HTML and CSS. I also familiar with back-end and database. I can finish projects from end to end.</p><br>
+  <p style="text-align: center"><img src="http://www.gravatar.com/avatar/51286f1ee07403b00eb216f3fa58e03f?s=200" alt="Neil Ding"></p>
+
+  <p>
+	  	<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+	  	<wb:follow-button uid="1659277913" type="red_1" width="67" height="24" >@GingerBear</wb:follow-button>
+	  	<a href="https://twitter.com/LoadingBear" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @LoadingBear</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<style>.ig-b- { display: inline-block; }
+		.ig-b- img { visibility: hidden; }
+		.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+		.ig-b-v-24 { width: 137px; height: 24px; background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0; }
+		@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+		.ig-b-v-24 { background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png); background-size: 160px 178px; } }</style>
+		<a href="http://instagram.com/loadingbear?ref=badge" class="ig-b- ig-b-v-24"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a><br>
+
+  	<!-- Place this code where you want the badge to render. -->
+		<a href="//plus.google.com/104871708136437408933?prsrc=3"
+		   rel="publisher" target="_top" style="text-decoration:none;display:inline-block;color:#333;text-align:center; font:13px/16px arial,sans-serif;white-space:nowrap;">
+		<span style="display:inline-block;font-weight:bold;vertical-align:top;margin-right:5px; margin-top:0px;">Neil Ding</span><span style="display:inline-block;vertical-align:top;margin-right:13px; margin-top:0px;">on</span>
+		<img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+" style="border:0;width:16px;height:16px;"/>
+		</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/17/a-wandering-on-css3/">A Wandering on CSS3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/10/something-about-me/">Something About Me</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">A Plan to Hunting Job as a TEAM (Deprecated)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/GingerBear">@GingerBear</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'GingerBear',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Neil Ding -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'neildingsblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/';
+        var disqus_url = 'http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

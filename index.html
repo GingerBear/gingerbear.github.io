@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="this post also appear on this about page I am new-graduated student from University of Pittsburgh with a master degree in Information Science. I love &hellip;">
+  <meta name="description" content="CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,83 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/17/a-wandering-on-css3/">A Wandering on CSS3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-17T13:19:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly using those main features, or triditional CSS2 features like position, styling, flaoting, etc, and a little bit decorating CSS3 features like border-radius, and box-shadow. CSS is not difficult, and when I think I have master the basic, I stop exploring those new features and believe that they are still on the way on browser compatbility.</p>
+
+<p>Recently front end technique is envolving so fast that experimental CSS3 things now become practical. Also due to the face that I have preparing for the front end job interview, I am going to make a wandering on these new features of CSS3.</p>
+
+<h3>Decoration</h3>
+
+<h4>box-shadow, border-radius, opacity</h4>
+
+<p>Most common used CSS3 features, and they are very well supported by modern browsers. <code>box-shadow</code> make shadow very easy in web pages. There are several paramaters to precisely control shadows, color, offset, blur, speard and inner/outter. It is often use in popup, dropdown. It is already been vendor-prefix freed on my just look on google plus sharing popup. <code>border-radius</code> is a interesting one. It used to be a lot of round coner hack out there. Like background image replacing, pixel mimicing. And I used to get excieted by there hacks. But now, they all gone by the missive adoption of <code>border-radius</code>. It sample to use. We can control four corner by four radius parameters. <code>opacity</code> is intiative that it control the trnasperency of a element with a percentage value, which is very useful in styling, and has no side effect.</p>
+
+<h3>Flexbox and layout</h3>
+
+<p>I heard <code>flexbox</code> very early, with the phrase that it is the most wanted feature in CSS3. From my recent learning, it is used for layout, which is one of the most discuessed topic in css layout. There used to be 3 main layout methods on the market. Table is the note ancient. It put elements into a big table, arrange them by tr, td. It is sample but it not flexible. If we want complex layout, the markup will be massed. Second is using float. It is massively adopted. Elements is arranged horizontally by fix the width and float them. The limitation is that Their width are fixed, or at least one of them is fixed. Besides, it need some tricky way to clear these float. Third is using absolut position to control layout. The advantage is that they are very easy to control. It is more like drawing, rather than arranging. The drawback is that the main flow is breaked. The normal element flow is breaked, which make the layout less extendable.</p>
+
+<p>Here comes the flexbox, it natually arrange the element horizontally in the flex contianer, or vertically. In the flex box container, it is very configrable to layout elements, not matter by horizontal, vertical, alignment, centering, evenly seperated, growing differently, or by custom order. It is like a new box flowing model that completely independent on normal box flow. So the flow item will not be affected by <code>float</code>, <code>clean</code> and <code>vertical-align</code>.</p>
+
+<p>Another things need to be mentioned about layout is Grid system. Grid system is not a native css feature, but a third-party position framework that arrange elements on the page, by specifing a pre-defined class. It is suggested a optimal solution for large scaled page layout. From my personal usage of Bootstrap grid system, I feel it less flexible, but more consistent cross multi-pages. Also by grid system it is easy to implement an integrated responsive solutions.</p>
+
+<h3>Animation</h3>
+
+<h4>transition, animation</h4>
+
+<p>Animation is good feature to make some easy animation. It is fairly sample to use and, more importantly, rendered by GPU, which means more smooth animation. There are two type of animation, transition and animation. Transition is simpler. It is a property of one element that indication some change of property should be gradually made. For example, element&rsquo;s width is changed by hovering. The width will change gradually. Change can only be applied to a set of properties like height/width, opacity, color, padding, margin, border, left/top. Properties that could be changed gradually. These change may triggered by a lot of event, hover, click, media-query, and javascript add class. Some parameter can also be added, like duration, delay, ease/linear, infinite.</p>
+
+<p>Animation is little different. In order to make a animation. We first need to define an keyframe, which is defined by a bunch of properties in a period property. from <code>from</code> to <code>to</code>, or from <code>0%</code> to <code>50%</code> to <code>100%</code>. With keyframe defined, it can be assign to element by animation property, with a bunch of parameters like delay, duration, ease/linear, alternate, infinite to indicate that animation.</p>
+
+<p>Another property is necessary to mention here, which is transform. I used to confuse it with transition. May because they looks like or they are always used together. So transform is just about four things: translate, scale, rotate, skew, and something matrix or 3d stuff. It can change an element&rsquo;s position, scale it, rotate it, and skew it.</p>
+
+<p>TranslateZ(0) could be use as a hack to improve page render performance. It force an element into a new layer, to avoid unnecessary re-paint.</p>
+
+<h3>Media Query</h3>
+
+<p>Media Query is use to deal with different style for differnt devices or different screen size. With a media query, we can define a specific style for screen or print with max/min with of screen, orientation of device, use logic operator like and/or. When critiria meet, browser will load styles in it. This feature make reponsive design happened.</p>
+
+<h3>Pseudo things</h3>
+
+<p>Pseudo things include Pseudo class and Pseudo elements. Pseudo classes refers to most used hover, active, checked, focus. Some newly adoped CSS3 seletor like nth-child(), first-child, root. Pseudo element is more used, which is :before and :after. They literally insert a same element before/after the target element. We could set style on them to add no-sematic content-based style, like quotes, icon. They can also be used to clearfix float, by a after pseudo-element. Pseedo element must have a content property. Its content can be fill dymanically with markup attributes by <code>attr()</code>. There are a lot of interesting pseudo element usage in <a href="http://css-tricks.com/pseudo-element-roundup/">this page</a>.</p>
+
+<ul>
+<li>END &ndash;</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -978,99 +1055,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-23T00:00:00-04:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">还是写中文吧。
-
-从五月到八月，本来是打算找个地方实习的，然后再选一门课，下学期就可以part-time，但并未如愿以偿。之前与Interactive System Design这门课中的项目合作单位Department of Oral Biology in School Of Dental Medicine联系了实习，对方也给出了积极的回应，但不巧对方教授出差，等她回来后距离选课（申请CPT）的日子只有不到一周，随即她告诉我在截止日期前完成实习手续已无可能。实习便只能作罢。
-
-然后就是自己两周低落的无所事事，每天打篮球，看季后赛，看电影，看书，生活毫无规律。心想这个四个月要是这么过，毕业找工作什么就别想了，更别谈什么梦想志向了。不在于四月有多么重要，而在于对自己管不住自己感到失望，从而失去了自信。
-
-倔强的我于是觉得自己该做点该做的，坚持四个月，一定能改变自己。于是便有了这篇本想要英文写的文字，试验性的暑假生活。“实验性”第一是因为自己打算过一次从来没过过的暑假（可能是最后一个暑假），第二因为自己想过一种激进的生活，看看自己的level到底能到多少。
-
-我认为自己是有天赋了，在各个方面达到远胜现在的高度。比如篮球，比如技术，比如自信，比如vision。事实并不残酷，我只是没有尽力，没有管住自己。我要证明我能能够做到。
-
-首先是肥胖，自制力差的最直观表现。在这两周的无所事事中，体重飙升，几乎到达了90公斤，原因主要是没有控制住饮食，再加上脚伤，篮球也并没有坚持每天打。其实要减肥也很简单，生活规律，控制饮食，保持锻炼。所以在这个暑假里，我要做到日常饮食以水果，蔬菜，面包以及少量肉类为主，stay real hungary，把体重控制到75以内。每天早上坚持跑步，做力量训练，周二周五打篮球。每天一点以前睡觉，早上七点起床。
-
-然后是学习，主要是技术上的学习。四个月的时间可以学习很多东西，但目标很明确，Google的要求是什么就学什么。下面是Google Front End Engineer的要求
-<div>Minimum qualifications</div>
-<div>
-<ul>
-	<li>BS degree in Computer Science or related field (In lieu of degree, 4 years of relevant work experience).</li>
-	<li>Development experience in server-side technologies such as C/C++ and/or Java.</li>
-	<li>Experience with AJAX, HTML and CSS, or Ruby, with an interest in user interface design.</li>
-	<li>Web application development experience.</li>
-</ul>
-</div>
-<div>
-<div>Preferred qualifications</div>
-<div>
-<ul>
-	<li>Masters or PhD in Computer Science or related field.</li>
-	<li>Significant experience developing user-facing software.</li>
-	<li>Experience working on cross-browser platforms.</li>
-	<li>Knowledge of UI frameworks such as XUL, Flex, and XAML.</li>
-	<li>Object-oriented JavaScript skills.</li>
-</ul>
-</div>
-</div>
-明显不足的一点是一门Server-Side的语言，比如Java，在很多笔试题中Java也经常会使用到。
-
-所以第一件事情是学习Java，学到什么程度，第一是写一个OOP的博客，第二是熟练使用Java写算法题。
-
-第二重要的应该是深入了解JavaScript，对于JavaScript的语言特性，面向对象机制，模块化，主流框架，NodeJs都应该到底master的程度。学习的途径第一是看书，手上的几本书在四个月内都应奋力读完，做好读书笔记。途径二是参加开源项目，从那篇学习开源项目的文章开始看起。
-
-第三和第四同等重要，即计算机基础知识与前端基础知识。计算机基础知识包括Linux和C语言，重读Linux和C一站式编程，了解服务器，编译器，浏览器内核的底层实现原理。第四是前端基础知识，包括CSS的深入学习，CSS3与HTML5的新特性，浏览器兼容性的知识。
-
-第五和第六同等重要，即设计的学习与知识杂项。设计一直是我很向往的方向，但始终都处在感性的认识阶段，未来我隐约感觉到自己会走上“设计师”的道路，但开始，还是从Engineering入门会更加基础牢固，所以在暑假的闲暇时间里读一些设计方面的名著是很有益的。知识杂项就就包括了一些必要的但了解即可的知识，比如Git，不如Ruby，比如Sayanee的Vimeo，以及一些讲座。
-
-总结成一份List，暑假每天应该这么过：
-
-身体方面：
-<ul>
-	<li>7点起床，晚上1点之前睡觉</li>
-	<li>早晨跑步，力量训练，周二周五晚上打篮球</li>
-	<li>饮食规律，水果蔬菜为主</li>
-</ul>
-知识方面：
-<ul>
-	<li>8小时学习时间</li>
-	<li>制定每月每周每日目标</li>
-	<li>2小时读书</li>
-</ul>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1113,6 +1097,10 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/17/a-wandering-on-css3/">A Wandering on CSS3</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/10/something-about-me/">Something About Me</a>
       </li>
     
@@ -1126,10 +1114,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
     
       <li class="post">
         <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/">Some Thoughts One Day After Graduate</a>
       </li>
     
   </ul>

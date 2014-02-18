@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Tech | Neil Ding]]></title>
+  <title><![CDATA[Category: tech | Neil Ding]]></title>
   <link href="http://GingerBear.github.io/blog/categories/tech/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2014-02-11T11:44:11-05:00</updated>
+  <updated>2014-02-18T01:08:48-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -14,179 +14,51 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Dropbox + Git 多人协作]]></title>
-    <link href="http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/"/>
-    <updated>2013-02-13T00:00:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2013/02/13/dropbox-git-%e5%a4%9a%e4%ba%ba%e5%8d%8f%e4%bd%9c</id>
-    <content type="html"><![CDATA[<div>
-<h1><strong>背景： </strong></h1>
-</div>
+    <title type="html"><![CDATA[A wandering on CSS3]]></title>
+    <link href="http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/"/>
+    <updated>2014-02-17T13:19:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3</id>
+    <content type="html"><![CDATA[<p>CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly using those main features, or triditional CSS2 features like position, styling, flaoting, etc, and a little bit decorating CSS3 features like border-radius, and box-shadow. CSS is not difficult, and when I think I have master the basic, I stop exploring those new features and believe that they are still on the way on browser compatbility.</p>
 
+<p>Recently front end technique is envolving so fast that experimental CSS3 things now become practical. Also due to the face that I have preparing for the front end job interview, I am going to make a wandering on these new features of CSS3.</p>
 
-<p>一个人开发项目到了一半，想多拉几个人过来一起开发。</p>
+<h3>Decoration</h3>
 
-<h1><strong>使用顺序： </strong></h1>
+<h4>box-shadow, border-radius, opacity</h4>
 
+<p>Most common used CSS3 features, and they are very well supported by modern browsers. <code>box-shadow</code> make shadow very easy in web pages. There are several paramaters to precisely control shadows, color, offset, blur, speard and inner/outter. It is often use in popup, dropdown. It is already been vendor-prefix freed on my just look on google plus sharing popup. <code>border-radius</code> is a interesting one. It used to be a lot of round coner hack out there. Like background image replacing, pixel mimicing. And I used to get excieted by there hacks. But now, they all gone by the missive adoption of <code>border-radius</code>. It sample to use. We can control four corner by four radius parameters. <code>opacity</code> is intiative that it control the trnasperency of a element with a percentage value, which is very useful in styling, and has no side effect.</p>
 
-<h2><strong>（一）我先配置好公共的repo。</strong></h2>
+<h3>Flexbox and layout</h3>
 
+<p>I heard <code>flexbox</code> very early, with the phrase that it is the most wanted feature in CSS3. From my recent learning, it is used for layout, which is one of the most discuessed topic in css layout. There used to be 3 main layout methods on the market. Table is the note ancient. It put elements into a big table, arrange them by tr, td. It is sample but it not flexible. If we want complex layout, the markup will be massed. Second is using float. It is massively adopted. Elements is arranged horizontally by fix the width and float them. The limitation is that Their width are fixed, or at least one of them is fixed. Besides, it need some tricky way to clear these float. Third is using absolut position to control layout. The advantage is that they are very easy to control. It is more like drawing, rather than arranging. The drawback is that the main flow is breaked. The normal element flow is breaked, which make the layout less extendable.</p>
 
-<ol>
-<li>在Dropbox上创建一个文件夹作为共享的空repo：</li>
-</ol>
+<p>Here comes the flexbox, it natually arrange the element horizontally in the flex contianer, or vertically. In the flex box container, it is very configrable to layout elements, not matter by horizontal, vertical, alignment, centering, evenly seperated, growing differently, or by custom order. It is like a new box flowing model that completely independent on normal box flow. So the flow item will not be affected by <code>float</code>, <code>clean</code> and <code>vertical-align</code>.</p>
 
+<p>Another things need to be mentioned about layout is Grid system. Grid system is not a native css feature, but a third-party position framework that arrange elements on the page, by specifing a pre-defined class. It is suggested a optimal solution for large scaled page layout. From my personal usage of Bootstrap grid system, I feel it less flexible, but more consistent cross multi-pages. Also by grid system it is easy to implement an integrated responsive solutions.</p>
 
-<pre><span style="color:#999999;"> $ cd C:/Users/Neil/Dropbox/</span>
+<h3>Animation</h3>
 
-<span style="color:#999999;"> $ mkdir Git-Repository/MyProject1.git</span>
+<h4>transition, animation</h4>
 
-<span style="color:#999999;"> $ cd Git-Repository/MyProject1.git</span>
+<p>Animation is good feature to make some easy animation. It is fairly sample to use and, more importantly, rendered by GPU, which means more smooth animation. There are two type of animation, transition and animation. Transition is simpler. It is a property of one element that indication some change of property should be gradually made. For example, element&rsquo;s width is changed by hovering. The width will change gradually. Change can only be applied to a set of properties like height/width, opacity, color, padding, margin, border, left/top. Properties that could be changed gradually. These change may triggered by a lot of event, hover, click, media-query, and javascript add class. Some parameter can also be added, like duration, delay, ease/linear, infinite.</p>
 
-<span style="color:#999999;"> $ git init --bare
+<p>Animation is little different. In order to make a animation. We first need to define an keyframe, which is defined by a bunch of properties in a period property. from <code>from</code> to <code>to</code>, or from <code>0%</code> to <code>50%</code> to <code>100%</code>. With keyframe defined, it can be assign to element by animation property, with a bunch of parameters like delay, duration, ease/linear, alternate, infinite to indicate that animation.</p>
 
-</span></pre>
+<p>Another property is necessary to mention here, which is transform. I used to confuse it with transition. May because they looks like or they are always used together. So transform is just about four things: translate, scale, rotate, skew, and something matrix or 3d stuff. It can change an element&rsquo;s position, scale it, rotate it, and skew it.</p>
 
+<p>TranslateZ(0) could be use as a hack to improve page render performance. It force an element into a new layer, to avoid unnecessary re-paint.</p>
 
-<ol>
-<li> 把原来本机上项目放到到那个共享的repo里：</li>
-</ol>
+<h3>Media Query</h3>
 
+<p>Media Query is use to deal with different style for differnt devices or different screen size. With a media query, we can define a specific style for screen or print with max/min with of screen, orientation of device, use logic operator like and/or. When critiria meet, browser will load styles in it. This feature make reponsive design happened.</p>
 
-<pre><span style="color:#999999;"> $ cd C:/User/Neil/Projects/MyProject1</span>
+<h3>Pseudo things</h3>
 
-<span style="color:#999999;"> $ git init</span>
+<p>Pseudo things include Pseudo class and Pseudo elements. Pseudo classes refers to most used hover, active, checked, focus. Some newly adoped CSS3 seletor like nth-child(), first-child, root. Pseudo element is more used, which is :before and :after. They literally insert a same element before/after the target element. We could set style on them to add no-sematic content-based style, like quotes, icon. They can also be used to clearfix float, by a after pseudo-element. Pseedo element must have a content property. Its content can be fill dymanically with markup attributes by <code>attr()</code>. There are a lot of interesting pseudo element usage in <a href="http://css-tricks.com/pseudo-element-roundup/">this page</a>.</p>
 
-<span style="color:#999999;"> $ git remote add origin C:/Users/Neil/Dropbox/Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "first commit."</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-
-
-<h2></h2>
-
-
-<h2><strong>（二）新加进来的开发们在本机clone一份。</strong></h2>
-
-
-<p><span style="color:#999999;">注意：在操作git之前，先config好自己的user.name和user.email</span></p>
-
-<ol>
-<li>创建本地目录，把Dropbox共享到的repo clone到里面。</li>
-</ol>
-
-
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/</span>
-
-<span style="color:#999999;"> $ git clone C:/Users/Eric/Dropbox/Share/MyProject1.git</span></pre>
-
-
-<h2></h2>
-
-
-<h2><strong>（三）开始日常开发。</strong></h2>
-
-
-<ol>
-<li>获取最新的版本：</li>
-</ol>
-
-
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/MyProject1</span>
-
-<span style="color:#999999;"> $ git pull origin master
-
-</span></pre>
-
-
-<ol>
-<li>完成一个小功能后，commit一个版本到本地的repo：</li>
-</ol>
-
-
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"
-
-</span></pre>
-
-
-<ol>
-<li>完成一个大功能后，把本地的repo push到共享的repo里：</li>
-</ol>
-
-
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-
-
-<h2></h2>
-
-
-<h2><strong>另外：</strong></h2>
-
-
-<p>可能会遇到冲突，因为在你pull最新版本下来之后，又有人push了更新的版本到共享repo里，而且他修改了跟你相关的代码。因此当你现在push的时候会出错，因为共享repo也不知道用他的代码好还是你的代码好。这时就git就会要求你在push之前再pull一次，并且会告诉你冲突的地方，在具体文件中会以下面这种方式体现：</p>
-
-<pre><span style="color:#999999;"> &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
-
-<span style="color:#999999;"> 我的代码</span>
-
-<span style="color:#999999;"> ===========</span>
-
-<span style="color:#999999;"> 他的代码</span>
-
-<span style="color:#999999;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span></pre>
-
-
-<p>我需要把这段代码解决（跟他商量怎么回事儿）之后在push到共享的repo。</p>
-
-<p>（完）</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[备忘ebay的一个讲座]]></title>
-    <link href="http://GingerBear.github.io/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/"/>
-    <updated>2013-02-13T00:00:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2013/02/13/%e5%a4%87%e5%bf%98ebay%e7%9a%84%e4%b8%80%e4%b8%aa%e8%ae%b2%e5%ba%a7</id>
-    <content type="html"><![CDATA[<p><strong>演讲人</strong>：Brain Johnson@ebay</p>
-
-<p><strong>主题</strong>：ebay的大数据</p>
-
-<p><strong>最大印象</strong>：努力很大，投入很多，但效果一般（5% better / year）</p>
-
-<p><strong>片段</strong>：</p>
-
-<p>&ldquo;big is not the case, detail is.&rdquo;</p>
-
-<p>关于 搜索key word expansion，他讲了很多情况中是不是要把搜索关键词的相关词也纳入搜索范围，比如加s的复数。但在会出现加了s就是毫不相关的东西，例子忘了。另外，在人们搜索diary的时候，很多人想找的是吸血鬼日记，而不是笔记本。在人们搜索basketball的时候，大多数人想找的是篮球鞋，而不是篮球。我的第一影响力可以用搜索后，点击商品的类别来自动划分不同key word的expansion。</p>
-
-<p>他还略过了一句话，其实也是我很想问的。那就是他说算法不重要（大概意思），数据更重要。为啥？</p>
-
-<p>刚开发的时候，ebay投了几千万美元（具体忘了），结果由于所带来的改进，几个月（具体忘了）就赚回来了。看来有和无的差别是巨大的。</p>
-
-<div>
-<div>他还分享了任务的data flow pipeline:</div>
-<div>
 <ul>
-    <li>production</li>
-    <li>behavioral item data analysisi</li>
-    <li>feature generation</li>
-    <li>classification prediction</li>
-    <li>offline analysis</li>
-    <li>human judgment</li>
-    <li>a/b test</li>
+<li>END &ndash;</li>
 </ul>
-（完）
-
-</div>
-</div>
 
 ]]></content>
   </entry>
