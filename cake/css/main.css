@@ -198,6 +198,28 @@ html {
     margin-top: 25px;
 }
 
+.hand {
+    position: absolute;
+    z-index: 20;
+    display: none;
+}
+
+.hand.hand-cutting {    
+    display: block;
+    -webkit-transform: translate3D(0, 300px, 0);
+    -webkit-animation: cutting 1s 1s forwards;
+}
+
+.hand.hand-draging {    
+    display: block;
+    -webkit-transform: translate3D(150px, 200px, 0);
+    -webkit-animation: draging 1s 1s forwards;
+}
+
+.hand img {
+    width: 50px;
+}
+
 
 @-webkit-keyframes floating {
     from {
@@ -206,6 +228,30 @@ html {
 
     to {
         margin-top: -8px;
+    }
+}
+
+@-webkit-keyframes cutting {
+    0% {
+        -webkit-transform: translate3D(0, 300px, 0);
+    }
+
+    50% {
+        -webkit-transform: translate3D(150px, 150px, 0);
+    }
+
+    100% {
+        -webkit-transform: translate3D(300px, 300px, 0);
+    }
+}
+
+@-webkit-keyframes draging {
+    0% {
+        -webkit-transform: translate3D(150px, 200px, 0);
+    }
+
+    100% {
+        -webkit-transform: translate3D(0, 400px, 0);
     }
 }
 

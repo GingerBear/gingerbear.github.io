@@ -3,10 +3,13 @@ var cutsTranslate = [];
 var friendPositions = [];
 var doc = document;
 var $friends = $('.friend');
+var $hand = $('.hand');
 // pre load $() for each friend element for better perf in touchmove event
 var friends = []; 
 // store friend's cut
 var friendCut = []; 
+
+var ifShowDraging = true;
 
 // store cuts;
 
@@ -109,6 +112,13 @@ var vibrate = function(time) {
 
 $('.cut img').last().on('load', function(){	
 
+	// show hand moving
+
+	$('.hand').addClass('hand-cutting');
+
+	setTimeout(function() {
+		$('.hand').addClass('hidden').removeClass('hand-cutting');
+	}, 3000);
 
 	var touch, moveX, moveY;
 	var onTarget = false;
@@ -233,6 +243,22 @@ $('.cut img').last().on('load', function(){
 
 			ifDrag = true;
 			ifSelected = true;
+
+			// show hand draging
+
+			if (ifShowDraging) {
+				ifShowDraging = false;
+
+				$hand.removeClass('hidden');
+
+				setTimeout(function() {
+					$hand.addClass('hand-draging');
+				}, 10);
+
+				setTimeout(function() {
+					$hand.addClass('hidden').removeClass('hand-draging');
+				}, 3000);
+			}
 			
 		} 
 		else if (ifDrag && ifSelected){
