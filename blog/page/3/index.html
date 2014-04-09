@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="这是我刚刚开启的独立博客，在Sina App Engine的服务下搭建。 &nbsp; ">
+  <meta name="description" content="总体来说，看官方的Polls 教程，还是比较清楚的。写个小记，加深记忆。 安装： 命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。 建立工程： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/">Django学习小记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-03T00:00:00-04:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">总体来说，看官方的<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">Polls 教程</a>，还是比较清楚的。写个小记，加深记忆。
+
+<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006.jpg"><img class="alignnone size-medium wp-image-15" title="bear-vs-snake-deathmatch-2006" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006-300x257.jpg" alt="" width="300" height="257" /></a>
+
+<strong>安装：</strong>
+
+命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。
+
+<strong>建立工程：</strong>
+
+<strong></strong>命令行cd到目录，运行django-admin.py startproject mysite建立名为mysite的工程。里面自动生成四个文件：__init__.py没用到，manage.py执行各种操作，settings.py配置文件，urls处理url。
+
+<strong>配置数据库：</strong>
+
+<strong></strong>修改settings,py里的DATABASES的参数，改了两个：（1）&#8217;ENGINE&#8217;里选sqlite3，（2）‘NAME’里写sqlite.db的地址。因为用的是SQLite，所以其他参数不管。然后运行python manage.py syncdb，意思是按照settings.py里的INSTALLED_APPS来建立数据库。
+
+<strong>建立应用：</strong>
+
+<strong></strong>在工程目录下，命令行运行python manage.py startapp polls建立名为polls的投票应用。里面自动生成四个文件：__init__.py没用到，models.py用类写成的数据库，tests.py没用到，views.py根据urls.py传来的参数，作出相应的操作，然后显示出来。
+
+<strong>创建应用models：</strong>
+
+<strong></strong>在models.py里写两个类（建数据表），并在settings.py里的INSTALLED_APPS加入（称为“注册”更合适）这个应用，完了别忘了运行python manage.py syncdb。Django里还有各种Database API对数据库进行<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial01/#playing-with-the-api" target="_blank">各种操作</a>。
+
+<strong>建立应用的管理后台：</strong>
+
+<strong></strong>实际上是使用Django自带的后台管理应用，方便对数据进行操作。步骤同上：settings.py里注册应用，syncdb，修改urls.py，然后就可以运行了（惊喜）。命令行运行python manage.py runserver，浏览器输入地址可以很不错的管理界面，并且能够<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin" target="_blank">定制界面</a>。
+
+<strong>配置应用的url：</strong>
+
+<strong></strong>修改urls.py，主要写url的正则表达式，以及负责接收的view。这里有些技巧（1）在patterns里写规则，减少重复的代码。（2）分开工程的urls.py和应用的urls.py，提高可拓展性。
+
+<strong>建立应用的views：</strong>
+
+<strong></strong>这一步是最花精力的。负责实现应用的逻辑。用def写各种方法，对应url的指示，比如index负责首页显示的东西，detail负责每一次投票（表单）等。通常现实的布局，由views交给templates处理，views只把所以要显示的数据给template，而template则是HTML，布局很容易。
+
+到这一步，一个应用基本上就完成了。其中还有各种减少代码的方法，不一一列出，具体参见<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">官方教程</a>。
+
+（End | by Neil）
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -553,53 +627,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/30/loopt%25e8%25bd%25ac%25e5%258f%2598%25e6%25af%258f%25e6%2597%25a5%25e4%25ba%25a4%25e6%2598%2593%25e8%25a7%2584%25e5%2588%2599-u-deals/">Loopt转变每日交易规则——U-Deals</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-30T00:00:00-04:00" pubdate data-updated="true">Jun 30<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-<p>Loopt转变每日交易规则&mdash;&mdash;U-Deals</p>
-<p>Erick Schonfeld &nbsp;Jun 22, 2011</p>
-<p>移动互联网Loopt通过追求每天交易空间，正在接通收益流。他已经与Groupon合作，通知用户附近的Groupon交易信息。但今天，它启动了属于自己的每日交易。Loopt称之为&ldquo;U-Deals&rdquo;。</p>
-<p>不用拿着交易清单到当地的商场外出购物，U-Deals让用户请求他们自己的交易。同时，他们通过Facebook，Twitter，email等尽力召集他们的朋友或者其他人一起支持这个交易。一旦这个交易到达了某个临界点，Loopt就会联系商家来要求这个交易。这需要一定的销售力，但没有传统的每日交易提供商大。&ldquo;有一件事情让我们喜欢的是，这既不是自己服务（self-serve）也不是纯粹的销售力模式&rdquo;，Loopt的CEO Sam Altman说。&rdquo;在我们的beta测试中，商家对于类似于&ldquo;如果你同意这一交易的话，我们有2000美元和100个新顾客的单子给你&rdquo;这种电话反应良好。</p>
-<p>&nbsp;</p>
-<p>Loopt正在试图与ChompOn合作，ChompOn是一家去年在TechCrunch Disrupt启动的白色标签的每日交易平台。一个名为Ringleadr的基于New York City的启动，它同样也针对逆向交易这一概念。</p>
-<p>为了是之运转，Loopt需要取得必要的足够多的交易，然后开始运转。&ldquo;流动性确实是一个关键问题，&rdquo;Altman承认。并且，当地商家很难说服。U-Deals有优势变为一个轻松的销售，如Altman所说。Loopts基本是通过预先认证的销售来完成这些小商家。但这些商家之中很多都从未听说过Loopt。（&ldquo;这像Groupon吗？&rdquo;）我猜测他想要一个比他期待的更大的销售力，如果成功的话。甚至人们正在寻求在Loopt之内的交易吗？</p>
-<p>这是这种模式的大问题。那些说他们想要在餐馆或者商店交易的人也许已经是那家商店的客户了。每日交易的期望是为当地商店增加新的客户。这是客户得到的东西。Loopt能成功与否在于那些原本已经要求这个交易的人是否能劝服那些原本不想买的人也买。</p>
-<p>原文：http://techcrunch.com/2011/06/22/loopt-u-deals/</p>
-<div><br /></div>
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -644,6 +671,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/08/thoughts-about-job-finding-in-recent-months/">Job Findings in Recent Months</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/17/a-wandering-on-css3/">A Wandering on CSS3</a>
       </li>
     
@@ -657,10 +688,6 @@
     
       <li class="post">
         <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
       </li>
     
   </ul>

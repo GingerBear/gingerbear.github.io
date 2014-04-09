@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="还是写中文吧。 从五月到八月，本来是打算找个地方实习的，然后再选一门课，下学期就可以part-time，但并未如愿以偿。之前与Interactive System Design这门课中的项目合作单位Department of Oral Biology in School Of Dental &hellip;">
+  <meta name="description" content="1. 选择虚拟主机，VPS，还是云平台？ 虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。 优点：便宜，配置方便。 缺点：不稳定，速度较慢，限制多。 VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。 优点： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,125 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-18T00:00:00-04:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><strong>1. 选择虚拟主机，VPS，还是云平台？</strong>
+
+虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。
+<ul>
+	<li>优点：便宜，配置方便。</li>
+	<li>缺点：不稳定，速度较慢，限制多。</li>
+</ul>
+VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。
+<ul>
+	<li>优点：稳定，自由（能拥有root权限），安全。</li>
+	<li>缺点：需要手动安装程序，需要linux维护。</li>
+</ul>
+云，“如果云不是指弹性云&#8230;..那单机云就是vps&#8230;..“，“弹性云就是可以自由调整配置， 可以制作模板动态扩容/缩减， 按时按需计划，提供多节点自动的动态负载均衡” <span style="text-decoration:underline;"><a href="http://www.hostloc.com/thread-194935-1-1.html">http://www.hostloc.com/thread-194935-1-1.html</a></span>
+
+<strong>2. AWS(云), Azure(云), Linode(VPS) 参数对比</strong>
+<div>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top"></td>
+<td valign="top">  AWS Free Tier</td>
+<td valign="top">Azure Extra Small</td>
+<td valign="top">Linode 1G</td>
+</tr>
+<tr>
+<td valign="top"><strong>RAM</strong></td>
+<td valign="top">  613MB</td>
+<td valign="top">768M</td>
+<td valign="top">1GB</td>
+</tr>
+<tr>
+<td valign="top"><strong>CPU</strong></td>
+<td valign="top">  N/A</td>
+<td valign="top">shared</td>
+<td valign="top">8 cores</td>
+</tr>
+<tr>
+<td valign="top"><strong>Storage</strong></td>
+<td valign="top">  30G</td>
+<td valign="top">20G</td>
+<td valign="top">24G</td>
+</tr>
+<tr>
+<td valign="top"><strong>Database</strong></td>
+<td valign="top">  20G</td>
+<td valign="top">N/A</td>
+<td valign="top">N/A</td>
+</tr>
+<tr>
+<td valign="top"><strong>Transfer</strong></td>
+<td valign="top">  15G</td>
+<td valign="top">5G free, $0.12/GB(5G-10T)</td>
+<td valign="top">2T</td>
+</tr>
+<tr>
+<td valign="top"><strong>Cost</strong></td>
+<td valign="top">  1-year free/ charge on demand</td>
+<td valign="top">15/m</td>
+<td valign="top">20/m</td>
+</tr>
+<tr>
+<td valign="top"><strong>*</strong></td>
+<td valign="top">  1-year free means 750 hours CPU (<span style="text-decoration:underline;"><a href="http://python.6.x6.nabble.com/CPyUG-OT-Amazon-EC2-VS-Linode-td2730701.html">普遍反映贵</a></span>, <span style="text-decoration:underline;"><a href="http://www.quora.com/Amazon-Web-Services/How-much-does-it-cost-for-a-similar-linode-instance-on-EC2">略复杂1</a></span>, <span style="text-decoration:underline;"><a href="https://forum.linode.com/viewtopic.php?t=9885&amp;p=57731">略复杂2</a></span>)</td>
+<td valign="top">Extra Small 有5Mbps 带宽限制，Small则要45/m</td>
+<td valign="top">纯净Linux, 所有东西需要自己配置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<strong>3. 方案</strong>
+
+先使用$200的Azure的Web Site，再使用Linode的VPS，因为
+
+1）需要快速上线，Azure的Web Site现在已经部署上线，Linode需要在命令行配置LAMP运行环境，AWS配置更加复杂。
+
+2）开始访问量低，Azure的Shared Web Site应该能够应付，尽管性能较低。
+
+3）Azure能够应付突发的访问量，尽管超出定额后会收费较高。
+
+4）Linode的口碑最佳，稳定高速，简单易于维护，适合中小应用。
+
+5）如果以后访问量巨大，可再迁移到功能更强大的AWS。
+
+6）$200不用白不用。
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -876,80 +995,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/">Django学习小记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-03T00:00:00-04:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">总体来说，看官方的<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">Polls 教程</a>，还是比较清楚的。写个小记，加深记忆。
-
-<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006.jpg"><img class="alignnone size-medium wp-image-15" title="bear-vs-snake-deathmatch-2006" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/bear-vs-snake-deathmatch-2006-300x257.jpg" alt="" width="300" height="257" /></a>
-
-<strong>安装：</strong>
-
-命令行里，在下载文件里运行python setup.py install，自动把Django安装到site-package里。并且把site-packagesdjangobin加入系统PATH。
-
-<strong>建立工程：</strong>
-
-<strong></strong>命令行cd到目录，运行django-admin.py startproject mysite建立名为mysite的工程。里面自动生成四个文件：__init__.py没用到，manage.py执行各种操作，settings.py配置文件，urls处理url。
-
-<strong>配置数据库：</strong>
-
-<strong></strong>修改settings,py里的DATABASES的参数，改了两个：（1）&#8217;ENGINE&#8217;里选sqlite3，（2）‘NAME’里写sqlite.db的地址。因为用的是SQLite，所以其他参数不管。然后运行python manage.py syncdb，意思是按照settings.py里的INSTALLED_APPS来建立数据库。
-
-<strong>建立应用：</strong>
-
-<strong></strong>在工程目录下，命令行运行python manage.py startapp polls建立名为polls的投票应用。里面自动生成四个文件：__init__.py没用到，models.py用类写成的数据库，tests.py没用到，views.py根据urls.py传来的参数，作出相应的操作，然后显示出来。
-
-<strong>创建应用models：</strong>
-
-<strong></strong>在models.py里写两个类（建数据表），并在settings.py里的INSTALLED_APPS加入（称为“注册”更合适）这个应用，完了别忘了运行python manage.py syncdb。Django里还有各种Database API对数据库进行<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial01/#playing-with-the-api" target="_blank">各种操作</a>。
-
-<strong>建立应用的管理后台：</strong>
-
-<strong></strong>实际上是使用Django自带的后台管理应用，方便对数据进行操作。步骤同上：settings.py里注册应用，syncdb，修改urls.py，然后就可以运行了（惊喜）。命令行运行python manage.py runserver，浏览器输入地址可以很不错的管理界面，并且能够<a href="https://docs.djangoproject.com/en/1.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin" target="_blank">定制界面</a>。
-
-<strong>配置应用的url：</strong>
-
-<strong></strong>修改urls.py，主要写url的正则表达式，以及负责接收的view。这里有些技巧（1）在patterns里写规则，减少重复的代码。（2）分开工程的urls.py和应用的urls.py，提高可拓展性。
-
-<strong>建立应用的views：</strong>
-
-<strong></strong>这一步是最花精力的。负责实现应用的逻辑。用def写各种方法，对应url的指示，比如index负责首页显示的东西，detail负责每一次投票（表单）等。通常现实的布局，由views交给templates处理，views只把所以要显示的数据给template，而template则是HTML，布局很容易。
-
-到这一步，一个应用基本上就完成了。其中还有各种减少代码的方法，不一一列出，具体参见<a href="https://docs.djangoproject.com/en/1.1/intro/" target="_blank">官方教程</a>。
-
-（End | by Neil）
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -994,6 +1039,10 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/08/thoughts-about-job-finding-in-recent-months/">Job Findings in Recent Months</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/17/a-wandering-on-css3/">A Wandering on CSS3</a>
       </li>
     
@@ -1007,10 +1056,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
     
       <li class="post">
         <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a>
       </li>
     
   </ul>
