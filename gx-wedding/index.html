@@ -1,480 +1,244 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)http://www.thepetedesign.com/demos/onepage_scroll_demo.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta charset="utf-8">
-	<title>jQuery One Page Scroll by Pete R. | The Pete Design</title>
-  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
-	<meta name="author" content="Pete R.">
-  <script type="text/javascript" src="jquery-1.11.0.js"></script>
-  <script type="text/javascript" src="jquery.onepage-scroll.js"></script>
-  <link href="onepage-scroll.css" rel="stylesheet" type="text/css">
-  <style>
-    html {
-      height: 100%;
-    }
-    body {
-      background: #E2E4E7;
-      padding: 0;
-      text-align: center;
-      font-family: 'open sans';
-      position: relative;
-      margin: 0;
-      height: 100%;
-      -webkit-font-smoothing: antialiased;
-    }
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
-    .wrapper {
-    	height: 100% !important;
-    	height: 100%;
-    	margin: 0 auto;
-    	overflow: hidden;
-    }
+<title>Cardview</title>
 
-    a {
-      text-decoration: none;
-    }
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/lottery.js"></script>
+<script type="text/javascript" src="js/cardview.js"></script>
 
+<script type="text/javascript">
 
-    h1, h2 {
-      width: 100%;
-      float: left;
-    }
-    h1, h2, h3 {
-      color: #F2C82D;
-      font-family: Georgia, 'Heiti SC', 'Microsoft Yahei', simsun, sans-serif;
-      margin-bottom: 10px;
-    }
-    h1 {
-      margin-top: 100px;
-      margin-bottom: 5px;
-      font-size: 70px;
-      letter-spacing: -4px;
-      font-weight: 100;
-    }
-    h1 span {
-      font-size: 26px;
-      margin: 0 5px;
-      text-transform: capitalize;
-      background: rgba(0,0,0,0.85);
-      display: inline-block;
-      color: #6D461D;
-      border-radius: 5px 5px;
-      -webkit-border-radius: 5px 5px;
-      -moz-border-radius: 5px 5px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
-      padding: 3px 10px;
-    }
-    h2 {
-      font-weight: 100;
-      margin-top: 0;
-      margin-bottom: 10px;
-    }
+window.onload = function () {
+  var lottery = new Lottery('maskContainer', 'imgs/mask.jpg', 'image', window.outerWidth, window.outerHeight, drawPercent);
+  lottery.init('imgs/cover.jpg', 'image');
 
-    .pointer {
-      color: #9b59b6;
-      font-family: 'Pacifico', cursive;
-      font-size: 30px;
-      margin-top: 15px;
-    }
-    code {
-      margin: 20px 1%;
-      float: left;
-      width: 48%;
-      height: 105px;
-      background: rgba(0,0,0,0.1);
-      border: rgba(0,0,0,0.05) 5px solid;
-      border-radius: 5px;
-      padding:5px;
-      text-align: center;
-      font-size: 15px;
-      margin-top: 25px;
-      display: block;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-    }
-    code.html {
-      color: #7EC9E6;
-    }
-    code.js {
-      color: #FFAD00;
-    }
+  var drawPercentNode = document.getElementById('drawPercent');
 
-    .main {
-      float: left;
-      width: 100%;
-      margin: 0 auto;
-    }
+  function drawPercent(percent) {
+    // drawPercentNode.innerHTML = percent + '%';
+    console.log(percent);
+    if (percent > 70) {
+    	$('#maskContainer').hide();
+			$('#wrapper').show();
 
-    .main h1 {
-      padding:150px 50px;
-      float: left;
-      width: 100%;
-      font-size: 45px;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      font-weight: 100;
-      margin: 0;
+			deck = new CardView('#wrapper', {
+				dataset: data,
+				onUpdateContent: function (el, data) {
+					$(el).find('img')
+						.attr('src', data.img)
+						.attr('style', data.imageStyle);
+					el.querySelector('p').innerHTML = data.text;
+				}
+			});
     }
+  }
+};
 
-    .main h1.demo1 {
-      background: #1ABC9C;
-    }
+function getRandomStr(len) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for( var i=0; i < len; i++ )
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
 
-    .reload.bell {
-      font-size: 12px;
-      padding: 20px;
-      width: 45px;
-      text-align: center;
-      height: 47px;
-      border-radius: 50px;
-      -webkit-border-radius: 50px;
-      -moz-border-radius: 50px;
-    }
+</script>
 
-    .reload.bell #notification {
-      font-size: 25px;
-      line-height: 140%;
-    }
+<script type="text/javascript">
 
-    .reload, .btn{
-      display: inline-block;
-      border: 4px solid #A2261E;
-      border-radius: 5px;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 5px;
-      background: #CC3126;
-      display: inline-block;
-      line-height: 100%;
-      padding: 0.7em;
-      text-decoration: none;
-      color: #fff;
-      width: 100px;
-      line-height: 140%;
-      font-size: 17px;
-      font-family: open sans;
-      font-weight: bold;
-    }
-    .reload:hover{
-      background: #444;
-    }
-    .btn {
-      width: 200px;
-      color: rgb(255, 255, 255);
-      border: 4px solid rgb(0, 0, 0);
-      background: rgba(3, 3, 3, 0.75);
-    }
-    .clear {
-      width: auto;
-    }
-    .btn:hover, .btn:hover {
-      background: #444;
-    }
-    .btns {
-      max-width: 410px;
-      width: 100%;
-      margin: 50px auto;
-    }
-    .credit {
-      text-align: center;
-      color: rgba(0,0,0,0.5);
-      padding: 10px;
-      width: 410px;
-      clear: both;
-    }
-    .credit a {
-      color: rgba(0,0,0,0.85);
-      text-decoration: none;
-      font-weight: bold;
-      text-align: center;
-    }
+var deck;
+var data = [
+	{
+		img: 'imgs/cover.jpg',
+		imageStyle: 'width: 100%; color: ',
+		text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+	},
+	{
+		img: 'imgs/p1.jpg',
+		imageStyle: 'width: 100%',
+		text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+	},
+	{
+		img: 'imgs/p2.jpg',
+		imageStyle: 'width: 100%',
+		text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+	},
+	{
+		img: 'imgs/p3.jpg',
+		imageStyle: 'width: 100%',
+		text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+	},
+	{
+		img: 'imgs/p4.jpg',
+		imageStyle: 'width: 100%',
+		text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.'
+	}	
+];
 
-    header {
-      position: relative;
-      z-index: 10;
-    }
-    .main section .page_container {
-      position: relative;
-      top: 16%;
-      margin: 0 auto 0;
-      max-width: 950px;
-      z-index: 3;
-      color: #F2C82D;
-    }
-    .main section  {
-      overflow: hidden;
-    }
+function loaded () {
+	// deck = new CardView('#wrapper', {
+	// 	dataset: data,
+	// 	onUpdateContent: function (el, data) {
+	// 		$(el).find('img')
+	// 			.attr('src', data.img)
+	// 			.attr('style', data.imageStyle);
+	// 		el.querySelector('p').innerHTML = data.text;
+	// 	}
+	// });
+}
 
-    .main section > img {
-      position: absolute;
-      max-width: 100%;
-      z-index: 1;
-    }
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
-    .main section.page1 {
-      background:url('images/cover.png') no-repeat -54px -56px;
-      background-size: 120%;
-    }
-    .main section.page1 h1 {
-      float: none;
-      max-width: 435px;
-      width: 100%;
-      display: block;
-      text-align: center;
-      padding: 0;
-      margin-bottom: 15px;
-      font-size: 2rem;
-    }  .main section.page1 h2 {
-        font-size: 18px;
-        display: block;
-        text-align: center;
-        max-width: 435px;
-        width: 100%;
-        line-height: 160%;
-      }
-    .main section .page_container .btns {
-      clear: both;
-      float: left;
-      text-align: center;
-      max-width: 410px;
-      width: 100%;
-    }
-    .main section .page_container .btns a{
-      text-align: center;
-    }
-    .main section.page2 {
-      background: url(images/p1.png) no-repeat -170px -200px;
-      background-size: 154%;
-    }
-    .main section.page2 > img {
-      position: absolute;
-      top: -300px;
-      left: 50%;
-      margin-left: -1095px;
-    }
-    .main section.page2 .page_container {
-      margin-top: 50px;
-      overflow: hidden;
-    }
-    .main section.page2 h1 {
-      text-align: center;
-      padding: 0;
-      margin-bottom: 15px;
-      font-size: 50px;
-      letter-spacing: -1px;
-    }
-    .main section.page2 h2 {
-      text-align: center;
-      line-height: 160%;
-      font-weight: 100;
-      color: #cc6600;
-      margin-bottom: 5px;
-    }
-    .main section.page3 {
-      background:url(images/p2.png) no-repeat center 130px;
-      background-size: 100%;
-    }
-    .main section.page3 .page_container {
-      overflow: hidden;
-      max-width: 500px;
-      width: 100%;
-      right: -285px;
-      height: 100%;
-    }
-    .main section.page3 h1 {
-      text-align: left;
-      padding: 0;
-      margin-bottom: 0;
-      font-size: 70px;
-      letter-spacing: -1px;
-    }
-    .main section.page3 h2 {
-      text-align: left;
-      line-height: 160%;
-      font-weight: 100;
-      font-size: 21px;
-    }
-    body.disabled-onepage-scroll .onepage-wrapper  section {
-      min-height: 100%;
-      height: auto;
-    }
+</script>
 
-    body.disabled-onepage-scroll .main section .page_container, body.disabled-onepage-scroll .main section.page3 .page_container  {
-      padding: 20px;
-      margin-top: 150px;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-    }
+<style>
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
-    body.disabled-onepage-scroll  section .page_container h1{
-      text-align: center;
-      font-size: 50px;
-      width: 100%;
-    }
-    body.disabled-onepage-scroll section .page_container h2, body.disabled-onepage-scroll section .page_container .credit, body.disabled-onepage-scroll section .page_container .btns{
-      text-align: center;
-      width: 100%;
-    }
+body, html {
+	height: 100%;
+}
 
-    body.disabled-onepage-scroll .main section.page1 > img {
-      position: absolute;
-      width: 80%;
-      left: 10%;
-    }
+body, ul, li, h1, h2, h3, img, p {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	list-style: none;
+}
 
-    body.disabled-onepage-scroll .main section > img {
-      position: relative;
-      max-width: 80%;
-      bottom: 0;
-    }
-    body.disabled-onepage-scroll code {
-      width: 95%;
-      margin: 0 auto 25px;
-      float: none;
-      overflow: hidden;
-    }
+body {
+	/* On modern browsers, prevent the whole page to bounce */
+	overflow: hidden;
+	font-size: 12px;
+}
 
-    body.disabled-onepage-scroll .main section.page3 .page_container {
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-      right: 0;
-    }
+#wrapper {
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	max-width: 568px;
+	height: 100%;
+	max-height: 568px;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+	display: none;
 
+	/* Prevent native touch events on Windows */
+	-ms-touch-action: none;
 
-    .text-btn {
-      display: block;
-      max-width: 410px;
-      margin: 30px auto 30px;
-      line-height: 250%;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 14px;
-    }
-    .text-btn a {
-      border-bottom: 2px dotted #000;
-      line-height: 200%;
-      display: inline-block;
-    }
-    body .socials {
-      margin-bottom: 0px;
-      max-width: 410px;
-      display: block;
-      float: left;
-      clear: both;
-    }
-    @media (max-width: 500px) {
-      body .main section .page_container {
-        top: 20px;
-      }
-      .rehide {
-        display: none !important;
-      }
-      .main section.page1 h2 {
-        font-size: 15px;
-        padding: 0 25px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        margin-bottom: 5px;
-      }
-      body .socials {
-        display: none;
-      }
-      .credit {
-        margin-top: 10px;
-        padding: 0;
-        font-size: 12px;
+	/* Prevent the callout on tap-hold and text selection */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 
-      }
-      .txt-btn {
-        margin: 12px 25px 12px;
-      }
-      .main section.page2 .page_container {
-        margin-top: 0;
-        overflow: hidden;
-      }
-      .main section.page2 h1, .main section.page3 h1 {
-        font-size: 25px;
-        text-align: center;
-        margin-bottom: 25px;
-      }
-      .main section.page2 h2, .main section.page3 h2 {
-        font-size: 15px;
-        text-align: center;
-      }
-      code {
-        margin: 10px auto;
-        width: 100%;
-      }
-      .main section.page3 h2 {
-        color: #cc6600;
-      }
-      .main section.page3 .page_container {
-        right: 0;
-        padding: 0 25px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-      }
-      .main section.page3 .page_container .part2 {
-        position: relative;
-        top: 250px;
-      }
-    }
-	</style>
-	<script>
-	  $(document).ready(function(){
-      $(".main").onepage_scroll({
-        sectionContainer: "section",
-        loop: false,
-        responsiveFallback: false
-      });
-		});
+	/* Prevent elements to be highlighted on tap */
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 
-	</script>
-	  <div class="main onepage-wrapper" style="position: relative;">
-      <section class="page1 section active" data-index="1" style="position: absolute; left: 0px; top: 0%;">
-        <div class="page_container">
-          <h1>缘起情定<br>我们以幸福的名义</h1>          
-          <h2>邀请您见证</h2>
-          <h3>四川 2014.10.1</h3>
-  	    </div>
-      </section>
+	/* Prevent text resize on orientation change, useful for web-apps */
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
 
-	    <section class="page2 section" data-index="2" style="position: absolute; left: 0px; top: 100%;">
-	      <div class="page_container">
-          <h2>他们是彼此的初恋</h2>
-          <h2>相恋八年</h2>
-          <h2>也是异地的八年</h2>
-          <h2>他们是彼此的初恋</h2>
-          <h2>他教会了她怎么去爱</h2>
-          <h2>她鼓舞着他一直向前</h2>
-          <h2>在人生各个阶段</h2>
-          <h2>他们扮演着彼此最重要的角色</h2>
-          <h2>情不知所起，一往而深</h2>
-        </div>
-      </section>
+#deck {
+	position: relative;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
 
-	    <section class="page3 section" data-index="3" style="position: absolute; left: 0px; top: 200%;">
-	      <div class="page_container">
-          <div class="part1">
-            <h2>时间：2014年10月01日/星期三</h2>
-            <h2>席设：恒源大酒店（情人桥）</h2>
-            <h2>地点：四川省凉山彝族自治州会东县</h2>
-          </div>
-          <div class="part2">
-            <h2>婚礼流程：</h2>
-            <h2>10：00 欢乐接亲大会</h2>
-            <h2>11：00 新人温馨仪式</h2>
-            <h2>17：30 热闹晚宴</h2>
-          </div>
-  	    </div>
-      </section>
+	background: #555;
+}
 
-    </div>
-    <a class="rehide" href="https://github.com/peachananr/onepage-scroll"><img style="position: absolute; top: 0; right: 0; border: 0;" src="forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-  </div>
+.card {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+
+	/* Put the scroller into the HW Compositing layer right from the start */
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
+.card div {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	background-position: 50% 50%;
+	background-size: 95% 95%;
+	background-repeat: no-repeat;
+	font-size: 1.6em;
+}
+
+.card img {
+	position: absolute;
+	z-index: 11;
+}
+
+.card h3 {
+	background-color: #aaa;
+	padding: 8px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.card p {
+	z-index: 12;
+	position: absolute;
+}
+
+#maskContainer {
+  position: absolute;
+  width: 100%;
+  height:100%;
+}
+
+#maskContainer > canvas {
+  position: absolute;
+  width: 100%;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="maskContainer"></div>
+
+<div id="wrapper">
+	<ul id="deck">
+		<li class="card"><div>
+			<img src="" alt="thumb">
+			<p>Text</p>
+		</div></li>
+		<li class="card"><div>
+			<img src="" alt="thumb">
+			<p>Text</p>
+		</div></li>
+		<li class="card"><div>
+			<img src="" alt="thumb">
+			<p>Text</p>
+		</div></li>
+	</ul>
+</div>
+
+</body>
+</html>
