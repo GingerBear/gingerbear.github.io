@@ -55,6 +55,7 @@ Lottery.prototype = {
         var device = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
         var clickEvtName = device ? 'touchstart' : 'mousedown';
         var moveEvtName = device? 'touchmove': 'mousemove';
+        var docEle = document.documentElement;
         if (!device) {
             var isMouseDown = false;
             this.mask.addEventListener('mouseup', function(e) {
@@ -82,8 +83,8 @@ Lottery.prototype = {
                     top:0
                 };
             }
-            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left;
-            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top;
+            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft;
+            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop;
             _this.drawPoint(x, y);
         }, false);
 
@@ -97,8 +98,8 @@ Lottery.prototype = {
                     top:0
                 };
             }
-            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left;
-            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top;
+            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft;
+            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop;
             _this.drawPoint(x, y);
         }, false);
     },

@@ -19,11 +19,13 @@ window.onload = function () {
   var drawPercentNode = document.getElementById('drawPercent');
 
   function drawPercent(percent) {
-    // drawPercentNode.innerHTML = percent + '%';
-    console.log(percent);
-    if (percent > 70) {
-    	$('#maskContainer').hide();
-			$('#wrapper').show();
+
+    if (percent > 60) {
+	
+			$('#wrapper').show();	
+			$('.audio').show();
+
+			document.getElementsByTagName("audio")[0].play();
 
 			deck = new CardView('#wrapper', {
 				dataset: data,
@@ -34,6 +36,16 @@ window.onload = function () {
 					el.querySelector('p').innerHTML = data.text;
 				}
 			});
+
+			$(".overlay").show();
+
+			setTimeout(function() {
+				$(".overlay").addClass('overlay-flash')
+					.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(){		
+					$(this).hide();
+					$('.maskContainer').remove();
+				});
+			}, 100);
     }
   }
 };
@@ -46,6 +58,17 @@ function getRandomStr(len) {
   return text;
 }
 
+$(document).on('click', '.audio', function() {
+	var audioDom = document.getElementsByTagName("audio")[0];
+	if ($(this).is('.on')) {
+		audioDom.pause();
+		$(this).removeClass('on').addClass('off');
+	} else {
+		audioDom.play();	
+		$(this).removeClass('off').addClass('on');
+	}
+});
+
 </script>
 
 <script type="text/javascript">
@@ -55,41 +78,64 @@ var data = [
 	{
 		img: 'imgs/cover.jpg',
 		imageStyle: 'width: 100%; color: ',
-		text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+		text: ''
 	},
 	{
 		img: 'imgs/p1.jpg',
 		imageStyle: 'width: 100%',
-		text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+		text: ''
 	},
 	{
 		img: 'imgs/p2.jpg',
 		imageStyle: 'width: 100%',
-		text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+		text: ''
 	},
 	{
 		img: 'imgs/p3.jpg',
 		imageStyle: 'width: 100%',
-		text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+		text: ''
 	},
 	{
 		img: 'imgs/p4.jpg',
 		imageStyle: 'width: 100%',
-		text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.'
+		text: ''
+	}	,
+	{
+		img: 'imgs/p5.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	},
+	{
+		img: 'imgs/p6.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	},
+	{
+		img: 'imgs/p7.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	},
+	{
+		img: 'imgs/p8.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	}	,
+	{
+		img: 'imgs/p9.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	},
+	{
+		img: 'imgs/p10.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
+	},
+	{
+		img: 'imgs/p11.jpg',
+		imageStyle: 'width: 100%',
+		text: ''
 	}	
 ];
-
-function loaded () {
-	// deck = new CardView('#wrapper', {
-	// 	dataset: data,
-	// 	onUpdateContent: function (el, data) {
-	// 		$(el).find('img')
-	// 			.attr('src', data.img)
-	// 			.attr('style', data.imageStyle);
-	// 		el.querySelector('p').innerHTML = data.text;
-	// 	}
-	// });
-}
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -177,7 +223,7 @@ body {
 	transform: translateZ(0);
 }
 
-.card div {
+.card .content {
 	position: relative;
 	width: 100%;
 	height: 100%;
@@ -209,11 +255,83 @@ body {
   position: absolute;
   width: 100%;
   height:100%;
+	-webkit-transition: opacity 1s;
+}
+
+#maskContainer.hide {
+	opacity: 0;
 }
 
 #maskContainer > canvas {
   position: absolute;
   width: 100%;
+}
+
+.arrow {
+	position: absolute;
+	bottom: 0;
+	z-index: 100;
+	font-size: 3rem;
+	width: 100%;
+	text-align: center;
+	color: #fff;
+	-webkit-animation: flashing 0.8s infinite alternate ease;
+}
+
+.icon-arrow {
+	-webkit-transform: rotate(90deg);
+	display: inline-block;
+}
+
+@-webkit-keyframes flashing {
+  from {
+  	opacity: 0;
+		color: #aaa;
+		-webkit-transform: translateY(-10px);
+  }
+
+  to {
+  	opacity: 0.8;
+		color: #fff;
+		-webkit-transform: translateY(0);
+  }
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	z-index: 102;
+	-webkit-transition: opacity 1s;
+	display: none;
+	opacity: 1;
+}
+
+.overlay-flash {
+	opacity: 0;
+}
+
+.audio {
+	position: absolute;
+	z-index: 101;
+	width: 30px;
+	height: 30px;
+	right: 10px;
+	bottom: 10px;
+	border-radius: 5px;
+	display: none;
+	opacity: .5;
+}
+.audio.on {
+	background: #fff url('imgs/sound-on.png') no-repeat center center;
+	background-size: 80%;
+}
+.audio.off {
+	background: #fff url('imgs/sound-off.png') no-repeat center center;
+	background-size: 80%;
 }
 
 </style>
@@ -225,20 +343,45 @@ body {
 
 <div id="wrapper">
 	<ul id="deck">
-		<li class="card"><div>
-			<img src="" alt="thumb">
-			<p>Text</p>
-		</div></li>
-		<li class="card"><div>
-			<img src="" alt="thumb">
-			<p>Text</p>
-		</div></li>
-		<li class="card"><div>
-			<img src="" alt="thumb">
-			<p>Text</p>
-		</div></li>
+		<li class="card">
+			<div class="content">
+				<img src="" alt="thumb">
+				<p>Text</p>
+			</div>
+			<div class="arrow">
+				<span class="icon-arrow">&#10095;</span>
+			</div>
+		</li>
+
+		<li class="card">
+			<div class="content">
+				<img src="" alt="thumb">
+				<p>Text</p>
+			</div>
+
+			<div class="arrow">
+				<span class="icon-arrow">&#10095;</span>
+			</div>
+		</li>
+
+		<li class="card">
+			<div class="content">
+				<img src="" alt="thumb">
+				<p>Text</p>
+			</div>
+
+			<div class="arrow">
+				<span class="icon-arrow">&#10095;</span>
+			</div>
+		</li>		
 	</ul>
+
 </div>
 
+<div class="overlay"></div>
+<div class="audio on"></div>
+<audio src="yougotme.ogg" loop>
+	<p>Your browser does not support the audio element </p>
+</audio>
 </body>
 </html>
