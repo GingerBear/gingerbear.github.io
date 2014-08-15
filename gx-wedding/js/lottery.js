@@ -44,10 +44,10 @@ Lottery.prototype = {
         x = x * 2;
         y = y * 2;
         this.maskCtx.beginPath();
-        var radgrad = this.maskCtx.createRadialGradient(x, y, 0, x, y, 60);
+        var radgrad = this.maskCtx.createRadialGradient(x, y, 0, x, y, 100);
         radgrad.addColorStop(0, 'rgba(0,0,0,1)');
         this.maskCtx.fillStyle = radgrad;
-        this.maskCtx.arc(x, y, 60, 0, Math.PI * 2, true);
+        this.maskCtx.arc(x, y, 100, 0, Math.PI * 2, true);
         this.maskCtx.fill();
     },
     bindEvent: function () {
@@ -77,14 +77,18 @@ Lottery.prototype = {
         }
         this.mask.addEventListener(clickEvtName, function (e) {
             isMouseDown = true;
+            var imageWidth = 360;
+            var screenWidth = window.outerWidth;
+            var scale = screenWidth / imageWidth;
+
             if (!_this.clientRect) {
                 _this.clientRect = {
                     left: 0,
                     top:0
                 };
             }
-            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft;
-            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop;
+            var x = ((device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft) / scale;
+            var y = ((device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop) / scale;
             _this.drawPoint(x, y);
         }, false);
 
@@ -92,14 +96,17 @@ Lottery.prototype = {
             if (!device && !isMouseDown) {
                 return false;
             }
+            var imageWidth = 360;
+            var screenWidth = window.outerWidth;
+            var scale = screenWidth / imageWidth;
             if (!_this.clientRect) {
                 _this.clientRect = {
                     left: 0,
                     top:0
                 };
             }
-            var x = (device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft;
-            var y = (device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop;
+            var x = ((device ? e.touches[0].clientX : e.clientX) - _this.clientRect.left + docEle.scrollLeft - docEle.clientLeft) / scale;
+            var y = ((device ? e.touches[0].clientY : e.clientY) - _this.clientRect.top + docEle.scrollTop - docEle.clientTop) / scale;
             _this.drawPoint(x, y);
         }, false);
     },

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
-<title>Cardview</title>
+<title>Wedding Invitation</title>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/lottery.js"></script>
@@ -25,7 +25,9 @@ window.onload = function () {
 			$('#wrapper').show();	
 			$('.audio').show();
 
-			document.getElementsByTagName("audio")[0].play();
+			$(document).on('touchend', function() {
+				document.getElementsByTagName("audio")[0].play();
+			});
 
 			deck = new CardView('#wrapper', {
 				dataset: data,
@@ -58,15 +60,26 @@ function getRandomStr(len) {
   return text;
 }
 
-$(document).on('click', '.audio', function() {
-	var audioDom = document.getElementsByTagName("audio")[0];
-	if ($(this).is('.on')) {
-		audioDom.pause();
-		$(this).removeClass('on').addClass('off');
-	} else {
-		audioDom.play();	
-		$(this).removeClass('off').addClass('on');
-	}
+$(function(){
+
+	$('.audio').on('click', function() {
+		var audioDom = document.getElementsByTagName("audio")[0];
+		if ($(this).is('.on')) {
+			audioDom.pause();
+			$(this).removeClass('on').addClass('off');
+		} else {
+			audioDom.play();	
+			$(this).removeClass('off').addClass('on');
+		}
+	});
+
+
+
+  $('body').on('touchstart', function (e) {
+    document.getElementsByTagName("audio")[0].play();
+    document.getElementsByTagName("audio")[0].pause();
+  });
+
 });
 
 </script>
@@ -271,7 +284,8 @@ body {
 	position: absolute;
 	bottom: 0;
 	z-index: 100;
-	font-size: 3rem;
+	font-weight: 800;
+	font-size: 2rem;
 	width: 100%;
 	text-align: center;
 	color: #fff;
@@ -279,7 +293,7 @@ body {
 }
 
 .icon-arrow {
-	-webkit-transform: rotate(90deg);
+	-webkit-transform: rotate(-90deg) scale(1,2.5);
 	display: inline-block;
 }
 
@@ -349,7 +363,7 @@ body {
 				<p>Text</p>
 			</div>
 			<div class="arrow">
-				<span class="icon-arrow">&#10095;</span>
+				<span class="icon-arrow">></span>
 			</div>
 		</li>
 
@@ -360,7 +374,7 @@ body {
 			</div>
 
 			<div class="arrow">
-				<span class="icon-arrow">&#10095;</span>
+				<span class="icon-arrow">></span>
 			</div>
 		</li>
 
@@ -371,7 +385,7 @@ body {
 			</div>
 
 			<div class="arrow">
-				<span class="icon-arrow">&#10095;</span>
+				<span class="icon-arrow">></span>
 			</div>
 		</li>		
 	</ul>
