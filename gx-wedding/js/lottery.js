@@ -15,6 +15,15 @@ function Lottery(id, cover, coverType, width, height, drawPercentCallback) {
     this.drawPercentCallback = drawPercentCallback;
 }
 
+function is_weixin(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 Lottery.prototype = {
     createElement: function (tagName, attributes) {
         var ele = document.createElement(tagName);
@@ -80,6 +89,10 @@ Lottery.prototype = {
             var imageWidth = 360;
             var screenWidth = window.outerWidth;
             var scale = screenWidth / imageWidth;
+
+            if (is_weixin()) {
+                scale = scale * 2;
+            }
 
             if (!_this.clientRect) {
                 _this.clientRect = {
