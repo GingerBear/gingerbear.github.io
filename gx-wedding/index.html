@@ -12,6 +12,32 @@
 
 <script type="text/javascript">
 
+var dataForWeixin={
+	appId:	"",
+	img:	"img/small.jpg", // get_post_weixin_thumb 为微信机器人高级版中的函数
+	url:	"http://gxding.com/wedding",
+	title:	"婚礼邀请",
+	desc:	"",
+	fakeid:	"",
+};
+
+(function(){
+	var onBridgeReady=function(){
+		// 发送给好友; 
+		WeixinJSBridge.on('menu:share:appmessage', function(argv){
+			WeixinJSBridge.invoke('sendAppMessage',{
+				"appid":		dataForWeixin.appId,
+				"img_url":		dataForWeixin.img,
+				"img_width":	"120",
+				"img_height":	"120",
+				"link":				dataForWeixin.url,
+				"desc":				dataForWeixin.desc,
+				"title":			dataForWeixin.title
+			}, function(res){});
+		});
+	};
+})();
+
 window.onload = function () {
   var lottery = new Lottery('maskContainer', 'imgs/mask.jpg', 'image', window.outerWidth, window.outerHeight, drawPercent);
   lottery.init('imgs/cover.jpg', 'image');
