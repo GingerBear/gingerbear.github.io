@@ -17,7 +17,7 @@ function Lottery(id, cover, coverType, width, height, drawPercentCallback) {
 
 function is_weixin(){
     var ua = navigator.userAgent.toLowerCase();
-    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+    if(/MicroMessenger/i.test(ua) &&  !/iPhone/i.test(ua)) {
         return true;
     } else {
         return false;
