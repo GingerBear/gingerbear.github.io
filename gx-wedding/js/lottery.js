@@ -112,6 +112,11 @@ Lottery.prototype = {
             var imageWidth = 360;
             var screenWidth = window.outerWidth;
             var scale = screenWidth / imageWidth;
+            
+            if (is_weixin()) {
+                scale = scale * 2;
+            }
+
             if (!_this.clientRect) {
                 _this.clientRect = {
                     left: 0,
