@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="1. 选择虚拟主机，VPS，还是云平台？ 虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。 优点：便宜，配置方便。 缺点：不稳定，速度较慢，限制多。 VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。 优点： &hellip;">
+  <meta name="description" content="In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,336 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T14:55:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
+
+<h2>Description and Requirement</h2>
+
+<p>The whole requirement is <a href="https://drive.google.com/file/d/1oWoWm2MAQf7uEw0U8gwXLUK0ufQHAlexupOlO0o6QZTG3Z67kM7GrRFsV0a7LK1mHObatCizd_Y4_8RD/edit?usp=sharing">here</a>. In short, the scheduler have</p>
+
+<pre><code>lwt_init(int quantum)
+</code></pre>
+
+<p>to set up the main thread, the global thread, the signal hander and thread running intervel with the a period of time as parameter (quantum).</p>
+
+<pre><code>lwt_create(char *name, void *argv, fun_type fn)
+</code></pre>
+
+<p>to create a thread with name, argument pointer and function pointer. and run it immediatly. return thread indentifier.</p>
+
+<pre><code>lwt_sleep(int seconds)
+</code></pre>
+
+<p>to put current thread into sleep for seconds.</p>
+
+<pre><code>thrd_wait(lwt *t)
+</code></pre>
+
+<p>to put current thread into wait until the input thread (child thread) exit.</p>
+
+<pre><code>smphr_create(int size)
+</code></pre>
+
+<p>to create a semaphore with a input size, and init a thread queue for waiting list.</p>
+
+<pre><code>P(smphr *s)
+</code></pre>
+
+<p>to acquire semaphore if avaible, if not, put current thread into queue</p>
+
+<pre><code>V(smphr *s)
+</code></pre>
+
+<p>to release semaphore, and dequeue the front thread in queue</p>
+
+<h2>How to achieve multi-thread</h2>
+
+<p>The idea is pretty similar with multi-processes running on a single processor. Threads are switched in a fast speed with a process, making it like they are served simultaneously. But how to make the switch? Use <em>alarm signal</em> to interrupt running thread, <em>setjmp</em> to save its running environment and <em>longjmp</em> to restore to its that environment. Here is the code :</p>
+
+<pre><code>lwt_init() 
+{
+    /* ... */
+
+    signal(SIGALRM, alarm_handler);
+    ualarm(lwt_quantum, 0);
+
+    /* ... */
+}
+
+void alarm_handler () 
+{
+    /* ... */
+
+    if (setjmp(sys_t.curr-&gt;env) == 0) { // interrupted, save current thread's runing environment. if get here from longjmp(), setjmp will return no-zero
+        do {
+            sys_t.curr = sys_t.curr-&gt;next; // set next thread as current thread
+
+            /* ... check state of current thread here */
+
+        } while (sys_t.curr-&gt;state != lwt_READY);
+
+        ualarm(sys_t.interval + sys_t.curr-&gt;prior, 0);
+        longjmp(sys_t.curr-&gt;env, 1);    // after switch, continue running environment where it was saved
+    }
+
+    /* ... */
+}
+</code></pre>
+
+<p>There is a serious problem here. Thread are created on main thread (actually process), so when they run, a stack will be allocated on the top of main stack. The stack will be remove if the thread run is over (returned). There is no problem if thread run one by one. But in this case, they are running simultaneously (not precisely simultaneous, but running without end of others). The result is that all these threads are using a same stack. We know that when we perform of a setjmp, env save the stack pointer of the thread. So it comes to the situation that switching will make thread go back to its stack pointer, but the content of that stack will not its content. Stack is all messed.</p>
+
+<p>A way to solve this is to give each thread its own stack when they created. This is achieve by a statement of assembly language. Code is there:</p>
+
+<pre><code>#ifdef _X86
+__asm__("mov %0, %%esp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#else
+__asm__("mov %0, %%rsp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
+#endif
+</code></pre>
+
+<p>I don&rsquo;t know jack about assembly language. But I was told that it move the stack pointer to a new stack.</p>
+
+<h2>How to implement Semaphore</h2>
+
+<p>Semaphore actually is quite sample (the reason I say this, because I thought it was hard). It is like a gate keeper having a list of available rooms. It will tell the visitor if any room available. If yes, gate keeper will allow the visitor to use the room and reduce the number of available rooms. If no, put the visiter on the waiting list.</p>
+
+<p>If the visitor has done with the room, gate keeper will make that room available again, and give it to the first visitor on the waiting list, and sure remove him from waiting list.</p>
+
+<p>P() is for thread to achieve the first part (check and gain semaphore), V() is for the second part (release semaphore and give to to front waiting list). Here is the code:</p>
+
+<pre><code>typedef struct smphr_t {
+    int     smphr_size;
+    Queue   queue;              // queue store thread waiting for semophore
+} smphr;
+
+smphr * smphr_create(int smphr_size){
+    smphr *s;
+    s = malloc(sizeof(smphr));
+    s-&gt;smphr_size = smphr_size;
+    s-&gt;queue = CreateQueue();                   // use a queue to store waiting list
+    return s;
+}
+
+void P(smphr *s){
+    int left = ualarm(0, 0);                    // disable the context switch, by clear the alarm
+    if(s-&gt;smphr_size &gt; 0){                      
+        s-&gt;smphr_size -= 1;                     // semaphore offered
+        ualarm(left, 0);                        // restore context switch
+    } else {                                    // no more semaphore, blocked
+        s-&gt;smphr_size -= 1;                     // TRICK! semaphore still need to be reduced one, in order to avoid fullCount getting too large. 
+        sys_t.curr-&gt;state = sem_WAIT;
+        Enqueue(sys_t.curr, s-&gt;queue);          // put into queue
+        raise(SIGALRM);
+    }
+}
+
+void V(smphr *s){
+    int left = ualarm(0, 0);
+    s-&gt;smphr_size += 1;                         // release semaphore
+    if (!IsEmpty(s-&gt;queue)) {                   
+        Front(s-&gt;queue)-&gt;state = lwt_READY;     // dequeue front and set to READY, if not empty
+        Dequeue(s-&gt;queue);
+    }
+    ualarm(left, 0);
+}
+</code></pre>
+
+<h2>Test with Producer-Consumer Problem</h2>
+
+<p>The LWT can be tested by a classical Producer-Consumer problem. Producer produce item, Consumer consume item produced. If item buffer is full, producer should wait (producer trying to produce should be put on the waiting list) until item is consumed and buffer is not full. Consumer, similarly, should wait if item buffer is empty (put on waiting list), until item is produced and buffer is not empty.</p>
+
+<p>So we need a fullCount Semaphore (max size of buffer) to decide if full, a emptyCount Semaphore (max size of buffer) to decide if empty and a useLock to only let one producer/consumer access to buffer at one time. Here is the code:</p>
+
+<pre><code>void producer(){
+    srand(time(NULL));  // Initializes random number generator
+    int item = 0;
+    while(1){        
+        item = rand();
+        P(emptyCount);
+        P(useQueue);
+        if (current &lt; N) {
+            buffer[current++] = item;
+        }
+        V(useQueue);
+        V(fullCount);
+        printf("Producer: %s\tproduce: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+    }
+}
+
+void consumer(){
+    int item = 0;
+    int i = 0;
+    while(i &lt; 30){ 
+        P(fullCount);
+        P(useQueue);
+        if (current &gt; 0) {
+            item = buffer[--current];
+        }
+        V(useQueue);
+        V(emptyCount);
+        printf("Consumer: %s\tconsume: %d\te: %d\tf: %d\tSize:%d\n"
+            , get_curr_name()
+            , item
+            , smphr_get_size(emptyCount)
+            , smphr_get_size(fullCount)
+            , current);
+        i++;
+    }
+}
+
+int main(int argc, char *argv[]){
+    int i,j;
+    lwt *t;
+    emptyCount  = smphr_create(N);
+    fullCount   = smphr_create(0);
+    useQueue    = smphr_create(1);
+
+    lwt_init(QUANTUM);
+
+    lwt_create("p1", 0, NULL, producer);  
+    lwt_create("p2", 0, NULL, producer);  
+    lwt_create("p3", 0, NULL, producer);  
+    lwt_create("p4", 0, NULL, producer);  
+    lwt_create("c1", 0, NULL, consumer);     
+    t = lwt_create("c2", 0, NULL, consumer);     
+
+    thrd_wait(t);
+    printf("Two Consumers consume 30 items!\n");
+    printf("Done!\n");
+}
+</code></pre>
+
+<p>The full code is on <a href="https://github.com/GingerBear/LWT">github</a>. Thanks to <a href="https://github.com/cadmuxe">cadmuxe</a> and <a href="https://github.com/liyangbin">liyangbin</a> for the help.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-28T02:16:00-04:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It has been a few weeks that I am thinking about writing a blog on the IS Reader project. In this post, I will try to answer:</p>
+
+<ul>
+<li>Why did I start the project?</li>
+<li>What will the product be functioning like?</li>
+<li>How did I or will I deal with it?</li>
+<li>What are the design rules that I am following?</li>
+</ul>
+
+
+<h2>Why did I start the project?</h2>
+
+<p>There are a lot of reasons that finally lead me to build this reader. First and most importantly, When I reading some long documents, like a book, I found myself need a sample tool that can store a pdf document online, and everytime you open it on different devices, it will restore the previous page you read. I went throught a series of search but didn&rsquo;t find a sample solution. Kindle App may work but not allow pdf uploads. Dropbox and Google Drive show pdf cross device but cannot restore the progress, no need to say annoating or sharing. Foxit reader can restore but only work locally.</p>
+
+<p>The secend reason is that, I was happened to take an independent study with Peter&rsquo;s, our program head, phd student Julio, who took me to the ReadingCycle project. It is also a reader project, but only work for picture format books. So it is a good change to do it along with the IS Reader. (Actually IS Reader the name came with the inital of School of <em>Information Science</em>, but not limit to that.)</p>
+
+<p>Thirdly, I am on my way finding a job, this project will be a great enhancement of my experience and CV. I will try a lot of new technologies that could be written on my CV.</p>
+
+<p>Finally, there is no such a product on the web and it is not that hard to build, so why don&rsquo;t I create one. Maybe it will grow into a real deal.</p>
+
+<h2>What will the product be functioning and look like?</h2>
+
+<p>On the first thought, the product is pretty sample. I can upload pdf documents on it, read it, restore the page on other devices and continue reading. By further thinking, it should support multi-user, not just me alone. Then it should provide a certain management page that can CRUD those documents. Next, it should allow user to annotate on the document. Finally, social stuff. User can share documents, notes with each other. They can track their progross. Product can even provide some kind of stratagy that my drive user to reader more, like comparing, gamification.</p>
+
+<p>At this moment of my typing, I am thinking the goal of the product should be to <strong>make people more like to read</strong>, or to learn, since I read for learn.</p>
+
+<h2>How did I or will I deal with it?</h2>
+
+<p>As I mentioned, the article should be typed several weeks ago, which means I have started working on it for several weeks (19 days since its github inital commit). I choosed all those new technology from the begining. At the begining scaffolding stage, I user Yeomen to genate a express project and a webapp (merged in the middle of developing, cover later).</p>
+
+<p>I use pdf.js for the JavaScript-based pdf rendering. Although its rendering is a bit not that sharp on windows, it is good enough for long time reading. Not surprisingly, it renders perfectly on MacBook Pro with Retina display (need to fix the scale issue), the one I just bought, and better on mac with no-Retina than windows.</p>
+
+<p>For the server, I use Express on Node.js, Mongoose and MongoDB for the database, Jade for the template engine. In fact, I tried to build a pure RESTful for the server, so I didn&rsquo;t use Jade at the first time. But met a lot of issues. First I came across some cross-domain issue on the cross ajax call from the client. I tried jsonp and cors to fix it. Then I didn&rsquo;t find a way to validate user session in a rapid way except cookies (I don&rsquo;t have experience with OAuth). So I gave up the RESTful option, in order for the quick shipping.</p>
+
+<p>For the client side, most code I wrote is about the reader page. The logic is sample and old-fashion, just some event binding and ajax call, store data in the dom. What&rsquo;s new is that I try to use some new JavaScript techniques. I use event delegation of those massive event bindings. I wrap the whole reader JavaScript logic in a constructor, which construct the JavaScript by parameters, hide internal private parameters and methods, and get inited by init(); Some progress was made, but way not enough. The code is close to spaghetti, dom bindings are hard coded inside. I am extremely want to make it modular and less coupled, maybe after a big release.</p>
+
+<p>Now, basic funcitons till making note are made. Next thing should be involved with some social, with OAuth bulid in, and books management with one-page app style (AngularJS or BackboneJS).</p>
+
+<h2>What are the design rules that I am following?</h2>
+
+<p>It is too late now, let me be short. For the design, 3 rules:</p>
+
+<ul>
+<li>Rule 1: As easy to use as possible</li>
+<li>Rule 2: As less reading interuption as possible</li>
+<li>Rule 3: As clean and sample as possible</li>
+</ul>
+
+
+<h2>Summary</h2>
+
+<p>Use the most quoted facebook works:</p>
+
+<blockquote><p>Keep Focus and Keep Shipping</p></blockquote>
+
+<p>That is all I need to do, no need to think to far. No matter what will the product be in the future, it has a good start, namely I build it for myself use.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -851,150 +1181,6 @@ Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/">我的托福那点破事儿</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-02T00:00:00-05:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">&nbsp;
-
-<a style="font-style:normal;line-height:24px;text-decoration:underline;" href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg"><img class="aligncenter size-full wp-image-26" style="border-style:initial;border-color:initial;margin-top:.4em;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#eeeeee;" title="download" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg" alt="" /></a>
-
-托福成绩刚刚出来了，96分，总体来说勉强还算是个decent的分数（太低也不会写这玩意儿）。
-所以今天主要说说托福那些破事儿。
-
-Reading(R), Listening(L), Speaking(S), Writing(W)
-第一次考试2010年5月16日：R:19 L:19 S:20 W:22 Total:80
-第二次考试2011年8月13日：R:25 L:24 S:20 W:21 Total:90
-第三次考试011年11月20日：R:21 L:28 S:23 W:24 Total:96<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg">
-</a>
-
-<strong>阅读：状态最重要</strong>
-就是把GRE从70年代开始所有的题都做完两遍以上，考托福照样不行，第二次25的原因是考前猛准备3周，把17个TPO的阅读做它两遍，才勉强达到25。第一次19考前做了两三套巴朗就受不了了。第三次就草草做了TPO的19、20、21、22、23、24，没掐时间，没定时间。所以阅读考前状态太重要了。
-
-<strong>听力：要多练，与多练</strong>
-丢掉笔记，要完全理解。就算貌似很难记住的细节，只要能搞清楚描写这个细节的目的，其实问到的时候是能回想起来的。
-
-<strong>口语：使Trick</strong>
-抛弃机经，坑人（所谓预测就是列出二三十个题目，那么大范围还不一定准）加给人心里负担（没准备到好就心神不宁的）。
-Trick 1. 在考试的间隙（题与题之间不要点跳过，等自动跳过）把事先准备好的6个题目的模板抄到草稿纸上，考的时候，照着念。避免紧张导致忘了。
-Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，听别人的口语回答，猜出题目，笃定地填入模板，考试时笃定的念就是了。（由于我拖太久了，以至于我休息的时候念的人太多，听不清楚题目）
-
-<strong>作文：丢弃模板，注重表达方式</strong>
-第三次作文，与前两次不同的是，由于基本没准备，所以感觉当时写作有点意识流，没有遵照严格和清晰的结构，但试图让表达流畅。
-字数也不是想象中的那么重要，第二次字数最多，但分数最低。
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/">Django项目小记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-05T00:00:00-04:00" pubdate data-updated="true">Nov 5<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p style="text-align:center;"><a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png"><img class="size-full wp-image-19 aligncenter" title="Untitled" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png" alt="" width="834" height="314" />图</a>：通过Django编写的表单提交操作，使用Jpype调用Java类，运行Web-Harvest抓取新浪微博，存入MySQL的过程中，Web-Harvest的运行状态。</p>
-<p style="text-align:left;">每次能看到这幅图片，就感到特别欣慰，特别是刚才的那次，感觉就像走完了一片沙漠看到了绿洲。</p>
-<p style="text-align:left;">从三天前大致学会Django的基本原理，到现在集成Web-Harvest，MySQL，PyMining到Django并成功运行。的确是费了不少周折。下面罗列出能够回想起的问题与解决方法。</p>
-<p style="text-align:left;"><strong>（1）问题：SQLite连接Web-Harvest中文乱码，databse插件无法执行多句SQL</strong></p>
-<p style="text-align:left;">未解决：放弃SQLite，改用MySQL</p>
-<p style="text-align:left;"><strong>（2）问题：XQuery输出SQL语句的格式MySQL读取失败</strong></p>
-<p style="text-align:left;">解决：用XQuery的concat方法链接字符串与变量，使之构成完整SQL字符串。经过仔细追求，修改WebHarvest源代码，还是发现WebHarvest的database插件只支持执行依据SQL语句，于是退而求其次，用了笨办法，把database插件包含到loops里，也就是说，每执行一次SQL，就连接一次MySQL。这是没有办法的办法，不过考虑到系统不会有很多人使用，并且爬虫速度的短板在http的读取上，这还是勉强能接受的。</p>
-<p style="text-align:left;"><strong>（3）问题：Web-Harvest连接MySQL，出现中文乱码</strong></p>
-<p style="text-align:left;">解决：乱码无非是文件编码、数据库编码、连接的编码三者不一致导致的。所以，确定文件编码、数据库编码都是utf-8后，只有是连接的编码没有设置好了，记得在PHP里是用一句语句设置连接编码的，但Web-Harvest里没有这种设置，database的参数里也没有。Google了很久后发现，在链接字符串里可以加入编码设置参数，于是连接字符串加上：</p>
-
-<pre>jdbc:mysql://127.0.0.1:3306/OpinionMonitor<span style="color:#ff0000;">?useUnicode=true&amp;amp;characterEncoding=UTF-8</span></pre>
-<p style="text-align:left;">这样就解决了乱码问题。</p>
-<p style="text-align:left;">另外，Django连接MySQL很方便，在settings.py里更改DATABASES，再syncdb即可。</p>
-<p style="text-align:left;"><strong>（4）问题：把PyMining集成到Django</strong></p>
-<p style="text-align:left;">解决：很方便，把conf, data, dict, mining四个文件复制到Project目录下，在App的views.py里加入原先的运行程序，最后加上return HttpResponse(&#8230;)，就可以运行了。</p>
-<p style="text-align:left;"><strong>（5）问题：把Web-Harvest集成到Django，并用表单传入爬虫运行参数</strong></p>
-<p style="text-align:left;">解决：十分纠结。首先第一个子问题出现了插入数据的问题：</p>
-
-<pre>Incorrect integer value: '' for column 'ReNum' at row 1”</pre>
-<p style="text-align:left;">也就是空（‘’）不能插入到integer型字段里。</p>
-<p style="text-align:left;">想到的解决方法一，用XQuery自定义函数把空转成0，理应很简单，但是中通不过语法检查，Google了很多样本，按照里面的各种格式不断修改尝试，但还是不行，最终放弃。</p>
-<p style="text-align:left;">想到的解决方法二，可能是MySQL的字段不允许为空，或者可能有自动转空为0的设置。但是设置允许为空之后，没有任何变化。Google之后，MySQL的确有转空为0的设置，在my.ini的safe_mode里设置，但奇怪的是，我的XAMPP里的mysql没有这个设置。只能放弃。</p>
-<p style="text-align:left;">最后的解决方法：在XQuery的return里加上判断$WeiboReNum != &#8220;&#8221; ，然后修改SQL语句。（依然是笨办法）奇怪的是，新浪微博里居然出了被转发的微博的转发数居然是0的，逻辑不通，但防止报错，改成了更丑陋的代码。如下：</p>
-
-<pre><span style="color:#ff0000;">return</span>	<span style="color:#008000;">if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum = "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum = "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '",0 , "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", 0, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")</pre>
-<p style="text-align:left;">然后第二个子问题是，如何在不用eclipse的情况下，加入classpath，解决方法是在系统的classpath里加入mysql-connector-java-5.1.18-bin.jar与webharvest_all_2.jar。并且在JPype的启动JVM的方法里，加入参数classpath（在加一遍系统参数）。</p>
-<p style="text-align:left;">第三个子问题是，JPype传参数到Java类里，一直报错：</p>
-
-<pre>No matching overloads found. at src/native/common/jp_method.cpp:121</pre>
-<p style="text-align:left;">看了很多论坛的解答后，发现似乎是实例化的问题，需要构造函数，果然在最早的JavaHello示例中，类里面故意写了一个空的构造函数（可能是为了满足JPype的特殊要求），于是在WebHarvestTest.java里加入了“形式上”的构造函数。经过不断的模仿与尝试，终于成功了。呼呼，颇为纠结。</p>
-<p style="text-align:left;">第四个子问题是，JPype只能运行一次，具体说来就是，shutdownJVM之后就不能再startJVM了，而且startJVM之后也不能再startJVM了，不然就报错：</p>
-
-<pre>RuntimeError: Unable to start JVM at src/native/common/jp_env.cpp:54</pre>
-<p style="text-align:left;">奇怪的问题，Google中无法发现jpype.isJVMStarted()这个方法，很好，如果判断已经启动，就不再启动了，果然问题解决。</p>
-
-<pre>if not jpype.isJVMStarted():
-    startJVM(getDefaultJVMPath(),"classpath")</pre>
-<p style="text-align:left;">（问题结束）</p>
-<p style="text-align:left;">随着问题的出现，烦恼，解决，心情也是起起伏伏。现在很平静，因为前期的基本问题已经解决，后面却还有更多问题要解决。主要涉及算法的应用与数据的表现，这可能就不是简单的Google几下就能解决的了，但不会像这么纠结在小问题上。</p>
-<p style="text-align:left;">（End | by Neil）</p>
-<p style="text-align:center;"></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1039,6 +1225,14 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/03/expectation-in-2015/">2015年的展望</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/15/two-months-on-working/">Two Months on Working</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/08/thoughts-about-job-finding-in-recent-months/">Job Findings in Recent Months</a>
       </li>
     
@@ -1048,14 +1242,6 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
     
       <li class="post">
         <a href="/blog/2014/02/10/something-about-me/">Something About Me</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/">A Plan to Hunting Job as a TEAM (Deprecated)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/10/a-phone-number-matching-regular-expression/">A Phone Number Matching Regular Expression</a>
       </li>
     
   </ul>
@@ -1100,7 +1286,7 @@ Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Neil Ding -
+  Copyright &copy; 2015 - Neil Ding -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Neil Ding]]></title>
   <link href="http://GingerBear.github.io/atom.xml" rel="self"/>
   <link href="http://GingerBear.github.io/"/>
-  <updated>2014-04-09T02:20:08-04:00</updated>
+  <updated>2015-01-04T15:00:59-05:00</updated>
   <id>http://GingerBear.github.io/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[2015年的展望]]></title>
+    <link href="http://GingerBear.github.io/blog/2015/01/03/expectation-in-2015/"/>
+    <updated>2015-01-03T14:25:00-05:00</updated>
+    <id>http://GingerBear.github.io/blog/2015/01/03/expectation-in-2015</id>
+    <content type="html"><![CDATA[<p>说什么展望的确有点空，因为这些话常常说过就忘，但是我还是还是忍不住想写下来，给自己一个目标，尽管很虽，但总比什么都没有强。2014是充满惊喜的一年。有不少事儿可以说，但是我现在心情如此急切和兴奋以至于我就想马上动手开始写2015的展望。那就简单记录一下2014发生了什么事情吧。</p>
+
+<blockquote><p>太直奔主题，差点忘了提一提现在的状态。正坐在匹兹堡的Shadyside walnut street的coffee tree咖啡馆用MacBook和sublime敲这些字儿，外面下着小雨，有点冷。刚刚从纽约和迈阿密的10天长假回来。昨天晚上打完篮球，腿有点酸。</p></blockquote>
+
+<p>2014年最值得一提的应该是，毕业后在匹兹堡找到了一个不错的工作，在一家叫做Branding Brand的公司做mobile web开发，为零售商开发移动购物网站。从2014年4月开始了我毕业后的第一份正式工作。总体来讲，一切都很顺利。刚刚开始的时候有一些小的难关，比如不太会和老外交流，难以融入团队。好在我比较迟钝，并没有太多在在意这些，一头闷在工作上，渐渐地获得了同事的信任，再经过几次令人满意的表现，算是在公司里找到了自己的节奏，从2014的结尾开始，走上一个好的开始。</p>
+
+<p>另外一件事情就是遇到了Qi，Qi是一个awesome的女汉子（现在正坐在我对面），公司里的iOS developer。我俩住的很近，每天一起乘公交车，渐渐就熟悉起来了，不对，应该是很快就熟悉起来了。我们俩一见如故，对事情的想法，对生活的态度，对待人的方式。我们都很乐观，积极，努力，都坚持着自己的梦想，想了解更丰富的世界，不断让自己更加出色。刚刚一起从假期远行回来，迎接无限美好的2015。</p>
+
+<p>好了，说说2015吧，似乎有挺多要做的，最重要的事情有两件，第一是成为牛逼的developer，第二是减肥。</p>
+
+<p>到4月就工作满一年了，回头想想在过去的6个里自己的技术水平似乎提高的并不是很高，更多是对自己已经了解的东西更加熟悉。同时，对基础的原理有了一定程度的认识，对自己的钻研能力有了一点信心，所以说这也是对于2015来说的一个好开端。所缺乏的也很明显，一方面需要更强的抽象能力，或者说重构能力，把当前的混乱的代码重新组织成为易于维护和拓展的结构，这是JavaScript和web develor往往所缺乏的，当然这也需要不断的实践和总结。所以这也自然的到了第二方面，更多和更广的实践，配合看书总结实践的经验。</p>
+
+<p>其实就在最近，产生好几个不错的项目想法，第一个是类似于私人助手的项目，类似于siri但是更加personal，在自己的家里通过语音进行交流，可以自定义命令，比如天气，设闹钟，记录想法，更加大胆的，开关电视，拍照录视频，接入api等等。这个项目应该会非常有意思，并且给人很大想象空间。实现起来也不回太难，在家里设置好语音输入和输出点，加上googl的语音识别api就能好方便的设置好几条有用的命令，后面的任务就是简单的堆集功能了。当然过程中应该也会有一些难点，特别是硬件方面，但应该都在可以解决的范围内。</p>
+
+<p>第二个项目是code style formatter，项目的的出发是公司里代码缺乏code style上的一致性，我们虽然有code style，但由于code style之前代码太多而且没有人来整理，依然后大量的代码是不一致的。当然这些工作也可以是手动的一行行改，但developer的本能不允许我做这样的事。于是我自然的就想到了开发一个code formatter来自己动修复这些code style。目前有一个开源的esformatter项目用来做这样的事情，并且可以自定义规则，但我们更想修复一些convention的规则，这些规则是code style不包括的，比如requium的callback应该是error, response, body。这会是一个一个比较有挑战的项目，应为它涉及到编程语言的parser方面的知识，我并不熟悉，也没有学过编译器之类的课程。不过我相信通过这个项目，我对JavaScrpt的了解会有一些提升。</p>
+
+<p>我一直喜欢UI方面的东西，并且移动平台上的UI设计与实现更有挑战和更多的施展空间，所以我还希望能实现一套自己的UI组件库，用到一些新的技术来练练手，比如web component，ES6，同时学习一些市面上牛逼的UI组件的设计思想。重复多造些轮子，比如重新实现一些基础组件，module loader，utility library (dom, ajax)，使用更多的abstraction layer和design pattern。</p>
+
+<p>另外如果能接触一下其他的平台，可能会学到更多的技术思想。可以用swift写一些iOS小程序，用Rust来熟悉底层系统方面的知识。</p>
+
+<p>看到过Vczh以前的一片文章，说经过大量实践后看书才后效果。经过一些项目实践后，看书就成了下一个目标，特别是设计模式方面的，另外编译原理，算法，操作系统也是对能力的提高有很大帮助。说道Vzch，他的“如何设计一门语言”也是很值得好好消化一下的。</p>
+
+<p>这么多技术方面的拉练基本上已经差不多能够填满我的2015了。</p>
+
+<p>另外一个同等重要的目标就是减肥了，其实减肥不光是变瘦，也意味着更好和健康的身体。自从工作开始，我就越来越胖了，体重的最高记录一次次被刷新，每天坐在椅子上一天下来都能感受到肚子上的脂肪堆积不下了。打起篮球来跑也跑不动，跳也跳不起，里从前的状态越来越远。减肥真的是一个很难的事情，它的难度对于我来说甚至超越了“变成牛逼的developer”，我必须在控制自己的饮食，保持不断的运动，而且是在每天花费很大精力在工作的业余。这需要我在疲惫的时候，依然保持强大的毅力，抵御住懒惰与饥饿的诱惑。还需要重新调整自己的作息规律，以及工作的节奏，以保证自己能够科学的降低体重（相对于无节制节食与运动，不顾减肥的副作用），目前的体重估计是95公斤，希望能在年底降到80公斤。</p>
+
+<p>写着写着就不知道该怎么收尾了，我觉得好像该说说“我一定会实现的！”这样的话里激励激励自己，但是根据对自己过往经历的来看，我真的对自己的毅力缺乏信心，我也不知如何是好，只能期待自己能控制住自己，不断把自己往前push，毕竟这些确实是我想做的事情，也是应该做的事情。我想在这个时候，能不能把自己的目标实现，可能这才是区分人的地方吧，计划和设想每个人都会做，真正能付出实践的才是优秀的人。所有不用多说，行动吧。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Two months on working]]></title>
+    <link href="http://GingerBear.github.io/blog/2014/06/15/two-months-on-working/"/>
+    <updated>2014-06-15T10:11:00-04:00</updated>
+    <id>http://GingerBear.github.io/blog/2014/06/15/two-months-on-working</id>
+    <content type="html"><![CDATA[<h2>How is the work itself</h2>
+
+<p>总体来说，这是一个Awesome的，让我和别人都感到幸运的工作。公司的状况感觉上非常好，在移动电子商务平台市场占有率号称是全美第一，每天感觉新的项目不断的启动，每周都有新的项目上线。整个公司的人员配置也很完备，技术开发人员占全部的员工的一半，数据分析团队也占了很大的部分，设计，产品，运维，会计，行政，管理层都有明确的分工，说明公司已经非常的完善稳定。前端组一共有二十人左右，但由于项目基本是在项目组里进行，所有我跟他们平时的交流不多，就是在第一次前端组的会上见过一面，后面也没有在开过类似的会了。前端组的老大是一个呆萌的胖子，平时很少见到他，他好像也不怎么管我们，所以加了面也没啥好聊的。前几天前端组又聚了一次，在新版Frontend的发布会上，Frontend是公司内部的前端框架，由Architecture组的人写的，狗也参加的这次发布会还是出现了不少让人起哄的场面。总之技术组给人的感觉还是非常棒的，尽管交流不多，然能看出大部分都对技术很有热情，不时能听到他们讨论有Web Component，ES6这类时髦词汇。每天都在打交道的人是项目组的同事，项目组在公司被称为Pod，我们组叫Human Center Pod，有三个前端工程师，两个后端工程师，一个项目工程师（项目经理），一个产品经理。三个前端中，一个senior，一个junior，还有一个new hire是我。七个人除了senior前端，其他都在二十来岁，跟我年龄差不多，或者比我再大一点。我的大多数问题都会向坐在我右边的junior前端求问，他再这儿工作了半年，偏传统的设计型前端，对CSS更熟悉一些，但如果遇到JavaScript的难题的时候，或者Ember的问题，常常我就的找坐在他右边的senior前端了。尽管大家都很乐于帮助，也很耐心，但从技术的追求上，他们都达不到我会去敬仰的程度，他们的expertise更多是建立在对现有项目的熟悉上。另外一点可以看出的是，他们在技术的最佳实践上并没有更新最新的步伐，不如在debug上，他们用的还是console.log，也没有使用更加高效的dev tool的re-compile，breakpoint和profile功能，还包括ember-inspector。在遇到越困难的bug时会提高越多的工作效率。</p>
+
+<p>除了工作，上班时他们几乎无时无刻在讲笑话。一开始我觉得听不懂可能是因为我不太熟，后来熟悉一些了能听懂了发现他们真的很会讲笑话，相比之下我的确是个无聊的人。我总是不知道该说什么怎么接话，所以我只能在哪儿傻笑，实在无解。这个时候往往就在像如果是在国内，应该不会是这样吧。</p>
+
+<p>对面的哥们儿是项目经理，负责给我们分配任务，review和merge我们的代码，年纪跟我们差不多，但似乎已经在这里混的很熟了，经常四处开会，各种领导层来这儿跟他扯淡。哥们儿确实挺牛，聪明，工作专注，也有点傲慢。似乎他总给人感觉对方比自己笨。</p>
+
+<p>左边的产品经理是个黑人女性，非常不典型的黑人，受过高等教育，聪明，能说会道。但对于我这个不太多话的亚洲人，她跟我交流的时候总是怪怪的显得不自然。在我的眼中，她虽然能力很强，但不是那种主导事情走向的人，她有时有自己的看法并且表现出主导场面的气势，但最后往往“略显无奈”地听从了别人的想法。不知道这是不是与她是黑人这一不可避免的事实有关，还是来自于周围技术人员在知识上对她的优势。当然了，她已经做得很好了，致使表现出了的形象与她实际的影响力有些不符。</p>
+
+<p>两个后端开发就是我们笑话的辐射中心，他们俩的笑果都是极冷的，有时候一个笑话要过好久旁边的fe才笑出声来。照美国人说，他们就是那种super nerd，特别是其中的一位，看上去非常瘦小，带着眼镜，穿着随意得邋遢，人看起来很无聊不善交际，但能感觉到内心世界很丰富，经常能语出惊人。</p>
+
+<p>剩下的那位就是来自中国的刚工作两个月的前端工程师，能够感觉到他的谨慎但热情，可能与他的特殊情况有关，这是他的第一份工作，还不知道如何跟同事打交道的分寸，在不知道的情况下他处于理性的选择安静，这也是他第一次试图融入美国环境，尽管来了两年，但学习中周围都是中国同学，生活在中国朋友圈中是大多数，在文化上的差异也让他选择谨慎地观察，而不是贸然地行动。尽管有不少阻力，但他保持着不错的态度，保持向周围学习，表达自己的观点，遇到问题的还算能够积极乐观的去面对。问题更多的来自于他自身，他那种积极的安静的态度不能时刻的保持，因为他毕竟不是人自然的状态，一旦久了，容易造成身心俱疲，心情糟糕，反过来影响他原先的积极乐观，从而导致一个恶心循环。这就是他目前的状态。如果我周围出现了向他这样的一位员工，我也许会主动的带着他与更多的人交流，主动询问他的意见，相信他。但现实没有那么理想化，人与人之间的关系更加微妙，少有过度的行文就会引起不必要的误会，所以人们常常选择保持一定距离，这点在美国人身上更加突出，更何况是在与一个文化差距如此之大的中国人之间。他能做的只能从自身开始，一点点的融入，改变，表达。尽可能保持好他自己的状态，相信一切会好的。</p>
+
+<h2>About the technology we use</h2>
+
+<p>技术的选择上，公司走得非常激进，后端使用nodejs，前端使用了ember，内部框架使用npm安装，代码使用github管理，最近甚至出了一套内部的Code Style。由于项目本身大部分是不断重复的，久而久之就自然而然地形成了一套内部框架，包括前端和后端的，还有一些ui库，整体的复杂度我不认为很高。项目库的复杂度来自于checkout部分ember的那部分代码，以及产品展示页面重js逻辑的差维护性的那部分代码，还有框架与自定义代码之间的冲突，主要来自于js，另外还有一些对过时设备的支持。最近我花了大量时间在安卓的4.1.2的原生浏览器的支持上，弄得心情特别差，因为往往追踪bug到最后，发现是android自己的bug没法解决，只能找一些丑陋的补丁。</p>
+
+<p>非常担心的是，一直这么下去会走进一个死胡同，也许对安卓老机型的bug有了更多的了解，但花了大量时间在那些毫无意义的bug上，让自己精疲力尽，又限制了自己的知识广度，更糟糕的是把自己困在了一个孤岛上，阻断了与周围人的交流的可能性。</p>
+
+<h2>Problem now after two months</h2>
+
+<p>问题很多，其中最大的问题应该是，经过了两个月的磨合，感觉自己仿佛失去目标，也失去追逐目标的动力。值得庆幸的是我在这里还没忘记再问自己，目标是什么？我觉得第一，成为一位牛逼的前端工程师，甚至是一位牛逼的技术人员。第二，增加自己在人群中的影响力。第三，找个女朋友。</p>
+
+<p>三个目标来自于三个问题，第一个技术问题显而易见，自己的技术水平太过于表面，不管是HTML，CSS还是JavaScript都没有深入到技术内部，仅仅停留在应用层面。对于HTML，我只知道它的Tag有哪些，在什么时候使用什么样的Tag，但我不准确的说出HTML的语义化是什么，HTML的DOM解析是如果进行的，HTML5的api有哪些，HTML的template是如何compile的，这些都需要对HTML有更深的了解。</p>
+
+<p>CSS可能是我比较熟悉的，但我对它的熟悉程度也就停留在对一些hack和CSS3的使用上，深入的了解需要解决的问题是，CSS的选择器该如何设计，模块化CSS，CSS的性能问题（特别是页面的reflow和repaint），如何写出高质量的CSS，移动设备的优化，跨设备的支持。</p>
+
+<p>JavaScript可能是最复杂的，我在上面花的时间也最多，但依然感觉自己没有掌握这门语言。问题在于对JavaScript的方法和对象的继承机制没有充分理解，导致在很多代码复用问题上显得无从下手。对JavaScript的事件机制还不是很清楚，对于事件的注册，代理，触发，时间循环还不是非常清楚。JavaScript的一些常用的模式感觉有些懵懵懂懂，特别是常用observor模式，在model-view的绑定经常使用，但对其背后的机制还不是很清楚。UI组件的开发中要注意哪些问题。框架开发要注意哪些问题。Ember的充分理解。JavaScript的高级应用，包括动态编译，Test，安全，WebSocket，Promise，ES6的新特性等问题。同时还需要对平台的理解，例如浏览器的原理，网络加载的步骤，页面渲染的步骤，浏览器缓存，异步同步多线程。此外还需对常用的工具要清楚，比如commend line，linux，test framework, dev tool, profiling, jquery core。</p>
+
+<p>如果对以上都有比较深的理解，仅仅是成为了一个资深的前端工程师。要成为牛逼的技术人员，还需要涉猎更广的技术，首先是服务器端，需要知道后端开发的通用问题，例如扩展性，复用性，可维护型。使用算法提供程序的效率。服务器配置，数据库优化，多线程的机制，并行处理，操作系统，网络协议。还需要涉猎其他平台比如ios和Android开发。优秀的技术人员还需要懂得如何让更多人的人合作开发大型的项目，团队建设，版本控制。</p>
+
+<p>这么多看起来似乎要一下子都学会有点不切实际，但考虑到自己的职业生涯还有四十年，我想应该会在十年之内达到的把。所有首先在两年内成为一名出色的前端工程师，在五年内达到一名优秀的技术专家，在十年内成为一名合格的技术主管。</p>
+
+<p>第二个目标是增加自己的影响力，现在很大的一个问题就是在公司里我很难找到自己的存在感。</p>
+
+<h2>How to solve these problems</h2>
+
+<h2>What is the big direction I am facing</h2>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Job findings in recent months]]></title>
@@ -1211,96 +1293,6 @@ Frank肚子饿了没带钱，我只好带他去找吃的，这边也无法是这
 或者说，想那么多干嘛？只管写就是了，想写什么就写什么。好像很多事情都是这样。
 
 （End | by Neil）
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[我的托福那点破事儿]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/"/>
-    <updated>2011-12-02T00:00:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/12/02/%e6%88%91%e7%9a%84%e6%89%98%e7%a6%8f%e9%82%a3%e7%82%b9%e7%a0%b4%e4%ba%8b%e5%84%bf</id>
-    <content type="html"><![CDATA[&nbsp;
-
-<a style="font-style:normal;line-height:24px;text-decoration:underline;" href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg"><img class="aligncenter size-full wp-image-26" style="border-style:initial;border-color:initial;margin-top:.4em;background-image:initial;background-attachment:initial;background-origin:initial;background-clip:initial;background-color:#eeeeee;" title="download" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg" alt="" /></a>
-
-托福成绩刚刚出来了，96分，总体来说勉强还算是个decent的分数（太低也不会写这玩意儿）。
-所以今天主要说说托福那些破事儿。
-
-Reading(R), Listening(L), Speaking(S), Writing(W)
-第一次考试2010年5月16日：R:19 L:19 S:20 W:22 Total:80
-第二次考试2011年8月13日：R:25 L:24 S:20 W:21 Total:90
-第三次考试011年11月20日：R:21 L:28 S:23 W:24 Total:96<a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/12/download.jpg">
-</a>
-
-<strong>阅读：状态最重要</strong>
-就是把GRE从70年代开始所有的题都做完两遍以上，考托福照样不行，第二次25的原因是考前猛准备3周，把17个TPO的阅读做它两遍，才勉强达到25。第一次19考前做了两三套巴朗就受不了了。第三次就草草做了TPO的19、20、21、22、23、24，没掐时间，没定时间。所以阅读考前状态太重要了。
-
-<strong>听力：要多练，与多练</strong>
-丢掉笔记，要完全理解。就算貌似很难记住的细节，只要能搞清楚描写这个细节的目的，其实问到的时候是能回想起来的。
-
-<strong>口语：使Trick</strong>
-抛弃机经，坑人（所谓预测就是列出二三十个题目，那么大范围还不一定准）加给人心里负担（没准备到好就心神不宁的）。
-Trick 1. 在考试的间隙（题与题之间不要点跳过，等自动跳过）把事先准备好的6个题目的模板抄到草稿纸上，考的时候，照着念。避免紧张导致忘了。
-Trick 2. 开始阅读听力尽量拖时间，这样可以在休息的时候，听别人的口语回答，猜出题目，笃定地填入模板，考试时笃定的念就是了。（由于我拖太久了，以至于我休息的时候念的人太多，听不清楚题目）
-
-<strong>作文：丢弃模板，注重表达方式</strong>
-第三次作文，与前两次不同的是，由于基本没准备，所以感觉当时写作有点意识流，没有遵照严格和清晰的结构，但试图让表达流畅。
-字数也不是想象中的那么重要，第二次字数最多，但分数最低。
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django项目小记]]></title>
-    <link href="http://GingerBear.github.io/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/"/>
-    <updated>2011-11-05T00:00:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2011/11/05/django%e9%a1%b9%e7%9b%ae%e5%b0%8f%e8%ae%b0</id>
-    <content type="html"><![CDATA[<p style="text-align:center;"><a href="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png"><img class="size-full wp-image-19 aligncenter" title="Untitled" src="http://gingerbear-wordpress.stor.sinaapp.com/uploads/2011/11/Untitled.png" alt="" width="834" height="314" />图</a>：通过Django编写的表单提交操作，使用Jpype调用Java类，运行Web-Harvest抓取新浪微博，存入MySQL的过程中，Web-Harvest的运行状态。</p>
-<p style="text-align:left;">每次能看到这幅图片，就感到特别欣慰，特别是刚才的那次，感觉就像走完了一片沙漠看到了绿洲。</p>
-<p style="text-align:left;">从三天前大致学会Django的基本原理，到现在集成Web-Harvest，MySQL，PyMining到Django并成功运行。的确是费了不少周折。下面罗列出能够回想起的问题与解决方法。</p>
-<p style="text-align:left;"><strong>（1）问题：SQLite连接Web-Harvest中文乱码，databse插件无法执行多句SQL</strong></p>
-<p style="text-align:left;">未解决：放弃SQLite，改用MySQL</p>
-<p style="text-align:left;"><strong>（2）问题：XQuery输出SQL语句的格式MySQL读取失败</strong></p>
-<p style="text-align:left;">解决：用XQuery的concat方法链接字符串与变量，使之构成完整SQL字符串。经过仔细追求，修改WebHarvest源代码，还是发现WebHarvest的database插件只支持执行依据SQL语句，于是退而求其次，用了笨办法，把database插件包含到loops里，也就是说，每执行一次SQL，就连接一次MySQL。这是没有办法的办法，不过考虑到系统不会有很多人使用，并且爬虫速度的短板在http的读取上，这还是勉强能接受的。</p>
-<p style="text-align:left;"><strong>（3）问题：Web-Harvest连接MySQL，出现中文乱码</strong></p>
-<p style="text-align:left;">解决：乱码无非是文件编码、数据库编码、连接的编码三者不一致导致的。所以，确定文件编码、数据库编码都是utf-8后，只有是连接的编码没有设置好了，记得在PHP里是用一句语句设置连接编码的，但Web-Harvest里没有这种设置，database的参数里也没有。Google了很久后发现，在链接字符串里可以加入编码设置参数，于是连接字符串加上：</p>
-
-<pre>jdbc:mysql://127.0.0.1:3306/OpinionMonitor<span style="color:#ff0000;">?useUnicode=true&amp;amp;characterEncoding=UTF-8</span></pre>
-<p style="text-align:left;">这样就解决了乱码问题。</p>
-<p style="text-align:left;">另外，Django连接MySQL很方便，在settings.py里更改DATABASES，再syncdb即可。</p>
-<p style="text-align:left;"><strong>（4）问题：把PyMining集成到Django</strong></p>
-<p style="text-align:left;">解决：很方便，把conf, data, dict, mining四个文件复制到Project目录下，在App的views.py里加入原先的运行程序，最后加上return HttpResponse(&#8230;)，就可以运行了。</p>
-<p style="text-align:left;"><strong>（5）问题：把Web-Harvest集成到Django，并用表单传入爬虫运行参数</strong></p>
-<p style="text-align:left;">解决：十分纠结。首先第一个子问题出现了插入数据的问题：</p>
-
-<pre>Incorrect integer value: '' for column 'ReNum' at row 1”</pre>
-<p style="text-align:left;">也就是空（‘’）不能插入到integer型字段里。</p>
-<p style="text-align:left;">想到的解决方法一，用XQuery自定义函数把空转成0，理应很简单，但是中通不过语法检查，Google了很多样本，按照里面的各种格式不断修改尝试，但还是不行，最终放弃。</p>
-<p style="text-align:left;">想到的解决方法二，可能是MySQL的字段不允许为空，或者可能有自动转空为0的设置。但是设置允许为空之后，没有任何变化。Google之后，MySQL的确有转空为0的设置，在my.ini的safe_mode里设置，但奇怪的是，我的XAMPP里的mysql没有这个设置。只能放弃。</p>
-<p style="text-align:left;">最后的解决方法：在XQuery的return里加上判断$WeiboReNum != &#8220;&#8221; ，然后修改SQL语句。（依然是笨办法）奇怪的是，新浪微博里居然出了被转发的微博的转发数居然是0的，逻辑不通，但防止报错，改成了更丑陋的代码。如下：</p>
-
-<pre><span style="color:#ff0000;">return</span>	<span style="color:#008000;">if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum != "" <span style="color:#ff0000;">and</span> $WeiboRtNum = "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", $WeiboReNum, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else if</span> ($Weibo != "" <span style="color:#ff0000;">and</span> $WeiboReNum = "" <span style="color:#ff0000;">and</span> $WeiboRtNum != "")
-<span style="color:#008000;">then</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '",0 , "', '", $WeiboRtNum, "', '", $WeiboDate, "-", $WeiboTime, "'); ")
-<span style="color:#008000;">else</span> <span style="color:#0000ff;">concat</span>("insert into monitor_weibo (Weiboer, WeiboerUrl, Weibo, WeiboUrl, ReNum, RtNum, DateTime) values ('", $Weiboer, "', '", $WeiboerUrl, "', '", $Weibo, "', '", $WeiboUrl, "', '", 0, "', '", 0, "', '", $WeiboDate, "-", $WeiboTime, "'); ")</pre>
-<p style="text-align:left;">然后第二个子问题是，如何在不用eclipse的情况下，加入classpath，解决方法是在系统的classpath里加入mysql-connector-java-5.1.18-bin.jar与webharvest_all_2.jar。并且在JPype的启动JVM的方法里，加入参数classpath（在加一遍系统参数）。</p>
-<p style="text-align:left;">第三个子问题是，JPype传参数到Java类里，一直报错：</p>
-
-<pre>No matching overloads found. at src/native/common/jp_method.cpp:121</pre>
-<p style="text-align:left;">看了很多论坛的解答后，发现似乎是实例化的问题，需要构造函数，果然在最早的JavaHello示例中，类里面故意写了一个空的构造函数（可能是为了满足JPype的特殊要求），于是在WebHarvestTest.java里加入了“形式上”的构造函数。经过不断的模仿与尝试，终于成功了。呼呼，颇为纠结。</p>
-<p style="text-align:left;">第四个子问题是，JPype只能运行一次，具体说来就是，shutdownJVM之后就不能再startJVM了，而且startJVM之后也不能再startJVM了，不然就报错：</p>
-
-<pre>RuntimeError: Unable to start JVM at src/native/common/jp_env.cpp:54</pre>
-<p style="text-align:left;">奇怪的问题，Google中无法发现jpype.isJVMStarted()这个方法，很好，如果判断已经启动，就不再启动了，果然问题解决。</p>
-
-<pre>if not jpype.isJVMStarted():
-    startJVM(getDefaultJVMPath(),"classpath")</pre>
-<p style="text-align:left;">（问题结束）</p>
-<p style="text-align:left;">随着问题的出现，烦恼，解决，心情也是起起伏伏。现在很平静，因为前期的基本问题已经解决，后面却还有更多问题要解决。主要涉及算法的应用与数据的表现，这可能就不是简单的Google几下就能解决的了，但不会像这么纠结在小问题上。</p>
-<p style="text-align:left;">（End | by Neil）</p>
-<p style="text-align:center;"></p>
 ]]></content>
   </entry>
   
