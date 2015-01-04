@@ -1,0 +1,396 @@
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+a {
+    color: #00e;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+a:hover {
+    color: #06e;
+}
+
+/*
+ * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
+ */
+
+img {
+    vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+html {
+    background-color: #EAC084;
+}
+.container {
+    width: 320px;
+    margin: 0 auto;
+}
+
+.cake {
+    position: relative;
+    padding-left: 0;
+    width: 320px;
+    height: 370px;
+    margin: 0 auto;
+}
+
+.cut {
+    display: inline-block;
+    position: absolute;
+    -webkit-transition: opacity 0.5s, margin-top 0.3s;
+}
+
+.cut.cut-drag-end {
+    z-index: 13;
+    -webkit-transition: -webkit-transform 0.5s;
+}
+
+.half-opacity {
+    opacity: 0.5;
+}
+
+.half-opacity.cut-drag-standby {
+    opacity: 1;
+    z-index: 12;
+    margin-top: -5px; 
+    -webkit-animation: floating 0.4s 0.5s infinite alternate;
+}
+
+.cut-1 { 
+    z-index: 10;
+}
+.cut-2 { 
+    z-index: 8;
+}
+.cut-3 { 
+    z-index: 6;
+}
+.cut-4 { 
+    z-index: 4;
+}
+.cut-5 { 
+    z-index: 4;
+}
+.cut-6 { 
+    z-index: 6;
+}
+.cut-7 { 
+    z-index: 8;
+}
+.cut-8 { 
+    z-index: 10;
+}
+
+.share-box .friend {
+    display: inline-block;
+    margin-right: 5px;
+    width: 70px;
+    vertical-align: top;
+    opacity: 0.66;
+    text-align: center;
+    padding: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: -webkit-transform 0.1s
+}
+
+.friend .cut-count {
+    line-height: 10px;
+    border:5px solid #dd4b39;
+    border-top:3px solid #dd4b39;
+    border-bottom:3px solid #dd4b39;
+    background-color: #dd4b39;
+    font-size: 9px;
+    color: #fff;
+    border-radius: 8px;
+    float: right;
+    margin-top: -10px;
+    margin-right: -10px;
+    margin-bottom: -10px;
+    position: relative;
+    z-index: 12;
+}
+
+.friend img {
+    width: 60px;
+}
+
+.friend span {
+    font-size: 11px;
+    white-space:nowrap;
+}
+
+.friend.selected {  
+    opacity: 1;
+    /*-webkit-transform: translate3D(0, -50px, 0);*/
+    -webkit-transform: scale(1.6);
+}
+
+.friend.filled {
+    opacity: 1;
+    border: 2px solid #dd4b39; 
+    border-radius: 5px;
+}
+
+.btns .skip {
+    float: right;
+    color: blue;
+    font-size: 13px;
+    margin-top: 25px;
+}
+
+.btns .share {
+    width: 150px;
+    margin: 0 auto;
+    display: block;
+    background-color: #dd4b39;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.hand {
+    position: absolute;
+    z-index: 20;
+    display: none;
+}
+
+.hand.hand-cutting {    
+    display: block;
+    -webkit-transform: translate3D(0, 300px, 0);
+    -webkit-animation: cutting 1s 1s forwards;
+}
+
+.hand.hand-draging {    
+    display: block;
+    -webkit-transform: translate3D(150px, 200px, 0);
+    -webkit-animation: draging 1s 1s forwards;
+}
+
+.hand img {
+    width: 50px;
+}
+
+
+@-webkit-keyframes floating {
+    from {
+        margin-top: -5px;
+    }
+
+    to {
+        margin-top: -8px;
+    }
+}
+
+@-webkit-keyframes cutting {
+    0% {
+        -webkit-transform: translate3D(0, 300px, 0);
+    }
+
+    50% {
+        -webkit-transform: translate3D(150px, 150px, 0);
+    }
+
+    100% {
+        -webkit-transform: translate3D(300px, 300px, 0);
+    }
+}
+
+@-webkit-keyframes draging {
+    0% {
+        -webkit-transform: translate3D(150px, 200px, 0);
+    }
+
+    100% {
+        -webkit-transform: translate3D(0, 400px, 0);
+    }
+}
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/* Prevent callout */
+
+.nocallout {
+    -webkit-touch-callout: none;
+}
+
+.pressed {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* A hack for HTML5 contenteditable attribute on mobile */
+
+textarea[contenteditable] {
+    -webkit-appearance: none;
+}
+
+/* A workaround for S60 3.x and 5.0 devices which do not animated gif images if
+   they have been set as display: none */
+
+.gifhidden {
+    position: absolute;
+    left: -100%;
+}
+
+/*
+ * Image replacement
+ */
+
+.ir {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: 0;
+    direction: ltr;
+    display: block;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -999em;
+}
+
+.ir br {
+    display: none;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/**
+ * Clearfix helper
+ * Used to contain floats: h5bp.com/q
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   Theses examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 800px) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+       only screen and (min-resolution: 144dpi) {
+    /* Style adjustments for viewports that meet the condition */
+}
