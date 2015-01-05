@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: regex, | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/regex/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/regex/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A phone number matching regular expression]]></title>
-    <link href="http://GingerBear.github.io/blog/2014/01/10/a-phone-number-matching-regular-expression/"/>
+    <link href="http://gxding.com/blog/2014/01/10/a-phone-number-matching-regular-expression/"/>
     <updated>2014-01-10T16:11:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2014/01/10/a-phone-number-matching-regular-expression</id>
+    <id>http://gxding.com/blog/2014/01/10/a-phone-number-matching-regular-expression</id>
     <content type="html"><![CDATA[<p>I used to void learning regular expression, because they looks too dry to digest. And in most case when I wanna use them, I can find existing ones on the web. But there are always a shadow in my mind that it is important. The shadow forms from when I found a lot of JavaScript books spending a whole chapter introducing Regular Expression. Weeks ago when I was reading Jeff Atwood&rsquo;s <em>Effective Programming: More Than Writing Code</em>, I read a chapter talking about phone screen. It point out five main part in phone screen.</p>
 
 <ul>

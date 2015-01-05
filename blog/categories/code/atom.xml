@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: code | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/code/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/code/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A User Level Light-weight Thread Scheduling Implementation ]]></title>
-    <link href="http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/"/>
+    <link href="http://gxding.com/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/"/>
     <updated>2013-11-01T14:55:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2013/11/01/a-light-weight-thread-scheduling-implementation</id>
+    <id>http://gxding.com/blog/2013/11/01/a-light-weight-thread-scheduling-implementation</id>
     <content type="html"><![CDATA[<p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
 
 <h2>Description and Requirement</h2>

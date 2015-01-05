@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: plan | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/plan/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/plan/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[2015年的展望]]></title>
-    <link href="http://GingerBear.github.io/blog/2015/01/03/expectation-in-2015/"/>
+    <link href="http://gxding.com/blog/2015/01/03/expectation-in-2015/"/>
     <updated>2015-01-03T14:25:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2015/01/03/expectation-in-2015</id>
+    <id>http://gxding.com/blog/2015/01/03/expectation-in-2015</id>
     <content type="html"><![CDATA[<p>说什么展望的确有点空，因为这些话常常说过就忘，但是我还是还是忍不住想写下来，给自己一个目标，尽管很虽，但总比什么都没有强。2014是充满惊喜的一年。有不少事儿可以说，但是我现在心情如此急切和兴奋以至于我就想马上动手开始写2015的展望。那就简单记录一下2014发生了什么事情吧。</p>
 
 <blockquote><p>太直奔主题，差点忘了提一提现在的状态。正坐在匹兹堡的Shadyside walnut street的coffee tree咖啡馆用MacBook和sublime敲这些字儿，外面下着小雨，有点冷。刚刚从纽约和迈阿密的10天长假回来。昨天晚上打完篮球，腿有点酸。</p></blockquote>
@@ -50,9 +50,9 @@
   
   <entry>
     <title type="html"><![CDATA[A plan to Hunting Job AS A TEAM (deprecated)]]></title>
-    <link href="http://GingerBear.github.io/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/"/>
+    <link href="http://gxding.com/blog/2014/01/14/a-plan-to-hunting-job-as-a-team/"/>
     <updated>2014-01-14T18:13:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2014/01/14/a-plan-to-hunting-job-as-a-team</id>
+    <id>http://gxding.com/blog/2014/01/14/a-plan-to-hunting-job-as-a-team</id>
     <content type="html"><![CDATA[<p>Since many friends and me are trying to hunting job in the US. I realize there should be a place for us to discuss and share. I am think if I could build some thing that may be used for that. We will benefit from that tool and I will benefit from building that tool. Even some friends may join us building this tool and make it open-source.</p>
 
 <p>Generally, this tool should have serveral parts:</p>

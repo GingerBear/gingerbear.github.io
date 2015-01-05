@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: recall | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/recall/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/recall/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Something about me]]></title>
-    <link href="http://GingerBear.github.io/blog/2014/02/10/something-about-me/"/>
+    <link href="http://gxding.com/blog/2014/02/10/something-about-me/"/>
     <updated>2014-02-10T17:37:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2014/02/10/something-about-me</id>
+    <id>http://gxding.com/blog/2014/02/10/something-about-me</id>
     <content type="html"><![CDATA[<blockquote><p>this post also appear on this <a href="http://gingerbear.github.io/about">about page</a></p></blockquote>
 
 <p>I am new-graduated student from University of Pittsburgh with a master degree in Information Science. I love technical stuffs. I start playing with computer at a fairly young age at about 10, which is specially young in a ordinary teacher family in China. My first OS was windows 98 on TCL desktop with a Celeron CPU. My first internet connection is <a href="http://www.eastday.com/">eastday.com</a>. I still cannot forget that existment. Fellowing technical move on the internet now is my daily routine.</p>

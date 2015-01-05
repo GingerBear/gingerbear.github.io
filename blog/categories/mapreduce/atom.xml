@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: mapreduce | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/mapreduce/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/mapreduce/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[CS2510: Project 2 - MiniGoogle Final Report]]></title>
-    <link href="http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/"/>
+    <link href="http://gxding.com/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/"/>
     <updated>2013-12-17T16:42:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2013/12/17/cs2510-project-2-minigoogle-final-report</id>
+    <id>http://gxding.com/blog/2013/12/17/cs2510-project-2-minigoogle-final-report</id>
     <content type="html"><![CDATA[<p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
 
 <h5>Guanxiong Ding (gud7)</h5>

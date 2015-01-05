@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: work | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/work/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/work/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Two months on working]]></title>
-    <link href="http://GingerBear.github.io/blog/2014/06/15/two-months-on-working/"/>
+    <link href="http://gxding.com/blog/2014/06/15/two-months-on-working/"/>
     <updated>2014-06-15T10:11:00-04:00</updated>
-    <id>http://GingerBear.github.io/blog/2014/06/15/two-months-on-working</id>
+    <id>http://gxding.com/blog/2014/06/15/two-months-on-working</id>
     <content type="html"><![CDATA[<h2>How is the work itself</h2>
 
 <p>总体来说，这是一个Awesome的，让我和别人都感到幸运的工作。公司的状况感觉上非常好，在移动电子商务平台市场占有率号称是全美第一，每天感觉新的项目不断的启动，每周都有新的项目上线。整个公司的人员配置也很完备，技术开发人员占全部的员工的一半，数据分析团队也占了很大的部分，设计，产品，运维，会计，行政，管理层都有明确的分工，说明公司已经非常的完善稳定。前端组一共有二十人左右，但由于项目基本是在项目组里进行，所有我跟他们平时的交流不多，就是在第一次前端组的会上见过一面，后面也没有在开过类似的会了。前端组的老大是一个呆萌的胖子，平时很少见到他，他好像也不怎么管我们，所以加了面也没啥好聊的。前几天前端组又聚了一次，在新版Frontend的发布会上，Frontend是公司内部的前端框架，由Architecture组的人写的，狗也参加的这次发布会还是出现了不少让人起哄的场面。总之技术组给人的感觉还是非常棒的，尽管交流不多，然能看出大部分都对技术很有热情，不时能听到他们讨论有Web Component，ES6这类时髦词汇。每天都在打交道的人是项目组的同事，项目组在公司被称为Pod，我们组叫Human Center Pod，有三个前端工程师，两个后端工程师，一个项目工程师（项目经理），一个产品经理。三个前端中，一个senior，一个junior，还有一个new hire是我。七个人除了senior前端，其他都在二十来岁，跟我年龄差不多，或者比我再大一点。我的大多数问题都会向坐在我右边的junior前端求问，他再这儿工作了半年，偏传统的设计型前端，对CSS更熟悉一些，但如果遇到JavaScript的难题的时候，或者Ember的问题，常常我就的找坐在他右边的senior前端了。尽管大家都很乐于帮助，也很耐心，但从技术的追求上，他们都达不到我会去敬仰的程度，他们的expertise更多是建立在对现有项目的熟悉上。另外一点可以看出的是，他们在技术的最佳实践上并没有更新最新的步伐，不如在debug上，他们用的还是console.log，也没有使用更加高效的dev tool的re-compile，breakpoint和profile功能，还包括ember-inspector。在遇到越困难的bug时会提高越多的工作效率。</p>

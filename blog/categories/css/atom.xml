@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: css | Neil Ding]]></title>
-  <link href="http://GingerBear.github.io/blog/categories/css/atom.xml" rel="self"/>
-  <link href="http://GingerBear.github.io/"/>
-  <updated>2015-01-04T15:00:59-05:00</updated>
-  <id>http://GingerBear.github.io/</id>
+  <link href="http://gxding.com/blog/categories/css/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-04T22:12:19-05:00</updated>
+  <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
     <email><![CDATA[bbbear444@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A wandering on CSS3]]></title>
-    <link href="http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3/"/>
+    <link href="http://gxding.com/blog/2014/02/17/a-wandering-on-css3/"/>
     <updated>2014-02-17T13:19:00-05:00</updated>
-    <id>http://GingerBear.github.io/blog/2014/02/17/a-wandering-on-css3</id>
+    <id>http://gxding.com/blog/2014/02/17/a-wandering-on-css3</id>
     <content type="html"><![CDATA[<p>CSS3 sounds like new tech, but it has been around for years with a increasing adoption on main browsers. I have been using CSS for years, but mostly using those main features, or triditional CSS2 features like position, styling, flaoting, etc, and a little bit decorating CSS3 features like border-radius, and box-shadow. CSS is not difficult, and when I think I have master the basic, I stop exploring those new features and believe that they are still on the way on browser compatbility.</p>
 
 <p>Recently front end technique is envolving so fast that experimental CSS3 things now become practical. Also due to the face that I have preparing for the front end job interview, I am going to make a wandering on these new features of CSS3.</p>
