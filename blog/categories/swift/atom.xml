@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: swift | Neil Ding]]></title>
+  <link href="http://gxding.com/blog/categories/swift/atom.xml" rel="self"/>
+  <link href="http://gxding.com/"/>
+  <updated>2015-01-12T22:08:07-05:00</updated>
+  <id>http://gxding.com/</id>
+  <author>
+    <name><![CDATA[Neil Ding]]></name>
+    <email><![CDATA[bbbear444@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[WeightTracking a sample iOS app with Swift]]></title>
+    <link href="http://gxding.com/blog/2015/01/12/weighttracking-a-sample-ios-app-with-swift/"/>
+    <updated>2015-01-12T21:48:00-05:00</updated>
+    <id>http://gxding.com/blog/2015/01/12/weighttracking-a-sample-ios-app-with-swift</id>
+    <content type="html"><![CDATA[<p>Trying to learn somthing new. Turns out that I am try to lose weight. Qi is a iOS developer. So why not bulid a sample iOS app that can tracking my weight.</p>
+
+<p>The requirement:
+&ndash; a input field to enter weight and a optional datetime picker to chose time (default to current)
+&ndash; a list that show all records that was entered.
+&ndash; ablity to edit the data in case wrong input.
+&ndash; diagram of change of weigth by time
+&ndash; should be about to tell weigh&rsquo;s loss/gain by week/month
+&ndash; auto-sync with remote storage</p>
+
+<p>Screen:
+&ndash; screen 1: input field of weight, and a button to toggle datatime picker. top right button to show changing diagram
+&ndash; screen 2: changing diagram. top right button to show all record in list, click to edit
+&ndash; screen 3: edit single record.</p>
+
+<p>Development is on going. The github repo is <a href="https://github.com/Qiki/WeightTracking.">https://github.com/Qiki/WeightTracking.</a></p>
+
+<p>To bo continued.</p>
+]]></content>
+  </entry>
+  
+</feed>
