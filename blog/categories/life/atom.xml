@@ -4,7 +4,7 @@
   <title><![CDATA[Category: life | Neil Ding]]></title>
   <link href="http://gxding.com/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://gxding.com/"/>
-  <updated>2015-01-12T22:08:07-05:00</updated>
+  <updated>2015-03-01T13:52:33-05:00</updated>
   <id>http://gxding.com/</id>
   <author>
     <name><![CDATA[Neil Ding]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[做热干面]]></title>
+    <link href="http://gxding.com/blog/2015/03/01/zuo-re-gan-mian/"/>
+    <updated>2015-03-01T12:40:00-05:00</updated>
+    <id>http://gxding.com/blog/2015/03/01/zuo-re-gan-mian</id>
+    <content type="html"><![CDATA[<p>在上次非常成功地做了一次热干面之后，今天我又做了一次，依然非常成功，并且简化了一些步骤。作为程序员，经过了两次的重复，自然而然地就想到了抽象出一个可以重复使用的菜谱来，让以后都能成功得做出热干面，而不是靠感觉。</p>
+
+<h3>需要准备的材料，超市一般都能买到：</h3>
+
+<p>辣椒，榨菜，生抽，老抽，麻油，蒜，面条，葱，芝麻酱，芝麻，胡椒，油</p>
+
+<p><img src="/images/re_gan_mian/IMG_2286.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2287.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2288.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2289.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2290.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2291.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2292.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2293.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2294.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2295.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2296.JPG" width="180" />
+<img src="/images/re_gan_mian/IMG_2297.JPG" width="180" /></p>
+
+<h3>步骤</h3>
+
+<p>（注：下面是两碗的量；一勺指的是正常吃饭用的铁勺；一抖指的是倒料的时候抖一下的量）</p>
+
+<ul>
+<li>剁：剁蒜，切葱，剁榨菜</li>
+<li>拌酱：两勺芝麻酱，两抖生抽，一抖油，加水拌成糊</li>
+<li>煮面：两人份的面，煮着差不多熟了（用嘴尝）就捞起来，放盆里用麻油拌一拌</li>
+<li>煮蒜水：放点儿水（小半碗）到锅里，加蒜煮，开了就盛到小碗里。</li>
+<li>捣芝麻：把两勺芝麻捣成芝麻粉，可以用冰淇淋勺子捣</li>
+<li>铺料：把面盛到碗里，铺上拌好的芝麻酱，捣好的芝麻粉，煮好的蒜水，一抖胡椒，两抖生抽，一抖老抽，剁好的榨菜，葱。</li>
+<li>自己拌，自己吃。</li>
+</ul>
+
+
+<h3>最后的样子</h3>
+
+<p><img src="/images/re_gan_mian/IMG_2285.JPG" />
+<img src="/images/re_gan_mian/IMG_2284.JPG" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Two months on working]]></title>
