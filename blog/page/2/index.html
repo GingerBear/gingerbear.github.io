@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="Now is day one after graduate. In fact I have to do my operating system project now, I too much thought are stoping me. So I decide to do project &hellip;">
+  <meta name="description" content="CS2510: Project 2 &ndash; MiniGoogle Final Report Guanxiong Ding (gud7) 12/17/2013 General Workflow Indexing workflow client send the documents to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,117 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-17T16:42:00-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
+
+<h5>Guanxiong Ding (gud7)</h5>
+
+<p>12/17/2013</p>
+
+<h2>General Workflow</h2>
+
+<h4>Indexing workflow</h4>
+
+<ul>
+<li>client send the documents to minigoogle server</li>
+<li>mingoogle server dispatch socket connections to worker by fork a process</li>
+<li>worker lookup mappers and reducers</li>
+<li>worker split the file and send to ma ppers</li>
+<li>each mapper count word for its split</li>
+<li>mapper partition the word count result and send to reducer</li>
+<li>reducer aggregate the result and append to master index files</li>
+</ul>
+
+
+<h4>Querying workflow</h4>
+
+<ul>
+<li>client send keywords to minigoogle server</li>
+<li>mingoogle server dispatch socket connections to worker by fork a process</li>
+<li>worker lookup mappers and reducers</li>
+<li>worker send each keyword to each mapper</li>
+<li>each mapper get a set of document &ndash; occurrence pairs by the keyword</li>
+<li>mapper send result set to reducer</li>
+<li>reducer gather all sets from mappers and calculate the total occurrence</li>
+<li>reducer sort the document by total occurrence and send back to client</li>
+</ul>
+
+
+<h2>Client</h2>
+
+<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
+
+<h3>Mini-google</h3>
+
+<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
+
+<h3>Worker</h3>
+
+<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
+
+<ul>
+<li>split file name</li>
+<li>document name</li>
+<li>number of mappers // to let reducer know when to start reducing</li>
+<li>address and ports of all reducers</li>
+</ul>
+
+
+<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
+
+<h3>Mapper helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
+
+<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
+
+<h3>Reducer helper</h3>
+
+<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
+
+<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
+
+<h3>Name Server</h3>
+
+<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
+
+<h3>Master index</h3>
+
+<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1010,70 +1121,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/29/%25e5%2586%2599%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%2594%25e8%25ae%25b0/">写学习笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-29T00:00:00-04:00" pubdate data-updated="true">Sep 29<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">最近在学不少东西，一直想写一下学习笔记，但都出于很多原因，主要是懒惰，没有付出实践。
-
-学了很多东西，需要消化。写学习笔记是很好的一种消化方式，能够让人温习学过的知识，并且用自己的语言重新描述一遍后，能够更好的理解知识。
-
-事实上我最近学习的知识也的确需要不断消化。Coursera上的Machine Learning课程有很多新的东西需要我去记忆与理解，每一节课都包含了很多复杂的公式与原理。经常听课的当时理解了，但很快就忘了。不如最近学到的Neural Network的原理就没有完全搞懂，之前的Linear Regression和Logistic Regression也不能立刻反映出实施步骤，中间总有知识断层。
-
-于是，在接下来的Blog中，我将从Neural Network的手写数字识别联系开始写Machine Learning的学习笔记，一直到最后。如果有多余的心思的话，把前面的也补上。
-
-另外，MIT的Python课程已经学完，一直想着实开发一个实际的项目，关于项目的构想与进展，我也将在Blog里谈谈。另外几门课程数据库与数据结构的课程也需要学习，在今天不小心又看了一遍阮一峰写Dennis Ritchie逝世的Blog后得知，我们的教程C Programming就是他写。于是产生了看完这本书的打算（反正比Python的书还薄）。所以同样我也打算写写这本书的读书笔记，也包括Python的本书。
-
-说到读书，之前的Hackers and Painters也读了一半了，但依旧停下了一周左右。其实在读书的过程中的确是有不少想法的，但也没有下意识的把这些想法记录下了。
-
-<span style="text-decoration:underline;">总结一下：</span>
-
-学习笔记：Machine Learning
-
-项目笔记：Python的项目
-
-读书笔记：H&amp;P，C Programming，Think Python
-
-<span style="text-decoration:underline;">后续计划：</span>
-
-学习笔记：Coursera里的其他课程，JavaScript学习
-
-项目笔记：新的项目
-
-读书笔记：Think Complexity，JavaScript The Good Part，Professional JavaScript.
-
-<span style="text-decoration:underline;">New idea</span>: Try to write in English.
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1117,6 +1164,10 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/26/first-expose-to-test/">First Expose to Test</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/01/zuo-re-gan-mian/">做热干面</a>
       </li>
     
@@ -1130,10 +1181,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
     
       <li class="post">
         <a href="/blog/2014/06/15/two-months-on-working/">Two Months on Working</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/08/thoughts-about-job-finding-in-recent-months/">Job Findings in Recent Months</a>
       </li>
     
   </ul>

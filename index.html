@@ -9,7 +9,7 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="在上次非常成功地做了一次热干面之后，今天我又做了一次，依然非常成功，并且简化了一些步骤。作为程序员，经过了两次的重复，自然而然地就想到了抽象出一个可以重复使用的菜谱来，让以后都能成功得做出热干面，而不是靠感觉。 需要准备的材料，超市一般都能买到： 辣椒，榨菜，生抽，老抽，麻油，蒜，面条，葱，芝麻酱 &hellip;">
+  <meta name="description" content="I have seen quite a lot of talking about test, and tried a little RSpec when learning Ruby on Rails years ago. But I don&rsquo;t really get myself &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/26/first-expose-to-test/">First Expose to Test</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-26T16:50:00-04:00" pubdate data-updated="true">Apr 26<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have seen quite a lot of talking about test, and tried a little RSpec when learning Ruby on Rails years ago. But I don&rsquo;t really get myself dig into the testing world. Today is Sunday, it&rsquo;s a sudden that come to my mind that maybe I should spend some time figure it out.</p>
+
+<p>It&rsquo;s a sad fact that the company I am working never encourage writing test for project. It relays a lot on human QA. Well that&rsquo;s not bad in some sense. But apparently we can be more efficient and get less bug if we adopt automated test. There seems to be architecture change in term of development. I found it a good chance to add test to the new architecture.</p>
+
+<p>I just spend an afternoon make the test working for the <a href="https://github.com/GingerBear/nba-daily">nba-daily project</a> that I have worked months ago. It has similar idea behind the company project, which proxying site to a better UI. In the mind, the test should be to pretty simple, namely, going to a page, checking that page contains what we need, going to another page, checking again.</p>
+
+<p>Check element is pretty common in testing. Most test framework and assert library should already taken then cared. The only thing is to requesting page. Obviously we cannot use node&rsquo;s plane http request module because if the real project, the request has to maintain the cookie and session. Normally cookie and session is handled by browser, so my first head to find those browser testing tools. It turns out that there is thing called Selenium, which can opens up local or remote browser, and use the browser to make the request. It can use different web driver to drive different browser. I tried the <code>chai-webdriver</code> and chrome driver, it works, but it won&rsquo;t work on the Travis CI, which doesn&rsquo;t have a browser GUI. To make Travis work, we need to use remote browser on virtual machine. I know that I have pay to use that.</p>
+
+<p>Then it come up another solution, PhantomJS. It call itself <code>headless WebKit</code>. It&rsquo;s hard to understand what is headless. But to my understanding, it&rsquo;s browser without GUI, and can be fully controlled by JavaScript (comparing to real browsers that expose limited API). And fortunately, Travis CI have PhantomJS pre installed on their virtual machine. So to make the whole thing work, I just need to plugin phantomjs into my test.</p>
+
+<p>At the beginning, it&rsquo;s confused me when I found phantomjs is not coded with JavaScript (but C++), nor it&rsquo;s a node module. I was mistakenly thought that it&rsquo;s node implementation of browser, it can be npm installed. It turns out that it doesn&rsquo;t have much to do with nodejs. They are completely two different environment. I was trying to try the simple code on the doc, but it just not works.</p>
+
+<p>After digging a while, I found that to make phantomjs working in node, I need to instal a bridge to make communicate, which is node module. With the bridge, I can create a phantomjs instance, then create a page instance, then open a url. After I get the response, I evaluate a piece of JavaScript function to get what we want on the page. I just typing something in the browser console and expecting something coming bac. Another interesting thing is, we I run the test, I can see the server response in my node terminal, which also include those assets request. This also proved that phantomjs is a <code>real</code> browser. At this point, I get everything I need.</p>
+
+<p>I pick up the most used (or most famous) test tool, mocha and chai to construct the test case. Soon I found that the assert need to be async. It need to assert after the request is done. Mocha provide a very nice way to achieve, simply call the done() function after asynchronously  assert. A very nice thing about phantomjs here is that, one of my request is based on the ajax call on the page. As long as I set a few seconds timeout to wait for the request is done, test is totally working!</p>
+
+<p>When I try to intentionally fail the test, gotcha occur. When I fail the first test, the rest tests all get timeouted error. It wired, since if one failed, the test should show that they should show, either success or fail, why it&rsquo;s a timeout error? It turns out that, when a async test failed, the assert will throw an error. So the following done() function will never run, which make the rest tests timeout. The solution is to wrap a try catch to assert and done, and call done again in the catch with e as params. So when assert failed, done will still get called.</p>
+
+<p>After all test working locally, the deployment just work out of the box. Travis will automatically run <code>npm test</code> if there is one in the package.json. So I send a pr, all build and test start running automatically. After a while, pass all green. yay!</p>
+
+<p><img src="/images/travis-pass.png" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -664,117 +720,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-17T16:42:00-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
-
-<h5>Guanxiong Ding (gud7)</h5>
-
-<p>12/17/2013</p>
-
-<h2>General Workflow</h2>
-
-<h4>Indexing workflow</h4>
-
-<ul>
-<li>client send the documents to minigoogle server</li>
-<li>mingoogle server dispatch socket connections to worker by fork a process</li>
-<li>worker lookup mappers and reducers</li>
-<li>worker split the file and send to ma ppers</li>
-<li>each mapper count word for its split</li>
-<li>mapper partition the word count result and send to reducer</li>
-<li>reducer aggregate the result and append to master index files</li>
-</ul>
-
-
-<h4>Querying workflow</h4>
-
-<ul>
-<li>client send keywords to minigoogle server</li>
-<li>mingoogle server dispatch socket connections to worker by fork a process</li>
-<li>worker lookup mappers and reducers</li>
-<li>worker send each keyword to each mapper</li>
-<li>each mapper get a set of document &ndash; occurrence pairs by the keyword</li>
-<li>mapper send result set to reducer</li>
-<li>reducer gather all sets from mappers and calculate the total occurrence</li>
-<li>reducer sort the document by total occurrence and send back to client</li>
-</ul>
-
-
-<h2>Client</h2>
-
-<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
-
-<h3>Mini-google</h3>
-
-<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
-
-<h3>Worker</h3>
-
-<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
-
-<ul>
-<li>split file name</li>
-<li>document name</li>
-<li>number of mappers // to let reducer know when to start reducing</li>
-<li>address and ports of all reducers</li>
-</ul>
-
-
-<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
-
-<h3>Mapper helper</h3>
-
-<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
-
-<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
-
-<h3>Reducer helper</h3>
-
-<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
-
-<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
-
-<h3>Name Server</h3>
-
-<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
-
-<h3>Master index</h3>
-
-<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -816,6 +761,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/26/first-expose-to-test/">First Expose to Test</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/01/zuo-re-gan-mian/">做热干面</a>
       </li>
     
@@ -829,10 +778,6 @@
     
       <li class="post">
         <a href="/blog/2014/06/15/two-months-on-working/">Two Months on Working</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/08/thoughts-about-job-finding-in-recent-months/">Job Findings in Recent Months</a>
       </li>
     
   </ul>
