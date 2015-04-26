@@ -1,5 +1,7 @@
 ---
 layout: default
+sidebar: false
+comments: false
 ---
 
 <div class="blog-index">
@@ -7,7 +9,7 @@ layout: default
   {% for post in paginator.posts %}
   {% assign content = post.content %}
     <article>
-      {% include article.html %}
+      {% include article_title.html %}
     </article>
   {% endfor %}
   <div class="pagination">
