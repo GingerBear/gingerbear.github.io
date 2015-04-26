@@ -9,7 +9,13 @@
   <meta name="author" content="Neil Ding">
 
   
-  <meta name="description" content="CS2510: Project 2 &ndash; MiniGoogle Final Report Guanxiong Ding (gud7) 12/17/2013 General Workflow Indexing workflow client send the documents to &hellip;">
+  <meta name="description" content="写学习笔记
+Sep 29 2012 二手相机试拍与沃尔玛购物
+Sep 17 2012 Neil的2012前半个月
+Jan 14 2012 我的托福那点破事儿
+Dec 02 2011 Django项目小记
+Nov 05 2011 Django学习小记
+Nov 03 2011 Hello, Asia &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -46,7 +52,7 @@
 
 </head>
 
-<body   >
+<body   class="no-sidebar"  >
   <header role="banner"><hgroup>
   <h1><a href="/">Neil Ding</a></h1>
   
@@ -69,7 +75,6 @@
   
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
   <li><a href="/about">About</a></li>
 </ul>
 
@@ -82,1043 +87,141 @@
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/17/cs2510-project-2-minigoogle-final-report/">CS2510: Project 2 - MiniGoogle Final Report</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-17T16:42:00-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CS2510: Project 2 &ndash; MiniGoogle Final Report</p>
-
-<h5>Guanxiong Ding (gud7)</h5>
-
-<p>12/17/2013</p>
-
-<h2>General Workflow</h2>
-
-<h4>Indexing workflow</h4>
-
-<ul>
-<li>client send the documents to minigoogle server</li>
-<li>mingoogle server dispatch socket connections to worker by fork a process</li>
-<li>worker lookup mappers and reducers</li>
-<li>worker split the file and send to ma ppers</li>
-<li>each mapper count word for its split</li>
-<li>mapper partition the word count result and send to reducer</li>
-<li>reducer aggregate the result and append to master index files</li>
-</ul>
-
-
-<h4>Querying workflow</h4>
-
-<ul>
-<li>client send keywords to minigoogle server</li>
-<li>mingoogle server dispatch socket connections to worker by fork a process</li>
-<li>worker lookup mappers and reducers</li>
-<li>worker send each keyword to each mapper</li>
-<li>each mapper get a set of document &ndash; occurrence pairs by the keyword</li>
-<li>mapper send result set to reducer</li>
-<li>reducer gather all sets from mappers and calculate the total occurrence</li>
-<li>reducer sort the document by total occurrence and send back to client</li>
-</ul>
-
-
-<h2>Client</h2>
-
-<p>It is a program on local machine. It can be runned by user on command line along with parameters. client will first lookup the naming server to find the address of mini-google, then request for a socket connection and then send index/query request to it with connection and then waiting for response.</p>
-
-<h3>Mini-google</h3>
-
-<p>First it will create a socket and binding with the address and port number, then listen() in a infinite loop. When receiving a request from client, it create a new process regarding to request type (index/query) to handle the request. After that, server will keeping listening for other requests.</p>
-
-<h3>Worker</h3>
-
-<p>Worker is the critical part of the whole work. It holds the connection with client and send result back to client if all mappers and reducers have done their work. It will split the file by the number of available mapper it got from name server. After file splitted, it will send each split to each mapper by a set of parameters</p>
-
-<ul>
-<li>split file name</li>
-<li>document name</li>
-<li>number of mappers // to let reducer know when to start reducing</li>
-<li>address and ports of all reducers</li>
-</ul>
-
-
-<p>and then waiting for their response by holding connection on multi-threads. If all mappers response work done, it will send message to client and close the connection.</p>
-
-<h3>Mapper helper</h3>
-
-<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;mapper&rdquo;.</p>
-
-<p>Mapper first do the word counting and combining on it splits by shell script using tr, sed, awk, uniq, sort. and then do partition on the map result, by the number of reducers. It do partition not by lines, but by alphabetic. Meaning if number of reducers is 2, result will be partition to two files, one with terms from [a-m], one with terms from [n-z], which refers to the step of shuffle. Then sent each partition to each reducer and waiting for their response by holding connection on multi-threads. If all reducers response work done, it will send message to worker and close the connection.</p>
-
-<h3>Reducer helper</h3>
-
-<p>Before working, it will register on name server when start running, with it address, port and type, which is &ldquo;reducer&rdquo;.</p>
-
-<p>Reducer first get the number of mappers. By this number, it will know how many mapper it have to wait. After it received all data from mapper, it will start to aggregate the mapper by shell script with awk. Then it will start 5 thread to merge result to master index. When all thread done their job. Reducer will send message back to mapper that its work done.</p>
-
-<h3>Name Server</h3>
-
-<p>Naming server establish sockets and keep waiting for connection. It support two type of request,register and request. Register will store address, port, server type. Lookup will will send back a set of address, port and server type by server type and number. For example, get 5 mappers, or get 3 reducers.</p>
-
-<h3>Master index</h3>
-
-<p>In this project, name index is separated alphabetically in 26 files for each letter. The advantage is that they could be better paralleled in indexing and querying with less concern on blocking issues.</p>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2012/09/29/%25e5%2586%2599%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%2594%25e8%25ae%25b0/">写学习笔记</a></h1>
+<time datetime="2012-09-29T00:00:00-04:00" pubdate><span class='month'>Sep</span> <span class='day'>29</span> <span class='year'>2012</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/14/some-thoughts-one-day-after-graduate/">Some Thoughts One Day After Graduate</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-14T23:47:00-05:00" pubdate data-updated="true">Dec 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Now is day one after graduate. In fact I have to do my operating system project now, I too much thought are stoping me. So I decide to do project tommorrow and write all these thoughts down. Ok, use Chinese.</p>
-
-<h2>莫扎特的Clarinet Concerto In A, K.622: 2. Adagio</h2>
-
-<p>我正在反复听莫扎特的(Clarinet Concerto In A, K.622: 2. Adagio)[<a href="http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH">http://www.xiami.com/song/1770385763?spm=a1z1s.6659513.0.0.0555RH</a>]，这首曲子能让人沉静下来能想想自己的事情。第一次听是在一个莫扎特的纪录片的片头曲听到，当时一听到那个单簧管吹出的旋律就很感动。</p>
-
-<h2>毕业中</h2>
-
-<h3>甘同学的包</h3>
-
-<p>说说昨晚的一个事儿。昨天晚上与甘同学小聚，因为他要就要去加州了，月黑风高的去了匹兹堡市中心逛了逛聊了聊，回来的时候已经很晚了（或者说很早了，因为是早上六点），迷迷糊糊到了家马上就睡了，刚睡一会收到个电话说他包找不到了，里面有个两千多刀的单反，问我看看记不记得放哪儿了，我起来看了看包，发现是我自己包（恰好跟他的包除了颜色都是一样的），然后去门外看了看下车的地方也没有。我告诉他可能是放到原来的车里地上了，但他手机又没电了，钥匙在那包里也回不去。那个焦急的情景，我很能体会。中间他没有办法去买了个充电器去咖啡店充了电，又租了车去了躺路过的地方找，找不到，又打了911，甚至直接下单买了一台新的单反。到了早上我又收到了电话问我再确定一下路上有没有，尽管我很确定但还是去看了看，依旧什么都没有。我回到了房间坐再床上睡了，突然看到了我椅子下还有个包，就是他的包…… 看来是我昨晚下车的时候顺手把他的包当成我的包就直接拿走了，但是我完全不记得了。这事儿我感到十分抱歉，自己的一个犯傻导致他人身心具疲。</p>
-
-<h3>学院三楼</h3>
-
-<p>学院三楼一直是个热闹的地方，长期有邦邦同学把守，每次去那儿都挺欢乐。我平时不怎么去，直到这个学期的后半段去的比较多，一是由于图书馆人太多，位子不好找，二是跟认识的同学还能聊聊天，又是还能讨论讨论项目，运气好甚至还有免费的食物。在这段时间里也熟悉了不少新朋友，每次学习到后面就成了茶话会，大家还都听能聊的，还挺开心的。学院三楼的那个桌儿仿佛成了一个我们专业小伙伴们的据点，每天都会有小伙伴来首先将其霸占。</p>
-
-<h3>Trees Hall</h3>
-
-<p>打篮球的地儿，虽然比起国内的强多了，但地板还是不可避免的滑，我也不可避免的打得没有外场好。每周我都会来这里打两次球，认识了一堆小伙伴，真的有些不舍得离开。如果能找到匹兹堡大学的工作，最大的好处就是能继续在这儿打篮球。刚来的那会儿真是谁都不认识，很傻很天真的跟跟几个老黑打起半场来。后来打起全场第一次就更清华哥吵起来了（后来还是关系不错），狗腿后来把我拉近了他们的篮球队，每周二周五晚上都非常认真的在这里练联防和战术，当时的那几个在一队真的挺厉害的，甚至在trees都很难找到能打赢我们的队。首先我们的防守特别好，我们守的是联防，外线的补位非常及时，内线有狗腿的强硬防守。对手在进攻的时候除了投三分，几乎很难突破进来。在进攻端，大神的组织非常合理，他知道该怎么打，并且总能打出一些战术。我们还有生哥的三分球，以及非常好的快攻意识，我更像是个小前锋，进攻方式多是中投和三分，偶尔有一些挡拆的配合。后来对篮球最执着的狗腿回国了，大家似乎就没有当时的那种练球的劲头了，大家都有各自忙的事情，晚上来打球更多是为了消遣。我之前一直是做他们车过来，后面也逐渐的自己走过来了，渐渐跟他们也走得不是那么近了，更多的是想自己多发挥一些个人能力，因为说实话在之前强大打团队里，打球的方式非常单一，个人能力都退化了。总之这是一个值得回忆的地方，如果我留下，我想我需要去练练身体，把个人能力提上去。</p>
-
-<h4>(待续)</h4>
-
-<h3>加州</h3>
-
-<h3>回国</h3>
-
-<h3>分手</h3>
-
-<h2>毕业后</h2>
-
-<h3>学校工作</h3>
-
-<h3>空闲的日子</h3>
-
-<h3>朋友</h3>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2012/09/17/%25e4%25ba%258c%25e6%2589%258b%25e7%259b%25b8%25e6%259c%25ba%25e8%25af%2595%25e6%258b%258d%25e4%25b8%258e%25e6%25b2%2583%25e5%25b0%2594%25e7%258e%259b%25e8%25b4%25ad%25e7%2589%25a9/">二手相机试拍与沃尔玛购物</a></h1>
+<time datetime="2012-09-17T00:00:00-04:00" pubdate><span class='month'>Sep</span> <span class='day'>17</span> <span class='year'>2012</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/08/first-two-weeks-using-macbook-pro-13-inch-with-retina-display-2013-late-version/">First Two Weeks Using MacBook Pro 13 Inch With Retina Display 2013 Late Version</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-08T02:03:00-05:00" pubdate data-updated="true">Nov 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I bought the new macbook pro right after the latest release of MBP on Apple&rsquo;s event. I was so existed about the new macbook pro, and I becoming more and more display my PC. There are a lot to talk about my loving on the new macbook pro, and lot of dis-lovness of my samsung PC. It&rsquo;s too late and I want to post this blog before sleep. So let me be short for the most important benefit.</p>
-
-<p>Oh, by the way, Apple just release the Bug fix for this macbook I using, which happens to be freeze on daily usage on a large set of new users. It is quite annoying for my mac freezing in the way I am using. What&rsquo;s worse is that I make me feel unsafe to use this machine, and always feeling it&rsquo;s gonna stuck. But finally, it is fixed. No freezing after tonight&rsquo;s update.</p>
-
-<h2>No.1 Shortcuts</h2>
-
-<p>What really make my working with mac effective is its massive and make-sense shortcuts. With command key combined with another key, I can operate faster than using mouse and trackpad. The most I use is</p>
-
-<ul>
-<li>cmd + q for close window or tab</li>
-<li>cmd + q for quick application</li>
-<li>cmd + l to select the address bar in browser</li>
-<li>cmd + t to open a new tab</li>
-<li>cmd + left/right arrow to the begin/end of line</li>
-<li>option + left/right move cursor word by word</li>
-<li>cmd + shift + 4 to screenshot</li>
-</ul>
-
-
-<p>I believe there are even more shortcuts to boost my usage.</p>
-
-<p>In addition, Alfred, of course, let me open application, file and directory without open folder and folder in finder. Which speed up my productivity a lot.</p>
-
-<h2>No.2 Trackpad</h2>
-
-<p>I have not using mouse for two weeks. The trackpad is super responsive and really magic with those gestures. The most useful one is multi-screen by four finger swipe left/right. It make good to organizing my applications when I open a lot. And four finger swipe up, to organize my my application automatically. I feel very comfortable and easier with different functional separated screens.</p>
-
-<h2>No.3 Screen</h2>
-
-<p>When I see an non-retina screen now, I will feel a lot blur. This screen is very precise and with great color. The display resolution is actually 1280x800, making 4 pixels to render 1 pixel. I cannot see the pixel in the screen, or I can see pixel clearly those application without retina-display optimization. I feel very comfortable coding with this screen.</p>
-
-<h2>No.4 keyboard</h2>
-
-<p>A lot of laptops try to make their keyboard looks like macbook&rsquo;s. But they failed to make their keyboards type like macbook&rsquo;s. This keyboard&rsquo;s type feel is neat. Each key is well separate and with a little curve in from the middle of key, which make you feel explicitly typing right on the key. And the keys&#8217; positions are well set. Make my muscle feel nature and comfortable when I am typing. My last PC&rsquo;s keys are really bad-positioned.</p>
-
-<h2>No.5 Light</h2>
-
-<p>I don&rsquo;t have to carry a so-heavy PC and charger to library everyday.</p>
-
-<h2>No.6 Misc</h2>
-
-<p>I call them miscellaneous not because they are not important, but they are not the greatest impact for me now. First is the batter life. I can working on it for a whole after without a charge. Second, good looking, yes, it looks beautiful like a art work. Then the charger, very well design. Cable can be well rolled on the charger. The port is magnetic and works for both direction.</p>
-
-<h2>Summary</h2>
-
-<p>The main things in mac is fast, clean and beautiful. I believe I won&rsquo;t change it in the following three years. Like the Julio, PhD Student of Peter, said, when I get the macbook (a old white plastic one), my life changed. I can feel that it is already change my life.</p>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2012/01/14/neil%25e7%259a%25842012%25e5%2589%258d%25e5%258d%258a%25e4%25b8%25aa%25e6%259c%2588/">Neil的2012前半个月</a></h1>
+<time datetime="2012-01-14T00:00:00-05:00" pubdate><span class='month'>Jan</span> <span class='day'>14</span> <span class='year'>2012</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/01/a-light-weight-thread-scheduling-implementation/">A User Level Light-weight Thread Scheduling Implementation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-01T14:55:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In last three days, I was trying to the operating system course project. It is a user level light-weight thread scheduler, with semaphores dealing with concurrency problem. Frankly I never did and multi-thread programming before, not to mention a write a multi-thread scheduler in C. And of course, I didn&rsquo;t do well with the operating system course. I will talk about the course at the end of this post. I almost forgot this homework until I found it just left three for the due. So what I do is not from nothing, but from my <a href="https://github.com/cadmuxe">cadmuxe</a>&rsquo;s code. Here I am gonna explain how it works.</p>
-
-<h2>Description and Requirement</h2>
-
-<p>The whole requirement is <a href="https://drive.google.com/file/d/1oWoWm2MAQf7uEw0U8gwXLUK0ufQHAlexupOlO0o6QZTG3Z67kM7GrRFsV0a7LK1mHObatCizd_Y4_8RD/edit?usp=sharing">here</a>. In short, the scheduler have</p>
-
-<pre><code>lwt_init(int quantum)
-</code></pre>
-
-<p>to set up the main thread, the global thread, the signal hander and thread running intervel with the a period of time as parameter (quantum).</p>
-
-<pre><code>lwt_create(char *name, void *argv, fun_type fn)
-</code></pre>
-
-<p>to create a thread with name, argument pointer and function pointer. and run it immediatly. return thread indentifier.</p>
-
-<pre><code>lwt_sleep(int seconds)
-</code></pre>
-
-<p>to put current thread into sleep for seconds.</p>
-
-<pre><code>thrd_wait(lwt *t)
-</code></pre>
-
-<p>to put current thread into wait until the input thread (child thread) exit.</p>
-
-<pre><code>smphr_create(int size)
-</code></pre>
-
-<p>to create a semaphore with a input size, and init a thread queue for waiting list.</p>
-
-<pre><code>P(smphr *s)
-</code></pre>
-
-<p>to acquire semaphore if avaible, if not, put current thread into queue</p>
-
-<pre><code>V(smphr *s)
-</code></pre>
-
-<p>to release semaphore, and dequeue the front thread in queue</p>
-
-<h2>How to achieve multi-thread</h2>
-
-<p>The idea is pretty similar with multi-processes running on a single processor. Threads are switched in a fast speed with a process, making it like they are served simultaneously. But how to make the switch? Use <em>alarm signal</em> to interrupt running thread, <em>setjmp</em> to save its running environment and <em>longjmp</em> to restore to its that environment. Here is the code :</p>
-
-<pre><code>lwt_init() 
-{
-    /* ... */
-
-    signal(SIGALRM, alarm_handler);
-    ualarm(lwt_quantum, 0);
-
-    /* ... */
-}
-
-void alarm_handler () 
-{
-    /* ... */
-
-    if (setjmp(sys_t.curr-&gt;env) == 0) { // interrupted, save current thread's runing environment. if get here from longjmp(), setjmp will return no-zero
-        do {
-            sys_t.curr = sys_t.curr-&gt;next; // set next thread as current thread
-
-            /* ... check state of current thread here */
-
-        } while (sys_t.curr-&gt;state != lwt_READY);
-
-        ualarm(sys_t.interval + sys_t.curr-&gt;prior, 0);
-        longjmp(sys_t.curr-&gt;env, 1);    // after switch, continue running environment where it was saved
-    }
-
-    /* ... */
-}
-</code></pre>
-
-<p>There is a serious problem here. Thread are created on main thread (actually process), so when they run, a stack will be allocated on the top of main stack. The stack will be remove if the thread run is over (returned). There is no problem if thread run one by one. But in this case, they are running simultaneously (not precisely simultaneous, but running without end of others). The result is that all these threads are using a same stack. We know that when we perform of a setjmp, env save the stack pointer of the thread. So it comes to the situation that switching will make thread go back to its stack pointer, but the content of that stack will not its content. Stack is all messed.</p>
-
-<p>A way to solve this is to give each thread its own stack when they created. This is achieve by a statement of assembly language. Code is there:</p>
-
-<pre><code>#ifdef _X86
-__asm__("mov %0, %%esp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
-#else
-__asm__("mov %0, %%rsp;": :"r"(sys_t.curr-&gt;stack + lwt_STACK_SIZE) );
-#endif
-</code></pre>
-
-<p>I don&rsquo;t know jack about assembly language. But I was told that it move the stack pointer to a new stack.</p>
-
-<h2>How to implement Semaphore</h2>
-
-<p>Semaphore actually is quite sample (the reason I say this, because I thought it was hard). It is like a gate keeper having a list of available rooms. It will tell the visitor if any room available. If yes, gate keeper will allow the visitor to use the room and reduce the number of available rooms. If no, put the visiter on the waiting list.</p>
-
-<p>If the visitor has done with the room, gate keeper will make that room available again, and give it to the first visitor on the waiting list, and sure remove him from waiting list.</p>
-
-<p>P() is for thread to achieve the first part (check and gain semaphore), V() is for the second part (release semaphore and give to to front waiting list). Here is the code:</p>
-
-<pre><code>typedef struct smphr_t {
-    int     smphr_size;
-    Queue   queue;              // queue store thread waiting for semophore
-} smphr;
-
-smphr * smphr_create(int smphr_size){
-    smphr *s;
-    s = malloc(sizeof(smphr));
-    s-&gt;smphr_size = smphr_size;
-    s-&gt;queue = CreateQueue();                   // use a queue to store waiting list
-    return s;
-}
-
-void P(smphr *s){
-    int left = ualarm(0, 0);                    // disable the context switch, by clear the alarm
-    if(s-&gt;smphr_size &gt; 0){                      
-        s-&gt;smphr_size -= 1;                     // semaphore offered
-        ualarm(left, 0);                        // restore context switch
-    } else {                                    // no more semaphore, blocked
-        s-&gt;smphr_size -= 1;                     // TRICK! semaphore still need to be reduced one, in order to avoid fullCount getting too large. 
-        sys_t.curr-&gt;state = sem_WAIT;
-        Enqueue(sys_t.curr, s-&gt;queue);          // put into queue
-        raise(SIGALRM);
-    }
-}
-
-void V(smphr *s){
-    int left = ualarm(0, 0);
-    s-&gt;smphr_size += 1;                         // release semaphore
-    if (!IsEmpty(s-&gt;queue)) {                   
-        Front(s-&gt;queue)-&gt;state = lwt_READY;     // dequeue front and set to READY, if not empty
-        Dequeue(s-&gt;queue);
-    }
-    ualarm(left, 0);
-}
-</code></pre>
-
-<h2>Test with Producer-Consumer Problem</h2>
-
-<p>The LWT can be tested by a classical Producer-Consumer problem. Producer produce item, Consumer consume item produced. If item buffer is full, producer should wait (producer trying to produce should be put on the waiting list) until item is consumed and buffer is not full. Consumer, similarly, should wait if item buffer is empty (put on waiting list), until item is produced and buffer is not empty.</p>
-
-<p>So we need a fullCount Semaphore (max size of buffer) to decide if full, a emptyCount Semaphore (max size of buffer) to decide if empty and a useLock to only let one producer/consumer access to buffer at one time. Here is the code:</p>
-
-<pre><code>void producer(){
-    srand(time(NULL));  // Initializes random number generator
-    int item = 0;
-    while(1){        
-        item = rand();
-        P(emptyCount);
-        P(useQueue);
-        if (current &lt; N) {
-            buffer[current++] = item;
-        }
-        V(useQueue);
-        V(fullCount);
-        printf("Producer: %s\tproduce: %d\te: %d\tf: %d\tSize:%d\n"
-            , get_curr_name()
-            , item
-            , smphr_get_size(emptyCount)
-            , smphr_get_size(fullCount)
-            , current);
-    }
-}
-
-void consumer(){
-    int item = 0;
-    int i = 0;
-    while(i &lt; 30){ 
-        P(fullCount);
-        P(useQueue);
-        if (current &gt; 0) {
-            item = buffer[--current];
-        }
-        V(useQueue);
-        V(emptyCount);
-        printf("Consumer: %s\tconsume: %d\te: %d\tf: %d\tSize:%d\n"
-            , get_curr_name()
-            , item
-            , smphr_get_size(emptyCount)
-            , smphr_get_size(fullCount)
-            , current);
-        i++;
-    }
-}
-
-int main(int argc, char *argv[]){
-    int i,j;
-    lwt *t;
-    emptyCount  = smphr_create(N);
-    fullCount   = smphr_create(0);
-    useQueue    = smphr_create(1);
-
-    lwt_init(QUANTUM);
-
-    lwt_create("p1", 0, NULL, producer);  
-    lwt_create("p2", 0, NULL, producer);  
-    lwt_create("p3", 0, NULL, producer);  
-    lwt_create("p4", 0, NULL, producer);  
-    lwt_create("c1", 0, NULL, consumer);     
-    t = lwt_create("c2", 0, NULL, consumer);     
-
-    thrd_wait(t);
-    printf("Two Consumers consume 30 items!\n");
-    printf("Done!\n");
-}
-</code></pre>
-
-<p>The full code is on <a href="https://github.com/GingerBear/LWT">github</a>. Thanks to <a href="https://github.com/cadmuxe">cadmuxe</a> and <a href="https://github.com/liyangbin">liyangbin</a> for the help.</p>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/12/02/%25e6%2588%2591%25e7%259a%2584%25e6%2589%2598%25e7%25a6%258f%25e9%2582%25a3%25e7%2582%25b9%25e7%25a0%25b4%25e4%25ba%258b%25e5%2584%25bf/">我的托福那点破事儿</a></h1>
+<time datetime="2011-12-02T00:00:00-05:00" pubdate><span class='month'>Dec</span> <span class='day'>02</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/28/building-the-is-reader/">Building the IS Reader</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-28T02:16:00-04:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It has been a few weeks that I am thinking about writing a blog on the IS Reader project. In this post, I will try to answer:</p>
-
-<ul>
-<li>Why did I start the project?</li>
-<li>What will the product be functioning like?</li>
-<li>How did I or will I deal with it?</li>
-<li>What are the design rules that I am following?</li>
-</ul>
-
-
-<h2>Why did I start the project?</h2>
-
-<p>There are a lot of reasons that finally lead me to build this reader. First and most importantly, When I reading some long documents, like a book, I found myself need a sample tool that can store a pdf document online, and everytime you open it on different devices, it will restore the previous page you read. I went throught a series of search but didn&rsquo;t find a sample solution. Kindle App may work but not allow pdf uploads. Dropbox and Google Drive show pdf cross device but cannot restore the progress, no need to say annoating or sharing. Foxit reader can restore but only work locally.</p>
-
-<p>The secend reason is that, I was happened to take an independent study with Peter&rsquo;s, our program head, phd student Julio, who took me to the ReadingCycle project. It is also a reader project, but only work for picture format books. So it is a good change to do it along with the IS Reader. (Actually IS Reader the name came with the inital of School of <em>Information Science</em>, but not limit to that.)</p>
-
-<p>Thirdly, I am on my way finding a job, this project will be a great enhancement of my experience and CV. I will try a lot of new technologies that could be written on my CV.</p>
-
-<p>Finally, there is no such a product on the web and it is not that hard to build, so why don&rsquo;t I create one. Maybe it will grow into a real deal.</p>
-
-<h2>What will the product be functioning and look like?</h2>
-
-<p>On the first thought, the product is pretty sample. I can upload pdf documents on it, read it, restore the page on other devices and continue reading. By further thinking, it should support multi-user, not just me alone. Then it should provide a certain management page that can CRUD those documents. Next, it should allow user to annotate on the document. Finally, social stuff. User can share documents, notes with each other. They can track their progross. Product can even provide some kind of stratagy that my drive user to reader more, like comparing, gamification.</p>
-
-<p>At this moment of my typing, I am thinking the goal of the product should be to <strong>make people more like to read</strong>, or to learn, since I read for learn.</p>
-
-<h2>How did I or will I deal with it?</h2>
-
-<p>As I mentioned, the article should be typed several weeks ago, which means I have started working on it for several weeks (19 days since its github inital commit). I choosed all those new technology from the begining. At the begining scaffolding stage, I user Yeomen to genate a express project and a webapp (merged in the middle of developing, cover later).</p>
-
-<p>I use pdf.js for the JavaScript-based pdf rendering. Although its rendering is a bit not that sharp on windows, it is good enough for long time reading. Not surprisingly, it renders perfectly on MacBook Pro with Retina display (need to fix the scale issue), the one I just bought, and better on mac with no-Retina than windows.</p>
-
-<p>For the server, I use Express on Node.js, Mongoose and MongoDB for the database, Jade for the template engine. In fact, I tried to build a pure RESTful for the server, so I didn&rsquo;t use Jade at the first time. But met a lot of issues. First I came across some cross-domain issue on the cross ajax call from the client. I tried jsonp and cors to fix it. Then I didn&rsquo;t find a way to validate user session in a rapid way except cookies (I don&rsquo;t have experience with OAuth). So I gave up the RESTful option, in order for the quick shipping.</p>
-
-<p>For the client side, most code I wrote is about the reader page. The logic is sample and old-fashion, just some event binding and ajax call, store data in the dom. What&rsquo;s new is that I try to use some new JavaScript techniques. I use event delegation of those massive event bindings. I wrap the whole reader JavaScript logic in a constructor, which construct the JavaScript by parameters, hide internal private parameters and methods, and get inited by init(); Some progress was made, but way not enough. The code is close to spaghetti, dom bindings are hard coded inside. I am extremely want to make it modular and less coupled, maybe after a big release.</p>
-
-<p>Now, basic funcitons till making note are made. Next thing should be involved with some social, with OAuth bulid in, and books management with one-page app style (AngularJS or BackboneJS).</p>
-
-<h2>What are the design rules that I am following?</h2>
-
-<p>It is too late now, let me be short. For the design, 3 rules:</p>
-
-<ul>
-<li>Rule 1: As easy to use as possible</li>
-<li>Rule 2: As less reading interuption as possible</li>
-<li>Rule 3: As clean and sample as possible</li>
-</ul>
-
-
-<h2>Summary</h2>
-
-<p>Use the most quoted facebook works:</p>
-
-<blockquote><p>Keep Focus and Keep Shipping</p></blockquote>
-
-<p>That is all I need to do, no need to think to far. No matter what will the product be in the future, it has a good start, namely I build it for myself use.</p>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/11/05/django%25e9%25a1%25b9%25e7%259b%25ae%25e5%25b0%258f%25e8%25ae%25b0/">Django项目小记</a></h1>
+<time datetime="2011-11-05T00:00:00-04:00" pubdate><span class='month'>Nov</span> <span class='day'>05</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/18/%25e4%25b8%25bb%25e6%259c%25ba%25e5%25af%25b9%25e6%25af%2594%25e6%2580%25bb%25e7%25bb%2593/">主机对比总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-18T00:00:00-04:00" pubdate data-updated="true">Jul 18<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><strong>1. 选择虚拟主机，VPS，还是云平台？</strong>
-
-虚拟主机，也就是Web Hosting，类似于000，与其他人共享一个OS环境。
-<ul>
-	<li>优点：便宜，配置方便。</li>
-	<li>缺点：不稳定，速度较慢，限制多。</li>
-</ul>
-VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，用户能独享一个OS。
-<ul>
-	<li>优点：稳定，自由（能拥有root权限），安全。</li>
-	<li>缺点：需要手动安装程序，需要linux维护。</li>
-</ul>
-云，“如果云不是指弹性云&#8230;..那单机云就是vps&#8230;..“，“弹性云就是可以自由调整配置， 可以制作模板动态扩容/缩减， 按时按需计划，提供多节点自动的动态负载均衡” <span style="text-decoration:underline;"><a href="http://www.hostloc.com/thread-194935-1-1.html">http://www.hostloc.com/thread-194935-1-1.html</a></span>
-
-<strong>2. AWS(云), Azure(云), Linode(VPS) 参数对比</strong>
-<div>
-<table width="100%" border="1" cellspacing="0" cellpadding="2">
-<tbody>
-<tr>
-<td valign="top"></td>
-<td valign="top">  AWS Free Tier</td>
-<td valign="top">Azure Extra Small</td>
-<td valign="top">Linode 1G</td>
-</tr>
-<tr>
-<td valign="top"><strong>RAM</strong></td>
-<td valign="top">  613MB</td>
-<td valign="top">768M</td>
-<td valign="top">1GB</td>
-</tr>
-<tr>
-<td valign="top"><strong>CPU</strong></td>
-<td valign="top">  N/A</td>
-<td valign="top">shared</td>
-<td valign="top">8 cores</td>
-</tr>
-<tr>
-<td valign="top"><strong>Storage</strong></td>
-<td valign="top">  30G</td>
-<td valign="top">20G</td>
-<td valign="top">24G</td>
-</tr>
-<tr>
-<td valign="top"><strong>Database</strong></td>
-<td valign="top">  20G</td>
-<td valign="top">N/A</td>
-<td valign="top">N/A</td>
-</tr>
-<tr>
-<td valign="top"><strong>Transfer</strong></td>
-<td valign="top">  15G</td>
-<td valign="top">5G free, $0.12/GB(5G-10T)</td>
-<td valign="top">2T</td>
-</tr>
-<tr>
-<td valign="top"><strong>Cost</strong></td>
-<td valign="top">  1-year free/ charge on demand</td>
-<td valign="top">15/m</td>
-<td valign="top">20/m</td>
-</tr>
-<tr>
-<td valign="top"><strong>*</strong></td>
-<td valign="top">  1-year free means 750 hours CPU (<span style="text-decoration:underline;"><a href="http://python.6.x6.nabble.com/CPyUG-OT-Amazon-EC2-VS-Linode-td2730701.html">普遍反映贵</a></span>, <span style="text-decoration:underline;"><a href="http://www.quora.com/Amazon-Web-Services/How-much-does-it-cost-for-a-similar-linode-instance-on-EC2">略复杂1</a></span>, <span style="text-decoration:underline;"><a href="https://forum.linode.com/viewtopic.php?t=9885&amp;p=57731">略复杂2</a></span>)</td>
-<td valign="top">Extra Small 有5Mbps 带宽限制，Small则要45/m</td>
-<td valign="top">纯净Linux, 所有东西需要自己配置</td>
-</tr>
-</tbody>
-</table>
-</div>
-<strong>3. 方案</strong>
-
-先使用$200的Azure的Web Site，再使用Linode的VPS，因为
-
-1）需要快速上线，Azure的Web Site现在已经部署上线，Linode需要在命令行配置LAMP运行环境，AWS配置更加复杂。
-
-2）开始访问量低，Azure的Shared Web Site应该能够应付，尽管性能较低。
-
-3）Azure能够应付突发的访问量，尽管超出定额后会收费较高。
-
-4）Linode的口碑最佳，稳定高速，简单易于维护，适合中小应用。
-
-5）如果以后访问量巨大，可再迁移到功能更强大的AWS。
-
-6）$200不用白不用。
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/11/03/django%25e5%25ad%25a6%25e4%25b9%25a0%25e5%25b0%258f%25e8%25ae%25b0/">Django学习小记</a></h1>
+<time datetime="2011-11-03T00:00:00-04:00" pubdate><span class='month'>Nov</span> <span class='day'>03</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/23/experimental-summer-life/">Experimental Summer Life</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-23T00:00:00-04:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">还是写中文吧。
-
-从五月到八月，本来是打算找个地方实习的，然后再选一门课，下学期就可以part-time，但并未如愿以偿。之前与Interactive System Design这门课中的项目合作单位Department of Oral Biology in School Of Dental Medicine联系了实习，对方也给出了积极的回应，但不巧对方教授出差，等她回来后距离选课（申请CPT）的日子只有不到一周，随即她告诉我在截止日期前完成实习手续已无可能。实习便只能作罢。
-
-然后就是自己两周低落的无所事事，每天打篮球，看季后赛，看电影，看书，生活毫无规律。心想这个四个月要是这么过，毕业找工作什么就别想了，更别谈什么梦想志向了。不在于四月有多么重要，而在于对自己管不住自己感到失望，从而失去了自信。
-
-倔强的我于是觉得自己该做点该做的，坚持四个月，一定能改变自己。于是便有了这篇本想要英文写的文字，试验性的暑假生活。“实验性”第一是因为自己打算过一次从来没过过的暑假（可能是最后一个暑假），第二因为自己想过一种激进的生活，看看自己的level到底能到多少。
-
-我认为自己是有天赋了，在各个方面达到远胜现在的高度。比如篮球，比如技术，比如自信，比如vision。事实并不残酷，我只是没有尽力，没有管住自己。我要证明我能能够做到。
-
-首先是肥胖，自制力差的最直观表现。在这两周的无所事事中，体重飙升，几乎到达了90公斤，原因主要是没有控制住饮食，再加上脚伤，篮球也并没有坚持每天打。其实要减肥也很简单，生活规律，控制饮食，保持锻炼。所以在这个暑假里，我要做到日常饮食以水果，蔬菜，面包以及少量肉类为主，stay real hungary，把体重控制到75以内。每天早上坚持跑步，做力量训练，周二周五打篮球。每天一点以前睡觉，早上七点起床。
-
-然后是学习，主要是技术上的学习。四个月的时间可以学习很多东西，但目标很明确，Google的要求是什么就学什么。下面是Google Front End Engineer的要求
-<div>Minimum qualifications</div>
-<div>
-<ul>
-	<li>BS degree in Computer Science or related field (In lieu of degree, 4 years of relevant work experience).</li>
-	<li>Development experience in server-side technologies such as C/C++ and/or Java.</li>
-	<li>Experience with AJAX, HTML and CSS, or Ruby, with an interest in user interface design.</li>
-	<li>Web application development experience.</li>
-</ul>
-</div>
-<div>
-<div>Preferred qualifications</div>
-<div>
-<ul>
-	<li>Masters or PhD in Computer Science or related field.</li>
-	<li>Significant experience developing user-facing software.</li>
-	<li>Experience working on cross-browser platforms.</li>
-	<li>Knowledge of UI frameworks such as XUL, Flex, and XAML.</li>
-	<li>Object-oriented JavaScript skills.</li>
-</ul>
-</div>
-</div>
-明显不足的一点是一门Server-Side的语言，比如Java，在很多笔试题中Java也经常会使用到。
-
-所以第一件事情是学习Java，学到什么程度，第一是写一个OOP的博客，第二是熟练使用Java写算法题。
-
-第二重要的应该是深入了解JavaScript，对于JavaScript的语言特性，面向对象机制，模块化，主流框架，NodeJs都应该到底master的程度。学习的途径第一是看书，手上的几本书在四个月内都应奋力读完，做好读书笔记。途径二是参加开源项目，从那篇学习开源项目的文章开始看起。
-
-第三和第四同等重要，即计算机基础知识与前端基础知识。计算机基础知识包括Linux和C语言，重读Linux和C一站式编程，了解服务器，编译器，浏览器内核的底层实现原理。第四是前端基础知识，包括CSS的深入学习，CSS3与HTML5的新特性，浏览器兼容性的知识。
-
-第五和第六同等重要，即设计的学习与知识杂项。设计一直是我很向往的方向，但始终都处在感性的认识阶段，未来我隐约感觉到自己会走上“设计师”的道路，但开始，还是从Engineering入门会更加基础牢固，所以在暑假的闲暇时间里读一些设计方面的名著是很有益的。知识杂项就就包括了一些必要的但了解即可的知识，比如Git，不如Ruby，比如Sayanee的Vimeo，以及一些讲座。
-
-总结成一份List，暑假每天应该这么过：
-
-身体方面：
-<ul>
-	<li>7点起床，晚上1点之前睡觉</li>
-	<li>早晨跑步，力量训练，周二周五晚上打篮球</li>
-	<li>饮食规律，水果蔬菜为主</li>
-</ul>
-知识方面：
-<ul>
-	<li>8小时学习时间</li>
-	<li>制定每月每周每日目标</li>
-	<li>2小时读书</li>
-</ul>
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/10/30/hello-asia/">Hello, Asia</a></h1>
+<time datetime="2011-10-30T00:00:00-04:00" pubdate><span class='month'>Oct</span> <span class='day'>30</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/23/%25e6%259a%2591%25e5%2581%2587%25e5%25ad%25a6%25e4%25b9%25a0%25e7%25ac%25ac%25e4%25b8%2580%25e5%25a4%25a9/">暑假学习第一天</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-23T00:00:00-04:00" pubdate data-updated="true">May 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">积极地说，感觉还不错，虽然做的还远不够好。
-
-由于昨天睡得晚，今天9点才起来，但早晨状态不错，并不困，简单吃了早餐和锻炼后，开始干正事儿。实际上这个时间是一天最佳的时间，所以应该花在最重要的事情上，但惰性使然，导致自己看起了vimeo的教学视频，一看就看了好多。略看了一下已知的知识，包括sublime tex, wordpress, web font。了解了一种格式语言Markdown，使用在github的readme中，通过ruby能够自动转化成HTML。还了解到了sublime text的package manager，下载的sass的代码高亮。最主要的是学习了一下SASS。
-
-<strong>SASS最主要的是三个功能：变量，方法，循环。</strong>
-
-使用美元符号$定义变量，可以定义统一的颜色，宽度，让CSS更容易维护。
-
-使用@mixin定义方法，在方法体内写入复用CSS，可以传递参数，使用@include调用。这使得按钮，widget很容易实现，配合变量，使得样式的主题很容易修改。
-
-循环的格式为
-<blockquote>@for i from 1 through 9</blockquote>
-缩进的内容为循环体。循环可以实现渐变的样式，但我觉得用处不大。
-
-<strong>另外SASS的使用规则还有：</strong>
-<ul>
-	<li>不需要大括号，使用缩进</li>
-	<li>可用用缩进加$重复利用某一元素，类似于JavaScript的with关键字</li>
-	<li>一些函数darken(#ccc, 10%), lighten(#ccc, 10%)</li>
-</ul>
-从sass &#8211;watch产生了小想法。watch能使.sass每次有变化的时候会自动编译成.css文件，那么，做web开发的时候，每当完成某个页面的时候，当自动保存sublime text后能不能自动刷新浏览器呢？这会带来一些方便。
-
-很快就到午饭时间了，吃了牛肉青椒番茄丁拌米线，半小时搞定。打算下午考驾照permit，开始做题，到了快两点出门结果下大雨，走了不远便打道回府。开始干“正事儿”。进入状态很慢，Java读着读着就容易走神，容易去看别的东西。看着看着觉得Java学习内容太多，太难肯，并且在web方向用的不多。并且越来越觉得Python更加适合，应用更广，更新，与web更近。回头再把Java扔到了一边开始找Python的书看，挑了不少时间结果很不明智地挑一本cookbook，鼓足一股劲开始啃了一起来，终于啃到正题了，结果发现根本就不是我需要的，都是一些细节函数的用法，没法读只能用来查。又扔到了一遍。又找了一圈要么太基础，要么太专，要么太老。我开始上网找网上的学习资料，结果看到了<a href="http://www.learnpython.org/">http://www.learnpython.org/</a> 就又鼓起劲开始学了起来，非常基础但让我熟悉其语法来了，也加上了一些小coding，很快就把基础知识过了一遍。
-
-想尝试做几道leetcode题目但对于Java还是太不熟悉，无从下手。
-
-就这么已经晚上11点了。最正题的JavaScript还没看。
-
-&nbsp;
-
-虽然没完成任务，但状态感觉还是有很大进步的，后面抓紧分配好时间，提前在google calendar上制定好时间。
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/07/09/node-js%25e5%2592%258cmongodb/">Node.js和MongoDB</a></h1>
+<time datetime="2011-07-09T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>09</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/dropbox-git-%25e5%25a4%259a%25e4%25ba%25ba%25e5%258d%258f%25e4%25bd%259c/">Dropbox + Git 多人协作</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div>
-<h1><strong>背景： </strong></h1>
-</div>
-一个人开发项目到了一半，想多拉几个人过来一起开发。
-<h1><strong>使用顺序： </strong></h1>
-<h2><strong>（一）我先配置好公共的repo。</strong></h2>
-1. 在Dropbox上创建一个文件夹作为共享的空repo：
-<pre><span style="color:#999999;"> $ cd C:/Users/Neil/Dropbox/</span>
-
-<span style="color:#999999;"> $ mkdir Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ cd Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ git init --bare
-
-</span></pre>
-2.  把原来本机上项目放到到那个共享的repo里：
-<pre><span style="color:#999999;"> $ cd C:/User/Neil/Projects/MyProject1</span>
-
-<span style="color:#999999;"> $ git init</span>
-
-<span style="color:#999999;"> $ git remote add origin C:/Users/Neil/Dropbox/Git-Repository/MyProject1.git</span>
-
-<span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "first commit."</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-<h2></h2>
-<h2><strong>（二）新加进来的开发们在本机clone一份。</strong></h2>
-<span style="color:#999999;">注意：在操作git之前，先config好自己的user.name和user.email</span>
-
-1. 创建本地目录，把Dropbox共享到的repo clone到里面。
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/</span>
-
-<span style="color:#999999;"> $ git clone C:/Users/Eric/Dropbox/Share/MyProject1.git</span></pre>
-<h2></h2>
-<h2><strong>（三）开始日常开发。</strong></h2>
-1. 获取最新的版本：
-<pre><span style="color:#999999;"> $ cd C:/User/Eric/Projects/MyProject1</span>
-
-<span style="color:#999999;"> $ git pull origin master
-
-</span></pre>
-2. 完成一个小功能后，commit一个版本到本地的repo：
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"
-
-</span></pre>
-3. 完成一个大功能后，把本地的repo push到共享的repo里：
-<pre><span style="color:#999999;"> $ git add .</span>
-
-<span style="color:#999999;"> $ git commit -m "comment on this commit"</span>
-
-<span style="color:#999999;"> $ git push origin master</span></pre>
-<h2></h2>
-<h2><strong>另外：</strong></h2>
-可能会遇到冲突，因为在你pull最新版本下来之后，又有人push了更新的版本到共享repo里，而且他修改了跟你相关的代码。因此当你现在push的时候会出错，因为共享repo也不知道用他的代码好还是你的代码好。这时就git就会要求你在push之前再pull一次，并且会告诉你冲突的地方，在具体文件中会以下面这种方式体现：
-<pre><span style="color:#999999;"> &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
-
-<span style="color:#999999;"> 我的代码</span>
-
-<span style="color:#999999;"> ===========</span>
-
-<span style="color:#999999;"> 他的代码</span>
-
-<span style="color:#999999;"> &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span></pre>
-我需要把这段代码解决（跟他商量怎么回事儿）之后在push到共享的repo。
-
-（完）
-</div>
-  
-  
-
-
+<h1><a href="/blog/2011/07/06/%25e6%259c%25ac%25e5%2591%25a8%25e6%259c%2580%25e4%25bd%25b3android%25e8%25bd%25af%25e4%25bb%25b6/">本周最佳Android软件</a></h1>
+<time datetime="2011-07-06T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>06</span> <span class='year'>2011</span></time>
     </article>
   
   
     <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/%25e5%25a4%2587%25e5%25bf%2598ebay%25e7%259a%2584%25e4%25b8%2580%25e4%25b8%25aa%25e8%25ae%25b2%25e5%25ba%25a7/">备忘ebay的一个讲座</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><strong>演讲人</strong>：Brain Johnson@ebay
-
-<strong>主题</strong>：ebay的大数据
-
-<strong>最大印象</strong>：努力很大，投入很多，但效果一般（5% better / year）
-
-<strong>片段</strong>：
-
-&#8220;big is not the case, detail is.&#8221;
-
-关于 搜索key word expansion，他讲了很多情况中是不是要把搜索关键词的相关词也纳入搜索范围，比如加s的复数。但在会出现加了s就是毫不相关的东西，例子忘了。另外，在人们搜索diary的时候，很多人想找的是吸血鬼日记，而不是笔记本。在人们搜索basketball的时候，大多数人想找的是篮球鞋，而不是篮球。我的第一影响力可以用搜索后，点击商品的类别来自动划分不同key word的expansion。
-
-他还略过了一句话，其实也是我很想问的。那就是他说算法不重要（大概意思），数据更重要。为啥？
-
-刚开发的时候，ebay投了几千万美元（具体忘了），结果由于所带来的改进，几个月（具体忘了）就赚回来了。看来有和无的差别是巨大的。
-<div>
-<div>他还分享了任务的data flow pipeline:</div>
-<div>
-<ul>
-	<li>production</li>
-	<li>behavioral item data analysisi</li>
-	<li>feature generation</li>
-	<li>classification prediction</li>
-	<li>offline analysis</li>
-	<li>human judgment</li>
-	<li>a/b test</li>
-</ul>
-（完）
-
-</div>
-</div>
-</div>
+<h1><a href="/blog/2011/07/06/%25e4%25bc%25b4%25e9%259a%258f%25e7%259d%2580%25e9%25a1%25b6%25e7%25ba%25a7%25e9%2593%25b6%25e8%25a1%258c%25ef%25bc%258c%25e9%2587%2591%25e8%259e%258d%25e6%259c%258d%25e5%258a%25a1%25e5%2595%2586yodlee%25e7%259a%2584%25e7%2594%25a8%25e6%2588%25b7%25e8%25be%25be%25e5%2588%25b03%25e5%258d%2583%25e4%25b8%2587/">伴随着顶级银行，金融服务商Yodlee的用户达到3千万</a></h1>
+<time datetime="2011-07-06T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>06</span> <span class='year'>2011</span></time>
+    </article>
   
   
-
-
+    <article>
+      
+<h1><a href="/blog/2011/07/04/node-js%25ef%25bc%258clamp%25ef%25bc%258c%25e5%2592%258c%25e6%259c%25aa%25e6%259d%25a5/">Node.JS，LAMP，和未来</a></h1>
+<time datetime="2011-07-04T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>04</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/07/04/couchdb%25e8%2583%25bd%25e4%25b8%25bahtml5%25ef%25bc%258cweb-apps%25e5%2581%259a%25e4%25bb%2580%25e4%25b9%2588%25ef%25bc%259f/">CouchDB能为HTML5，Web Apps做什么？</a></h1>
+<time datetime="2011-07-04T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>04</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/07/03/%25e6%2595%25b0%25e6%258d%25ae%25e5%258f%25af%25e8%25a7%2586%25e5%258c%2596-%25e7%25bb%25b4%25e5%259f%25ba%25e7%2599%25be%25e7%25a7%2591%25e7%259a%2584%25e5%25ae%259a%25e4%25b9%2589/">数据可视化-维基百科的定义</a></h1>
+<time datetime="2011-07-03T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>03</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/07/02/node-js%25e4%25b8%258e%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25e7%25ab%25af%25e8%2584%259a%25e6%259c%25ac%25e7%259a%2584%25e6%259c%25aa%25e6%259d%25a5/">Node.js与服务器端脚本的未来</a></h1>
+<time datetime="2011-07-02T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>02</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/07/01/google-plus%25e4%25b8%25ba%25e4%25bb%2580%25e4%25b9%2588google%25e5%25bf%2585%25e5%25b0%2586%25e8%25a1%25b0%25e8%2590%25bd/">Google Plus:为什么Google必将衰落</a></h1>
+<time datetime="2011-07-01T00:00:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>01</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/06/30/loopt%25e8%25bd%25ac%25e5%258f%2598%25e6%25af%258f%25e6%2597%25a5%25e4%25ba%25a4%25e6%2598%2593%25e8%25a7%2584%25e5%2588%2599-u-deals/">Loopt转变每日交易规则——U-Deals</a></h1>
+<time datetime="2011-06-30T00:00:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>30</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/06/30/%25e7%25bf%25bb%25e8%25af%2591%25e4%25b8%2580%25e4%25ba%259b%25e6%2596%2587%25e7%25ab%25a0%25e6%258c%25ba%25e5%25a5%25bd%25e7%259a%2584/">翻译一些文章挺好的</a></h1>
+<time datetime="2011-06-30T00:00:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>30</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/02/20/%25e6%2594%25be%25e4%25b8%258b%25e6%259d%259f%25e7%25bc%259a-%25e5%25bc%2580%25e5%25a7%258b%25e6%2583%25b3%25e8%25b1%25a1/">放下束缚 开始想象</a></h1>
+<time datetime="2011-02-20T00:00:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>20</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/02/14/%25e6%2588%2591%25e4%25b8%25ba%25e4%25bb%2580%25e4%25b9%2588%25e4%25b8%258d%25e7%2594%25a8%25e6%2596%25b0%25e6%25b5%25aa%25e5%25be%25ae%25e5%258d%259as60%25e5%25ae%25a2%25e6%2588%25b7%25e7%25ab%25af/">我为什么不用新浪微博S60客户端</a></h1>
+<time datetime="2011-02-14T00:00:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>14</span> <span class='year'>2011</span></time>
+    </article>
+  
+  
+    <article>
+      
+<h1><a href="/blog/2011/02/10/%25e5%25be%25ae%25e5%258d%259a%25e4%25bb%2585%25e4%25bb%2585%25e6%2598%25af%25e4%25ba%25ba%25e4%25ba%25ba%25e7%25bd%2591%25e9%2587%258c%25e7%259a%2584%25e7%258a%25b6%25e6%2580%2581%25ef%25bc%259f/">微博仅仅是人人网里的状态？</a></h1>
+<time datetime="2011-02-10T00:00:00-05:00" pubdate><span class='month'>Feb</span> <span class='day'>10</span> <span class='year'>2011</span></time>
     </article>
   
   <div class="pagination">
@@ -1135,7 +238,7 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
   
     <section>
 	<br>
-  <p>My name is Neil Ding. I live in Pittsburgh Pennsylvania in United State. I work as a frontend developer builing mobile e-commerce website and on the way to be awesome.</p><br>
+  <p>Hello, my name is Neil. I am developer. I like making things better. I like say yes.</p><br>
   <p style="text-align: center"><img src="http://www.gravatar.com/avatar/51286f1ee07403b00eb216f3fa58e03f?s=200" alt="Neil Ding"></p>
 
   <p>
@@ -1231,19 +334,6 @@ VPS，Virtual Private Server，在一台设备上虚拟出的多个OS环境，�
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'neildingsblog';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 
