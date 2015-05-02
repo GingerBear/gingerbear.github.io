@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+  <title>Slide Menu Demo</title>
+  <style>
+body {
+  overflow-x: hidden;
+  margin: 0;
+}
+ul {
+  margin: 0;
+  padding-left: 0;
+}
+body.slide-menu-active .body-wrapper {
+  -webkit-transform: translateX(80%);
+  -moz-transform: translateX(80%);
+  -o-transform: translateX(80%);
+  -ms-transform: translateX(80%);
+  transform: translateX(80%);
+}
+body.slide-menu-active #slide-menu {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+.body-wrapper {
+  background: #fff;
+  height: 1000px;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  -moz-transition: -moz-transform 0.2s ease;
+  -o-transition: -o-transform 0.2s ease;
+  -ms-transition: -ms-transform 0.2s ease;
+  transition: transform 0.2s ease;
+}
+#slide-menu-button {
+  display: block;
+}
+#slide-menu {
+  overflow-x: hidden;
+  height: 2000px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  -moz-transition: -moz-transform 0.2s ease;
+  -o-transition: -o-transform 0.2s ease;
+  -ms-transition: -ms-transform 0.2s ease;
+  transition: transform 0.2s ease;
+  -webkit-transform: translateX(-120%);
+  -moz-transform: translateX(-120%);
+  -o-transform: translateX(-120%);
+  -ms-transform: translateX(-120%);
+  transform: translateX(-120%);
+  z-index: 10;
+  border-right: 1px solid #ccc;
+}
+#slide-menu .main-menu {
+  margin: 0;
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+  -webkit-transition: -webkit-transform 0.2s ease;
+  -moz-transition: -moz-transform 0.2s ease;
+  -o-transition: -o-transform 0.2s ease;
+  -ms-transition: -ms-transform 0.2s ease;
+  transition: transform 0.2s ease;
+}
+#slide-menu .main-menu a {
+  display: block;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+#slide-menu .main-menu.unactive {
+  -webkit-transform: translateX(-120%);
+  -moz-transform: translateX(-120%);
+  -o-transform: translateX(-120%);
+  -ms-transform: translateX(-120%);
+  transform: translateX(-120%);
+}
+#slide-menu .sub-menus {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  -webkit-transform: translateX(120%);
+  -moz-transform: translateX(120%);
+  -o-transform: translateX(120%);
+  -ms-transform: translateX(120%);
+  transform: translateX(120%);
+  -webkit-transition: -webkit-transform 0.2s ease;
+  -moz-transition: -moz-transform 0.2s ease;
+  -o-transition: -o-transform 0.2s ease;
+  -ms-transition: -ms-transform 0.2s ease;
+  transition: transform 0.2s ease;
+}
+#slide-menu .sub-menus h2 {
+  margin: 0;
+}
+#slide-menu .sub-menus a,
+#slide-menu .sub-menus h3 {
+  display: block;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+#slide-menu .sub-menus.active {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+#slide-menu .sub-menus .sub-menu {
+  display: none;
+}
+#slide-menu .sub-menus .sub-menu.active {
+  display: block;
+}
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+
+  <div class="body-wrapper">
+    This is the main body.
+    <button id="slide-menu-button">Open Slide Menu</button>
+  </div>
+
+  <div id="slide-menu">
+
+    <ul class="main-menu">
+      <li class="has-sub-menu" data-menu-id="0">
+        <a href="#main-menu-0">Main Menu 0</a>
+      </li>
+      <li class="has-sub-menu" data-menu-id="1">
+        <a href="#main-menu-1">Main Menu 1</a>
+      </li>
+      <li class="has-sub-menu" data-menu-id="2">
+        <a href="#main-menu-2">Main Menu 2</a>
+      </li>
+      <li>
+        <a href="http://gxding.com">Direct Link</a>
+      </li>
+    </ul>
+
+    <div class="sub-menus">
+      <div class="sub-menu" data-parent-menu-id="0">
+        <h2><a href="#" class="back-to-main">< Main Menu 0</a></h2>
+        <div class="sub-menu-content">
+          <ul class="sub-section">
+            <li><a href="#sub-menu-0">Sub Menu 0</a></li>
+            <li><a href="#sub-menu-1">Sub Menu 1</a></li>
+            <li><a href="#sub-menu-2">Sub Menu 2</a></li>
+            <li><a href="#sub-menu-3">Sub Menu 3</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-menu" data-parent-menu-id="1">
+        <h2><a href="#" class="back-to-main">< Main Menu 1</a></h2>
+        <div class="sub-menu-content">
+          <ul class="sub-section">
+            <li><a href="#sub-menu-0">Sub Menu 0</a></li>
+            <li><a href="#sub-menu-1">Sub Menu 1</a></li>
+            <li><a href="#sub-menu-2">Sub Menu 2</a></li>
+            <li><a href="#sub-menu-3">Sub Menu 3</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-menu" data-parent-menu-id="2">
+        <h2><a href="#" class="back-to-main">< Main Menu 2</a></h2>
+        <div class="sub-menu-content">
+          <ul class="sub-section">
+            <li><a href="#sub-menu-0">Sub Menu 0</a></li>
+            <li><a href="#sub-menu-1">Sub Menu 1</a></li>
+            <li><a href="#sub-menu-2">Sub Menu 2</a></li>
+            <li><a href="#sub-menu-3">Sub Menu 3</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<script>
+(function() {
+
+  // slide menu
+  var $body = $('body');
+  $body.on('click', '#slide-menu-button', function(e) {
+    e.preventDefault();
+    $body.toggleClass('slide-menu-active');
+
+    if ($body.hasClass('slide-menu-active')) {
+      $body.one('click.body-wrapper', '.body-wrapper', function(e) {
+        e.preventDefault();
+        $body
+          .removeClass('slide-menu-active')
+          .off('touchend.body-wrapper');
+      }).one('touchend.body-wrapper', '.body-wrapper', function(e) {
+        e.preventDefault();
+        $body
+          .removeClass('slide-menu-active')
+          .off('click.body-wrapper');
+      });
+    }
+  });
+
+  // sub menu
+  $body.on('click', '.has-sub-menu > a', function(e) {
+    e.preventDefault();
+    var $menu = $(this).parent();
+    var $subMenu = $('.sub-menus ' + '[data-parent-menu-id=' + $menu.data('menu-id') + ']');
+
+    if ($subMenu.length) {
+      $subMenu.addClass('active');
+      $('.sub-menus').addClass('active');
+      $('.main-menu').addClass('unactive');
+    }
+  });
+  
+  // go back to main menu
+  $body.on('click', '.back-to-main', function(e) {
+    e.preventDefault();
+    var $thisSubMenu = $(this).closest('.sub-menu');
+
+    $('.sub-menus').removeClass('active');
+    $('.main-menu').removeClass('unactive');
+
+    setTimeout(function() {
+      $thisSubMenu.removeClass('active');
+    }, 300);
+  });
+
+})();
+</script>
+  </div>
+</body>
+</html>
