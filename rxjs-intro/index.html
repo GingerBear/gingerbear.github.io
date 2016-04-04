@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-twilight.min.css">
+  <title>Rx for JavaScript Rocks!</title>
+  <style>
+    .container {
+      width: 800px;
+    }
+    .alter-contianer .origin {
+      display: block;
+    }
+    .alter-contianer .alter {
+      display: none;
+    }
+    .alter-contianer:hover .origin {
+      display: none;
+    }
+    .alter-contianer:hover .alter {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <h2>What is RxJS</h2>
+  <div class="alter-contianer">
+  <pre class="origin"><code class="language-scss">lodash for events</code></pre>
+  <pre class="alter"><code class="language-scss">// full version
+RxJS is a library for composing asynchronous and event-based programs by
+using observable sequences. It provides one core type, the Observable,
+satellite types (Observer, Schedulers, Subjects) and operators inspired
+by Array#extras (map, filter, reduce, every, etc) to allow handling asynchronous
+events as collections.</code></pre>
+  </div>
+
+  <h2>What it can do? </h2>
+  <div class="alter-contianer">
+  <pre class="origin"><code class="language-javascript">const source = getAsyncStockData();
+
+const subscription = source
+  .filter(quote => quote.price > 30)
+  .map(quote => quote.price)
+  .subscribe(
+    price => console.log(`Prices higher than $30: ${price}`),
+    err => console.log(`Something went wrong: ${err.message}`);
+  );</code></pre>
+  <pre class="alter"><code class="language-javascript">// callback version, but only happened once
+getAsyncStockData(function(err, quote) {
+  if (err) {
+    return console.log(`Something went wrong: ${err.message}`);
+  }
+  var price = quote.price;
+  if (price > 30) {
+    return console.log(`Prices higher than $30: ${price}`);
+  }
+});</code></pre>
+  </div>
+  </div>
+
+    <h2>Example</h2>
+    <ul>
+      <li><a href="./autocomplete/rxjs/autocomplete.html">Autocomplete RxJS</a></li>
+      <li><a href="./autocomplete/jquery/autocomplete.html">Autocomplete jQuery</a></li>
+    </ul>
+
+    <h2>More</h2>
+    <ul>
+      <li><a href="https://gist.github.com/staltz/868e7e9bc2a7b8c1f754">The introduction to Reactive Programming you've been missing</a></li>
+      <li><a href="https://egghead.io/series/cycle-js-fundamentals">Cycle.js Fundamentals</a></li>
+      <li><a href="http://bytes.inso.cc/talks/funjs-reactive/#/home">State Your Business - A journey in the world of Reactive Programming with JavaScript</a></li>
+    </ul>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/prism.min.js"></script>
+</body>
+</html>
