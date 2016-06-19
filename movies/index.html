@@ -98,8 +98,9 @@
       margin-right: 5px;
     }
 
-    i.icon {
+    .icon {
       background-size: 100%;
+      background-repeat: no-repeat;
       width: 20px;
       height: 30px;
       display: inline-block;
@@ -107,22 +108,26 @@
     }
 
     .tomato-fresh {
-      background: url('./img/tomato-fresh.png') no-repeat;
+      background-image: url('./img/tomato-fresh.png');
     }
     .popcorn-full {
-      background: url('./img/popcorn-full.png') no-repeat;
+      background-image: url('./img/popcorn-full.png');
+      width: 18px;
     }
     .popcorn-spilled {
-      background: url('./img/popcorn-spilled.png') no-repeat;
+      background-image: url('./img/popcorn-spilled.png');
+      width: 25px;
     }
     .tomato-rotten {
-      background: url('./img/tomato-rotten.png') no-repeat;
+      background-image: url('./img/tomato-rotten.png');
     }
     .tomato-certified {
-      background: url('./img/tomato-certified.png') no-repeat;
+      background-image: url('./img/tomato-certified.png');
+      width: 25px;
     }
     .want-to-see {
-      background: url('./img/want-to-see.png') no-repeat;
+      background-image: url('./img/want-to-see.png');
+      width: 25px;
     }
 
     .nav {
@@ -134,12 +139,12 @@
       border-top: 1px solid #ccc;
     }
     .nav a {
-      font-size: 15px;
+      font-size: 14px;
       display: block;
       flex: 1;
       text-align: center;
       color: #555;
-      padding: 15px 0;
+      padding: 12px 0;
       text-decoration: none;
       background: #eee;
     }
