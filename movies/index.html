@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movies</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+</head>
+<body>
+  <div class="container"></div>
+
+  <script id="movieTemplate" type="text/x-handlebars-template">
+    <div class="last-update">last update: {{lastUpdateTime}}</div>
+    <div class="nav">
+      <a href="#section-0">New</a>
+      <a href="#section-1">Top</a>
+      <a href="#section-2">Upcoming</a>
+    </div>
+    {{#each sections}}
+    <div class="section" id="section-{{@key}}">
+      <h2>{{title}}</h2>
+      <div class="movies">
+        {{#each items}}
+          <div class="movie">
+            <a class="link" href="http://www.flixster.com{{href}}"><img src="{{poster}}" alt="{{title}}"></a>
+            <div class="content">
+              <h3>{{title}}</h3>
+              <div class="release-date">{{releaseDate}}</div>
+              <div class="scores">
+              {{#each scores}}
+                <span><i class="icon {{type}}"></i> {{value}}</span>
+              {{/each}}
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </script>
+
+  <script>
+    var render = Handlebars.compile($('#movieTemplate').html());
+    $.get('./data.json').done(function(data) {
+      data.lastUpdateTime = new Date(data.lastUpdateTime).toLocaleString();
+      $('.container').html(render(data));
+    });
+  </script>
+
+  <style>
+    * {
+      font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    }
+    body {
+      margin: 0;
+    }
+    h2 {
+      background: #eee;
+      padding: 10px;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+    h3 {
+      margin: 0;
+    }
+    .last-update {
+      font-size: 15px;
+      color: #999;
+    }
+    .movie {
+      overflow: hidden;
+      padding: 20px 0;
+    }
+    .movie:nth-child(even) {
+      background: #f8f8f8;
+    }
+    .movie .link {
+      float: left;
+      margin-right: 20px;
+      width: 20%;
+    }
+    .movie .link img {
+      width: 100%;
+    }
+    .movie .release-date {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    i.icon {
+      background-size: 100%;
+      width: 40px;
+      height: 55px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .tomato-fresh {
+      background: url('./img/tomato-fresh.png') no-repeat;
+    }
+    .popcorn-full {
+      background: url('./img/popcorn-full.png') no-repeat;
+    }
+    .popcorn-spilled {
+      background: url('./img/popcorn-spilled.png') no-repeat;
+    }
+    .tomato-rotten {
+      background: url('./img/tomato-rotten.png') no-repeat;
+    }
+    .tomato-certified {
+      background: url('./img/tomato-certified.png') no-repeat;
+    }
+    .want-to-see {
+      background: url('./img/want-to-see.png') no-repeat;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      background: #eee;
+      border-top: 1px solid #ccc;
+    }
+    .nav a {
+      font-size: 35px;
+      display: block;
+      flex: 1;
+      text-align: center;
+      color: #555;
+      padding: 30px 0;
+      text-decoration: none;
+      background: #eee;
+    }
+    .nav a:nth-child(even) {
+      background: #fff;
+    }
+  </style>
+</body>
+</html>
