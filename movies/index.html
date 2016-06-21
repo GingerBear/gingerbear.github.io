@@ -8,49 +8,673 @@
   <meta name="MobileOptimized" content="320">
   <meta http-equiv="cleartype" content="on">
   <title>Movies</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 </head>
 <body>
-  <div class="container"></div>
-
-  <script id="movieTemplate" type="text/x-handlebars-template">
-    <div class="last-update">last update: {{lastUpdateTime}}</div>
-    <div class="nav">
-      <a href="#section-0">New</a>
-      <a href="#section-1">Top</a>
-      <a href="#section-2">Upcoming</a>
-    </div>
-    {{#each sections}}
-    <div class="section" id="section-{{@key}}">
-      <h2>{{title}}</h2>
-      <div class="movies">
-        {{#each items}}
-          <div class="movie">
-            <a class="link" href="http://www.flixster.com{{href}}"><img src="{{poster}}" alt="{{title}}"></a>
-            <div class="content">
-              <h3>{{title}}</h3>
-              <div class="release-date">{{releaseDate}}</div>
-              <div class="scores">
-              {{#each scores}}
-                <span class="score"><i class="icon {{type}}"></i> {{value}}</span>
-              {{/each}}
-              </div>
-            </div>
+  <div class="container"><div class="last-update">last update: 1466479570884</div>
+<div class="nav">
+  <a href="#section-0">New</a>
+  <a href="#section-1">Top</a>
+  <a href="#section-2">Upcoming</a>
+</div>
+<div class="section" id="section-0">
+  <h2>Open This Week</h2>
+  <div class="movies">
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/independence-day-resurgence"><img src="http://resizing.flixster.com/u0rd6hj3ZRFtBnsSh-mLKOpjwCU&#x3D;/180x267/v1.bTsxMTU3MzQxNDtqOzE3MTQyOzIwNDg7MjAyNTszMDAw" alt="Independence Day: Resurgence"></a>
+        <div class="content">
+          <h3>Independence Day: Resurgence</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 98%</span>
           </div>
-        {{/each}}
+        </div>
       </div>
-    </div>
-    {{/each}}
-  </script>
-
-  <script>
-    var render = Handlebars.compile($('#movieTemplate').html());
-    $.get('./data.json').done(function(data) {
-      data.lastUpdateTime = new Date(data.lastUpdateTime).toLocaleString();
-      $('.container').html(render(data));
-    });
-  </script>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/free-state-of-jones"><img src="http://resizing.flixster.com/MwThXUHKgzaYudFc4jAX8TghxEg&#x3D;/180x259/v1.bTsxMjAzNjU3MDtqOzE3MDI5OzIwNDg7MTk2MjsyODI2" alt="Free State of Jones"></a>
+        <div class="content">
+          <h3>Free State of Jones</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 97%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-shallows"><img src="http://resizing.flixster.com/3jV3OE5kGtMSLqlwIKpyqCnvgRM&#x3D;/180x267/v1.bTsxMTczMDA5NztqOzE3MDQ3OzIwNDg7MjAyNTszMDAw" alt="The Shallows"></a>
+        <div class="content">
+          <h3>The Shallows</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 95%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/swiss-army-man"><img src="http://resizing.flixster.com/gfJKukZi3umQe5h6wVfXDHbDwiw&#x3D;/180x267/v1.bTsxMTg5OTk0MTtqOzE3MDE4OzIwNDg7NDA1MDs2MDAw" alt="Swiss Army Man"></a>
+        <div class="content">
+          <h3>Swiss Army Man</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 67%</span>
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+            <span class="score"><i class="icon douban"></i> 8.8</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-neon-demon"><img src="http://resizing.flixster.com/o23gpeeEXZJJGqMNwmXplHqzt_M&#x3D;/175x270/v1.bTsxMTg5OTk0ODtwOzE3MDI1OzIwNDg7MzAwOzQ2Mw" alt="The Neon Demon"></a>
+        <div class="content">
+          <h3>The Neon Demon</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 50%</span>
+            <span class="score"><i class="icon want-to-see"></i> 88%</span>
+            <span class="score"><i class="icon douban"></i> 6.7</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/hunt-for-the-wilderpeople"><img src="http://resizing.flixster.com/Vn-NzT81J0OGAoS6wOPEELITE_4&#x3D;/180x267/v1.bTsxMTkzOTg0MjtwOzE3MDUwOzIwNDg7NDc4OzcwOA" alt="Hunt for the Wilderpeople"></a>
+        <div class="content">
+          <h3>Hunt for the Wilderpeople</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 100%</span>
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+            <span class="score"><i class="icon douban"></i> 8.7</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/wiener-dog"><img src="http://resizing.flixster.com/PtfJv-hOeU8KuQAHSnC_neabWsU&#x3D;/180x257/v1.bTsxMTk3NjEzNDtqOzE3MDI3OzIwNDg7Mjg0OzQwNQ" alt="Wiener-Dog"></a>
+        <div class="content">
+          <h3>Wiener-Dog</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 76%</span>
+            <span class="score"><i class="icon want-to-see"></i> 85%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-duel-2016"><img src="http://resizing.flixster.com/2B2GNBYQ-qRi4oMwR-ihiK8zzo0&#x3D;/180x267/v1.bTsxMTg2OTI1OTtwOzE3MDI2OzIwNDg7NDY4OzY5NQ" alt="The Duel"></a>
+        <div class="content">
+          <h3>The Duel</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 91%</span>
+            <span class="score"><i class="icon douban"></i> 7.9</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-phenom-2016"><img src="http://resizing.flixster.com/rzWzswd9nC5Wo5YnIaYWRYeIjgk&#x3D;/180x265/v1.bTsxMTkyMjUyMztqOzE3MDU1OzIwNDg7NTcwOzg0MA" alt="The Phenom"></a>
+        <div class="content">
+          <h3>The Phenom</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/eat-that-question-frank-zappa-in-his-own-words"><img src="http://resizing.flixster.com/sTHI_6kXXPCt8bL_1TXELJe0_3c&#x3D;/180x265/v1.bTsxMTk4MDYyNTtqOzE3MDE4OzIwNDg7ODI3NTsxMjE3NQ" alt="Eat That Question: Frank Zappa in His Own Words"></a>
+        <div class="content">
+          <h3>Eat That Question: Frank Zappa in His Own Words</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 100%</span>
+            <span class="score"><i class="icon want-to-see"></i> 90%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/right-now-wrong-then"><img src="http://resizing.flixster.com/YjsUGds3B3r1MBgff-nRFjClruQ&#x3D;/180x266/v1.bTsxMTgxMDYxMDtqOzE3MDExOzIwNDg7NTYwOzgyOQ" alt="Right Now, Wrong Then"></a>
+        <div class="content">
+          <h3>Right Now, Wrong Then</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 93%</span>
+            <span class="score"><i class="icon want-to-see"></i> 94%</span>
+            <span class="score"><i class="icon douban"></i> 7.4</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/nuts-2016"><img src="http://resizing.flixster.com/UHFT3vhCrqsNFcVRcdOLVt8ujVQ&#x3D;/180x260/v1.bTsxMTg5MDkxMTtqOzE3MDMzOzIwNDg7Mjc2NDszOTky" alt="Nuts!"></a>
+        <div class="content">
+          <h3>Nuts!</h3>
+          <div class="release-date">June 22, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 100%</span>
+            <span class="score"><i class="icon want-to-see"></i> 96%</span>
+            <span class="score"><i class="icon douban"></i> 8.7</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/breaking-a-monster"><img src="http://resizing.flixster.com/toTI8U3Fo-QymuGNwTimW0EvXN4&#x3D;/180x263/v1.bTsxMjAwNzY2NTtqOzE3MDEzOzIwNDg7NTcwOzgzNA" alt="Breaking A Monster"></a>
+        <div class="content">
+          <h3>Breaking A Monster</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 100%</span>
+            <span class="score"><i class="icon want-to-see"></i> 100%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/river-2016"><img src="http://resizing.flixster.com/TtzW6Ygnz99an49HTPxaSmujFb4&#x3D;/180x257/v1.bTsxMTIwMzYwNjtqOzE3MDk1OzIwNDg7Mjg0OzQwNQ" alt="River"></a>
+        <div class="content">
+          <h3>River</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 88%</span>
+            <span class="score"><i class="icon want-to-see"></i> 97%</span>
+            <span class="score"><i class="icon douban"></i> 8.7</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/septembers-of-shiraz"><img src="http://resizing.flixster.com/Lzbhy4SblbKDtcKBiy4pQ2DgBB8&#x3D;/180x265/v1.bTsxMjA0ODI1OTtqOzE3MDE4OzIwNDg7Njk1OzEwMjQ" alt="Septembers Of Shiraz"></a>
+        <div class="content">
+          <h3>Septembers Of Shiraz</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 92%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/les-cowboys"><img src="http://resizing.flixster.com/rMxSCd_ztN91k8SMAN5OBkPhiUk&#x3D;/180x262/v1.bTsxMTk4MDYxNjtqOzE3MDU0OzIwNDg7NzA0OzEwMjQ" alt="Les Cowboys"></a>
+        <div class="content">
+          <h3>Les Cowboys</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 71%</span>
+            <span class="score"><i class="icon want-to-see"></i> 92%</span>
+            <span class="score"><i class="icon douban"></i> 7.6</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-call-up"><img src="http://resizing.flixster.com/p5tWbg9AouJOB_xobnRJhfms5XQ&#x3D;/180x240/v1.bTsxMTk0MzQ0NjtqOzE3MDU0OzIwNDg7MTUzNjsyMDQ4" alt="The Call Up"></a>
+        <div class="content">
+          <h3>The Call Up</h3>
+          <div class="release-date">June 24, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 81%</span>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="section" id="section-1">
+  <h2>Top Box Office</h2>
+  <div class="movies">
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/finding-dory"><img src="http://resizing.flixster.com/bxlokQTTtpqDuMNEIhn49RMbcOw&#x3D;/180x265/v1.bTsxMTY4NTUzMDtwOzE3MDMwOzIwNDg7NDMyOzYzNw" alt="Finding Dory"></a>
+        <div class="content">
+          <h3>Finding Dory</h3>
+          <div class="release-date">June 17, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 94%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 90%</span>
+            <span class="score"><i class="icon douban"></i> 7.5</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/central-intelligence"><img src="http://resizing.flixster.com/CMv2Cc2qEhRuOS3K9B0AT15a0zQ&#x3D;/180x267/v1.bTsxMTk0NjQ4MztqOzE3MDMxOzIwNDg7ODAwOzExODY" alt="Central Intelligence"></a>
+        <div class="content">
+          <h3>Central Intelligence</h3>
+          <div class="release-date">June 17, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 66%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 76%</span>
+            <span class="score"><i class="icon douban"></i> 6.9</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-conjuring-2"><img src="http://resizing.flixster.com/BbBR12-tlSgY27BHsrqeDk9jXBI&#x3D;/180x267/v1.bTsxMTg4MjMyOTtqOzE3MDQ2OzIwNDg7MTQxNzsyMTAw" alt="The Conjuring 2"></a>
+        <div class="content">
+          <h3>The Conjuring 2</h3>
+          <div class="release-date">June 10, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 77%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 87%</span>
+            <span class="score"><i class="icon douban"></i> 8.1</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/now-you-see-me-2"><img src="http://resizing.flixster.com/lVi_SdODKWE8tnLvtla2hGaTpJA&#x3D;/178x270/v1.bTsxMTg2MzA5NztqOzE3MDI5OzIwNDg7NTAwMDs3NjAw" alt="Now You See Me 2"></a>
+        <div class="content">
+          <h3>Now You See Me 2</h3>
+          <div class="release-date">June 10, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 34%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 64%</span>
+            <span class="score"><i class="icon douban"></i> 6.6</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/warcraft"><img src="http://resizing.flixster.com/PikFknrW9xUJ2qP_90p9LqbSTqg&#x3D;/171x270/v1.bTsxMTc4NTc1MjtqOzE3MDM4OzIwNDg7MzE1ODs1MDAw" alt="Warcraft"></a>
+        <div class="content">
+          <h3>Warcraft</h3>
+          <div class="release-date">June 10, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 29%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 81%</span>
+            <span class="score"><i class="icon douban"></i> 8.0</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/x-men-apocalypse"><img src="http://resizing.flixster.com/EuIrm_3MvlzWoO2K7I8lO3wAy9U&#x3D;/180x267/v1.bTsxMTk0OTYxMDtqOzE3MDUzOzIwNDg7MjAyNTszMDAw" alt="X-Men: Apocalypse"></a>
+        <div class="content">
+          <h3>X-Men: Apocalypse</h3>
+          <div class="release-date">May 27, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 48%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 72%</span>
+            <span class="score"><i class="icon douban"></i> 8.1</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/teenage-mutant-ninja-turtles-out-of-the-shadows"><img src="http://resizing.flixster.com/glmXOBIMNv0hWgqQDc-Fi2DfzhM&#x3D;/173x270/v1.bTsxMTk0MDMzNjtqOzE3MDQ5OzIwNDg7MTY5MTsyNjM5" alt="Teenage Mutant Ninja Turtles: Out of the Shadows"></a>
+        <div class="content">
+          <h3>Teenage Mutant Ninja Turtles: Out of the Shadows</h3>
+          <div class="release-date">June 3, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 37%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 55%</span>
+            <span class="score"><i class="icon douban"></i> 6.4</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/alice-in-wonderland-through-the-looking-glass"><img src="http://resizing.flixster.com/WgMGBXD1Tz5L_yjiC53EQycQdFM&#x3D;/180x267/v1.bTsxMTU5MTQyODtqOzE3MTEyOzIwNDg7ODY0OzEyODA" alt="Alice Through the Looking Glass"></a>
+        <div class="content">
+          <h3>Alice Through the Looking Glass</h3>
+          <div class="release-date">May 27, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 30%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 56%</span>
+            <span class="score"><i class="icon douban"></i> 6.7</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/me-before-you"><img src="http://resizing.flixster.com/lBkL7wMgWgX-icE8uohDBR-Jzy8&#x3D;/180x267/v1.bTsxMTU0Mzc3MztqOzE3MTExOzIwNDg7NDA1OzYwMA" alt="Me Before You"></a>
+        <div class="content">
+          <h3>Me Before You</h3>
+          <div class="release-date">June 3, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 57%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 79%</span>
+            <span class="score"><i class="icon douban"></i> 7.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/captain-america-civil-war"><img src="http://resizing.flixster.com/WogbOKaNoV7NFGpmEHMWh3l__n0&#x3D;/180x266/v1.bTsxMTY5MDA3MDtwOzE3MDI1OzIwNDg7NDg4OzcyMA" alt="Captain America: Civil War"></a>
+        <div class="content">
+          <h3>Captain America: Civil War</h3>
+          <div class="release-date">May 6, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 90%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 91%</span>
+            <span class="score"><i class="icon douban"></i> 7.8</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-angry-birds-movie"><img src="http://resizing.flixster.com/i3MlBk0uOjtww8-1uINqz0mDti0&#x3D;/180x267/v1.bTsxMTg0MjIwMztqOzE3MDE1OzIwNDg7MjAyNTszMDAw" alt="The Angry Birds Movie"></a>
+        <div class="content">
+          <h3>The Angry Birds Movie</h3>
+          <div class="release-date">May 20, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 43%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 51%</span>
+            <span class="score"><i class="icon douban"></i> 7.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-jungle-book-2016"><img src="http://resizing.flixster.com/NqkX5NCydzykfulEJmFsWbMbTn8&#x3D;/180x266/v1.bTsxMTY1Mzk2MztqOzE3MTQyOzIwNDg7MTAxNDsxNTAw" alt="The Jungle Book"></a>
+        <div class="content">
+          <h3>The Jungle Book</h3>
+          <div class="release-date">April 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 94%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 90%</span>
+            <span class="score"><i class="icon douban"></i> 7.9</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/zootopia"><img src="http://resizing.flixster.com/OydwmKhhmIm37K03HvI_8b_OpSE&#x3D;/180x267/v1.bTsxMTMxODA2ODtwOzE3MTIzOzIwNDg7NDk5Ozc0MQ" alt="Zootopia"></a>
+        <div class="content">
+          <h3>Zootopia</h3>
+          <div class="release-date">March 4, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 98%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 94%</span>
+            <span class="score"><i class="icon douban"></i> 9.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-nice-guys"><img src="http://resizing.flixster.com/kkq2xxd7AiB0sTy32aiS6pxk-hA&#x3D;/180x267/v1.bTsxMTczNDYzMTtqOzE3MDM2OzIwNDg7NDA1MDs2MDAw" alt="The Nice Guys"></a>
+        <div class="content">
+          <h3>The Nice Guys</h3>
+          <div class="release-date">May 20, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 91%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 82%</span>
+            <span class="score"><i class="icon douban"></i> 7.4</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/love-and-friendship"><img src="http://resizing.flixster.com/2R-yAgF_Ee6QyIveHsYCiLgeKO4&#x3D;/180x267/v1.bTsxMTc3NzU2MTtqOzE3MDM3OzIwNDg7NTUyOzgxOA" alt="Love &amp; Friendship"></a>
+        <div class="content">
+          <h3>Love &amp; Friendship</h3>
+          <div class="release-date">May 13, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 99%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 71%</span>
+            <span class="score"><i class="icon douban"></i> 6.8</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-lobster"><img src="http://resizing.flixster.com/NotMbb2vtneaSWp2G8SpxVg-CDY&#x3D;/180x267/v1.bTsxMTczNDYzMDtqOzE3MDM1OzIwNDg7ODExMDsxMjAyNg" alt="The Lobster"></a>
+        <div class="content">
+          <h3>The Lobster</h3>
+          <div class="release-date">May 13, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 90%</span>
+            <span class="score"><i class="icon popcorn-full"></i> 70%</span>
+            <span class="score"><i class="icon douban"></i> 7.5</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/maggies-plan-2016"><img src="http://resizing.flixster.com/Gje37fxr4cYKiqwdrFMBZKjNKco&#x3D;/180x265/v1.bTsxMTY0NDk2OTtqOzE3MTAzOzIwNDg7NDEzODs2MDg4" alt="Maggie&#x27;s Plan"></a>
+        <div class="content">
+          <h3>Maggie&#x27;s Plan</h3>
+          <div class="release-date">May 20, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-certified"></i> 85%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 59%</span>
+            <span class="score"><i class="icon douban"></i> 6.6</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/neighbors-2-sorority-rising"><img src="http://resizing.flixster.com/N541GM2FeXb4RtHzf75nMYatn5A&#x3D;/171x270/v1.bTsxMTg5MDkzNDtqOzE3MDU2OzIwNDg7MTIxMzsxOTIw" alt="Neighbors 2: Sorority Rising"></a>
+        <div class="content">
+          <h3>Neighbors 2: Sorority Rising</h3>
+          <div class="release-date">May 20, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 62%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 52%</span>
+            <span class="score"><i class="icon douban"></i> 5.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/genius-2016"><img src="http://resizing.flixster.com/gtD1MJ2cVkyaFKIKdF3nTCX7icY&#x3D;/180x266/v1.bTsxMTc4NTYzNTtwOzE3MDExOzIwNDg7MTk2OzI5MA" alt="Genius"></a>
+        <div class="content">
+          <h3>Genius</h3>
+          <div class="release-date">June 10, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 46%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 58%</span>
+            <span class="score"><i class="icon douban"></i> 7.5</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/money-monster"><img src="http://resizing.flixster.com/7MQYfNdd4ZlHf9AQLA9-t7nJ0JM&#x3D;/180x267/v1.bTsxMTg0MjIwMTtqOzE3MDEzOzIwNDg7MjAyNTszMDAw" alt="Money Monster"></a>
+        <div class="content">
+          <h3>Money Monster</h3>
+          <div class="release-date">May 13, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 55%</span>
+            <span class="score"><i class="icon popcorn-spilled"></i> 59%</span>
+            <span class="score"><i class="icon douban"></i> 7.2</span>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="section" id="section-2">
+  <h2>Upcoming Movies</h2>
+  <div class="movies">
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-legend-of-tarzan"><img src="http://resizing.flixster.com/BWn0Xe8X1CX32ChC6Mi4rsOI1XM&#x3D;/180x267/v1.bTsxMTk1NDYwNjtqOzE3MDU0OzIwNDg7NTc0Ozg1MQ" alt="The Legend of Tarzan"></a>
+        <div class="content">
+          <h3>The Legend of Tarzan</h3>
+          <div class="release-date">July 1, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 98%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-purge-election-year"><img src="http://resizing.flixster.com/IZkVuzZmU5H--cISaG47SEUbDi0&#x3D;/171x270/v1.bTsxMjAwNzY3NDtqOzE3MDIyOzIwNDg7NTAwMDs3OTE3" alt="The Purge: Election Year"></a>
+        <div class="content">
+          <h3>The Purge: Election Year</h3>
+          <div class="release-date">July 1, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 94%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-bfg-2016"><img src="http://resizing.flixster.com/-rG0Y_lpDVqKGs5ctDxHAJc-qx0&#x3D;/180x267/v1.bTsxMTkzMTU2NTtqOzE3MDUzOzIwNDg7MTY4ODsyNTAw" alt="The BFG"></a>
+        <div class="content">
+          <h3>The BFG</h3>
+          <div class="release-date">July 1, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 71%</span>
+            <span class="score"><i class="icon want-to-see"></i> 97%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/our-kind-of-traitor-2016"><img src="http://resizing.flixster.com/s6OHZ9Mx56i2MTX2vx9iRQjXoWI&#x3D;/180x267/v1.bTsxMTgzNzY4NztqOzE3MDQ0OzIwNDg7NDA1OzYwMA" alt="Our Kind of Traitor"></a>
+        <div class="content">
+          <h3>Our Kind of Traitor</h3>
+          <div class="release-date">July 1, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 80%</span>
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+            <span class="score"><i class="icon douban"></i> 6.6</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-secret-life-of-pets"><img src="http://resizing.flixster.com/i-PqkVOjdFaWc-jukeZnPPpFHwc&#x3D;/171x270/v1.bTsxMTUxMDc2OTtqOzE3MTM3OzIwNDg7NDgwOzc2MA" alt="The Secret Life of Pets"></a>
+        <div class="content">
+          <h3>The Secret Life of Pets</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 78%</span>
+            <span class="score"><i class="icon want-to-see"></i> 99%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/mike-and-dave-need-wedding-dates"><img src="http://resizing.flixster.com/KcK5AfBr9aA4whvL1x3GRYuCkZg&#x3D;/180x257/v1.bTsxMTU2NDM5NztqOzE3MTI1OzIwNDg7Mjg0OzQwNQ" alt="Mike and Dave Need Wedding Dates"></a>
+        <div class="content">
+          <h3>Mike and Dave Need Wedding Dates</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 95%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/captain-fantastic"><img src="http://resizing.flixster.com/lXlTbTL8ACExWdFgbfRQ806LAyo&#x3D;/180x267/v1.bTsxMTg2OTI1NztqOzE3MDI0OzIwNDg7MTA4MDsxNjAw" alt="Captain Fantastic"></a>
+        <div class="content">
+          <h3>Captain Fantastic</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 71%</span>
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/cell-2016"><img src="http://resizing.flixster.com/3owcm7EzVG3oigHeaf3glj1O3f0&#x3D;/180x267/v1.bTsxMTg2NjEwNDtqOzE3MDIxOzIwNDg7NTc0Ozg1MQ" alt="Cell"></a>
+        <div class="content">
+          <h3>Cell</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon popcorn-spilled"></i> 15%</span>
+            <span class="score"><i class="icon douban"></i> 4.5</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/fathers-and-daughters"><img src="http://resizing.flixster.com/CIZKpTEHJgd795VFSJCSj5xVbb0&#x3D;/180x267/v1.bTsxMTg5NTQ0OTtqOzE3MDI2OzIwNDg7NTY3Ozg0MA" alt="Fathers And Daughters"></a>
+        <div class="content">
+          <h3>Fathers And Daughters</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 27%</span>
+            <span class="score"><i class="icon want-to-see"></i> 80%</span>
+            <span class="score"><i class="icon douban"></i> 7.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/our-little-sister"><img src="http://resizing.flixster.com/FTv74M1IHxvFnIjRiagonV_u1ho&#x3D;/180x257/v1.bTsxMTIwMzY0MjtqOzE3MTMxOzIwNDg7Mjg0OzQwNQ" alt="Our Little Sister (Umimachi Diary) (Umi-gai Diary)"></a>
+        <div class="content">
+          <h3>Our Little Sister (Umimachi Diary) (Umi-gai Diary)</h3>
+          <div class="release-date">July 8, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 93%</span>
+            <span class="score"><i class="icon want-to-see"></i> 73%</span>
+            <span class="score"><i class="icon douban"></i> 8.6</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/ghostbusters-iii"><img src="http://resizing.flixster.com/5-fJVoM8pG60ljcMwJlPpUgHijI&#x3D;/180x240/v1.bTsxMTU1NzA0MDtqOzE3MTAzOzIwNDg7MzAwMDs0MDAw" alt="Ghostbusters"></a>
+        <div class="content">
+          <h3>Ghostbusters</h3>
+          <div class="release-date">July 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 93%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/the-infiltrator-2016"><img src="http://resizing.flixster.com/tgqpMUmamOdzihhUUECbs2mgRTg&#x3D;/180x267/v1.bTsxMTg0MjIwMDtqOzE3MDEyOzIwNDg7MTk0NDsyODgw" alt="The Infiltrator"></a>
+        <div class="content">
+          <h3>The Infiltrator</h3>
+          <div class="release-date">July 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 98%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/cafe-society-2016"><img src="http://resizing.flixster.com/DtFjV0EuMULlDw0Hd-grSdjyhSU&#x3D;/180x257/v1.bTsxMTg2MDAyODtqOzE3MDIwOzIwNDg7Mjg0OzQwNQ" alt="Caf� Society"></a>
+        <div class="content">
+          <h3>Caf� Society</h3>
+          <div class="release-date">July 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-fresh"></i> 73%</span>
+            <span class="score"><i class="icon want-to-see"></i> 97%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/equals-2016"><img src="http://resizing.flixster.com/bQRag9Gcb3vEp2WMp_-n0Oldzr0&#x3D;/180x257/v1.bTsxMTU3MzQyMDtqOzE3MTAzOzIwNDg7Mjg0OzQwNQ" alt="Equals"></a>
+        <div class="content">
+          <h3>Equals</h3>
+          <div class="release-date">July 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon tomato-rotten"></i> 52%</span>
+            <span class="score"><i class="icon want-to-see"></i> 92%</span>
+            <span class="score"><i class="icon douban"></i> 6.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/tulip-fever"><img src="http://resizing.flixster.com/wHFc2UHhV7-V_GhdtSH0oHDRW8w&#x3D;/180x267/v1.bTsxMTk1MjE0MztqOzE3MDIxOzIwNDg7MzY3OzU0NA" alt="Tulip Fever"></a>
+        <div class="content">
+          <h3>Tulip Fever</h3>
+          <div class="release-date">July 15, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 95%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/ice-age-collision-course"><img src="http://resizing.flixster.com/_5MKRnEaZwAcRygYQRA8A2-C38s&#x3D;/180x240/v1.bTsxMTM2MjUwOTtqOzE3MTA1OzIwNDg7NjAwOzgwMA" alt="Ice Age: Collision Course"></a>
+        <div class="content">
+          <h3>Ice Age: Collision Course</h3>
+          <div class="release-date">July 22, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 95%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/star-trek-beyond"><img src="http://resizing.flixster.com/XIXH_W2TTaoIeYgb7AAg7QRi7ew&#x3D;/173x270/v1.bTsxMjAyNzEwMztqOzE3MDU3OzIwNDg7Mjg2OzQ0Ng" alt="Star Trek Beyond"></a>
+        <div class="content">
+          <h3>Star Trek Beyond</h3>
+          <div class="release-date">July 22, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 99%</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/lights-out-2016"><img src="http://resizing.flixster.com/_dueVJH_zP_V7bYp3S6zwT_dR5U&#x3D;/180x240/v1.bTsxMTc3NTI0NjtqOzE3MDE3OzIwNDg7MTM4MDsxODQw" alt="Lights Out"></a>
+        <div class="content">
+          <h3>Lights Out</h3>
+          <div class="release-date">July 22, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 92%</span>
+            <span class="score"><i class="icon douban"></i> 7.2</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/nerve-2016"><img src="http://resizing.flixster.com/CEp_YeKBlFvkscGyOCQ5DFQCfM8&#x3D;/180x257/v1.bTsxMTkyMjUzMztqOzE3MDIwOzIwNDg7Mjg0OzQwNQ" alt="Nerve"></a>
+        <div class="content">
+          <h3>Nerve</h3>
+          <div class="release-date">July 27, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 95%</span>
+            <span class="score"><i class="icon douban"></i> 7.8</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com/movie/jason-bourne"><img src="http://resizing.flixster.com/oiiOGM_RpE-doqyWG-3Tb0m9Xok&#x3D;/171x270/v1.bTsxMTU2MDMzODtqOzE3MTE2OzIwNDg7MzE1ODs1MDAw" alt="Jason Bourne"></a>
+        <div class="content">
+          <h3>Jason Bourne</h3>
+          <div class="release-date">July 29, 2016</div>
+          <div class="scores">
+            <span class="score"><i class="icon want-to-see"></i> 99%</span>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
 
   <style>
     * {
@@ -77,9 +701,7 @@
     .movie {
       overflow: hidden;
       padding: 5px 0;
-    }
-    .movie:nth-child(even) {
-      background: #f8f8f8;
+      border-bottom: 1px solid #eee;
     }
     .movie .link {
       float: left;
@@ -88,16 +710,19 @@
     }
     .movie .link img {
       width: 100%;
+      display: block;
     }
     .movie .release-date {
       color: #999;
       font-size: 13px;
       margin-bottom: 10px;
     }
+    .movie .content {
+      padding-right: 5px;
+    }
     .movie .score {
       margin-right: 5px;
     }
-
     .icon {
       background-size: 100%;
       background-repeat: no-repeat;
@@ -120,6 +745,7 @@
     }
     .tomato-rotten {
       background-image: url('./img/tomato-rotten.png');
+      width: 23px;
     }
     .tomato-certified {
       background-image: url('./img/tomato-certified.png');
@@ -129,6 +755,11 @@
       background-image: url('./img/want-to-see.png');
       width: 25px;
     }
+    .douban {
+      background-image: url('./img/douban.png');
+      position: relative;
+      top: 2px;
+    }
 
     .nav {
       position: fixed;
@@ -136,7 +767,8 @@
       width: 100%;
       display: flex;
       background: #eee;
-      border-top: 1px solid #ccc;
+      border-top: 1px solid #eee;
+      z-index: 1;
     }
     .nav a {
       font-size: 14px;
@@ -146,10 +778,11 @@
       color: #555;
       padding: 12px 0;
       text-decoration: none;
-      background: #eee;
-    }
-    .nav a:nth-child(even) {
       background: #fff;
+      border-right: 1px solid #eee;
+    }
+    .nav a:last-of-type {
+      border-right: none;
     }
   </style>
 </body>
