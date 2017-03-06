@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="7200">
+  <title>Clock</title>
+
+</head>
+
+<body>
+  <h1 id="time"></h1>
+  <h2>
+    <span id="date"></span>
+    <span id="weekday"></span>
+  </h2>\
+
+  <script>
+    main();
+
+    function main() {
+      updateTime();
+
+      setInterval(function () {
+        updateTime();
+      }, 1000);
+
+    }
+
+    function updateTime() {
+      var time = document.querySelector('#time');
+      var date = document.querySelector('#date');
+      var weekday = document.querySelector('#weekday');
+
+      var D = getTime();
+
+      time.innerHTML = D.time;
+      date.innerHTML = D.date;
+      weekday.innerHTML = D.day;
+    }
+
+    function getTime() {
+
+      var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+      var now = new Date();
+      var time = now.getHours() + ':' + now.getMinutes();
+      var date = now.toLocaleDateString();
+      var day = days[now.getDay()];
+
+      return {
+        date: date,
+        time: time,
+        day: day
+      }
+    }
+  </script>
+
+  <style>
+    h1 {
+      font-size: 280px;
+      margin: 0;
+    }
+    
+    h2 {
+      font-size: 100px;
+      margin: 0;
+    }
+    
+    #date {
+      margin-right: 20px;
+    }
+  </style>
+
+</body>
+
+</html>
