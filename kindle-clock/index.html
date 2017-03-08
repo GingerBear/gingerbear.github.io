@@ -25,7 +25,7 @@
 
       setInterval(function () {
         updateTime();
-      }, 1000);
+      }, 60000);
     }
 
     function updateTime() {
@@ -71,7 +71,13 @@
             $('#weather').html(
               [d.data[0], d.data[1]]
                 .map(function (date) {
-                  return '<h3><span class="desc">' + date.desc + '</span><span class="weather-date">' + date.weekday + '</span><strong>' + getHigh2Low(date.high, date.low) + '°</strong></h3><hr>'
+                  return '<div class="weather-day">'+
+                    '<div><strong class="weather-deg">' + getHigh2Low(date.high, date.low) + '°</strong></div>' +
+                    '<div>' + 
+                    '<span class="weather-date">' + date.weekday + '</span>'+
+                    '<span class="desc">' + date.desc + '</span>'
+                    '</div>' + 
+                    +'</div><hr>'
                 })
             );
           }
@@ -95,53 +101,48 @@
     body {
       margin: 8px 0;
     }
-    
+
     body.black {
       background: black;
       color: white;
     }
-    
+
     h1 {
       font-size: 290px;
       margin: 0;
       line-height: 210px;
     }
-    
+
     h2 {
-      font-size: 150px;
+      font-size: 120px;
       line-height: 130px;
       margin: 0;
     }
-    
-    h3 {
-      font-size: 160px;
+
+    .weather-deg {
+      font-size: 130px;
       line-height: 130px;
       margin: 0;
+      margin-right: 10px;
       overflow: hidden;
     }
-    
-    h3 strong {
-      float: right;
-    }
-    
-    h3 span {
-      display: block;
-    }
-    
+
     .weather-date {
-      float: right;
-      font-size: 50px;
-      width: 300px;
+      display: block;
+      font-size: 40px;
       line-height: 60px;
       padding-right: 10px;
-      text-align: right;
     }
-    
+
     .desc {
-      float: left;
-      font-size: 110px;
+      display: block;
+      font-size: 60px;
       line-height: 1;
-      width: 350px;
+      font-weight: bold;
+    }
+    .weather-day {
+      display: flex;
+      margin-bottom: 10px;
     }
   </style>
 
