@@ -36,7 +36,7 @@
       right: 0;
       left: 100%;
       transition: left 15s linear;
-      font-size: 20px;
+      font-size: 25px;
       width: 250px;
       padding-right: 20px;
       font-weight: bold;
@@ -79,7 +79,7 @@
     var slots = [];
 
     function getSlot(cb) {
-      var lines = ($('#video').height() - 20) / 20;
+      var lines = ($('#video').height() - 20) / 25;
       var slot = Math.round(Math.random() * lines);
       if (slots[slot]) {
         setTimeout(function () {
@@ -98,7 +98,7 @@
     function pushMsg(item) {
       getSlot(function (slot) {
         slots[slot] = 1;
-        var msg = $(`<p class="msg" style="top: ${slot * 20}px">${item.name || 'null'}: ${item.msg}</p>`)
+        var msg = $(`<p class="msg" style="top: ${slot * 25}px">${item.name || 'null'}: ${item.msg}</p>`)
         $('#messages').append(msg);
         setTimeout(function () {
           msg.addClass('runing')

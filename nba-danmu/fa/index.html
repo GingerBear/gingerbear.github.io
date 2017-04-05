@@ -82,6 +82,7 @@
       if (msg) {
         $('#input').val('');
         writeMsg(name, msg);
+        $('#input').focus();
       }
     }
 
@@ -89,6 +90,12 @@
       if (e.which === 13) { handleInput() }
     });
     $('#send').on('click', handleInput);
+
+    if (!$('#name').val()) {
+      $('#name').focus()
+    } else {
+      $('#input').focus();
+    }
   </script>
 
 </body>
