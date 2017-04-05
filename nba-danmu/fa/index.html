@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <title>NBA Danmu</title>
+  <style>
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+    
+    .input {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    input {
+      padding: 5px;
+      margin-bottom: 5px;
+      font-size: 20px;
+      height: 40px;
+      vertical-align: top;
+    }
+    
+    button {
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="input">
+    <div>
+      <div>
+        <input placeholder="name" width="40" type="text" id="name" />
+      </div>
+      <div>
+        <input placeholder="message" type="text" id="input" />
+      </div>
+      <div>
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCnvikYffeE5EPrHwmNNBp3uYEWwh3XrWM",
+      authDomain: "danmu-22cf4.firebaseapp.com",
+      databaseURL: "https://danmu-22cf4.firebaseio.com",
+      projectId: "danmu-22cf4",
+      storageBucket: "danmu-22cf4.appspot.com",
+      messagingSenderId: "1080436912125"
+    };
+
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
+    function writeMsg(name, msg) {
+      var newMsgRef = database.ref('game/1').push();
+      newMsgRef.set({
+        msg: msg,
+        name: name
+      });
+    }
+
+    function handleInput() {
+      var msg = $('#input').val();
+      var name = $('#name').val();
+      if (msg) {
+        $('#input').val('');
+        writeMsg(name, msg);
+      }
+    }
+
+    $('#input').on('keyup', function (e) {
+      if (e.which === 13) { handleInput() }
+    });
+    $('#send').on('click', handleInput);
+  </script>
+
+</body>
+
+</html>

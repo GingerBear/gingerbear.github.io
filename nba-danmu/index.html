@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <title>NBA Danmu</title>
+
+  <script src='http://releases.flowplayer.org/7.0.0/flowplayer.min.js'></script>
+  <script src='http://releases.flowplayer.org/hlsjs/flowplayer.hlsjs.min.js'></script>
+  <link rel='stylesheet prefetch' href='http://releases.flowplayer.org/7.0.0/skin/skin.css'>
+
+  <style>
+    * {
+      margin: 0;
+    }
+    
+    #video {
+      background: black;
+      width: 100%;
+    }
+    
+    #messages {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      top: 0;
+    }
+    
+    .msg {
+      position: absolute;
+      right: 0;
+      left: 100%;
+      transition: left 15s linear;
+      font-size: 20px;
+      width: 250px;
+      padding-right: 20px;
+      font-weight: bold;
+      text-shadow: 0 0 1px black;
+      color: yellow;
+      font-family: '黑体'
+    }
+    
+    .msg.runing {
+      left: -250px;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="video"></div>
+  <div id="messages"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCnvikYffeE5EPrHwmNNBp3uYEWwh3XrWM",
+      authDomain: "danmu-22cf4.firebaseapp.com",
+      databaseURL: "https://danmu-22cf4.firebaseio.com",
+      projectId: "danmu-22cf4",
+      storageBucket: "danmu-22cf4.appspot.com",
+      messagingSenderId: "1080436912125"
+    };
+
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+    var slots = [];
+
+    function getSlot(cb) {
+      var lines = ($('#video').height() - 20) / 20;
+      var slot = Math.round(Math.random() * lines);
+      if (slots[slot]) {
+        setTimeout(function () {
+          return getSlot(cb);
+        }, 1000);
+      } else {
+        return cb(slot);
+      }
+    }
+
+
+    database.ref('game/1').limitToLast(10).on('child_added', function (snapshot) {
+      pushMsg(snapshot.val());
+    });
+
+    function pushMsg(item) {
+      getSlot(function (slot) {
+        slots[slot] = 1;
+        var msg = $(`<p class="msg" style="top: ${slot * 20}px">${item.name || 'null'}: ${item.msg}</p>`)
+        $('#messages').append(msg);
+        setTimeout(function () {
+          msg.addClass('runing')
+          setTimeout(function () {
+            slots[slot] = 0;
+          }, 1000);
+        }, 100);
+      });
+    }
+  </script>
+
+  <script>
+    flowplayer("#video", {
+      splash: true,
+      embed: false,
+      ratio: 9 / 16,
+      hlsjs: {
+        xhrSetup: function (xhr) {
+          xhr.withCredentials = true;
+        }
+      },
+      clip: {
+        live: true,
+        sources: [
+          {
+            type: "application/x-mpegurl",
+            src: "http://nlds295.cdnak.neulion.com/nlds/nba/gsw/as/live/gsw_hd.m3u8?hdnea=expires%3D1491361009%7Eaccess%3D%2Fnlds%2Fnba%2Fgsw%2Fas%2Flive%2F*%7Emd5%3Db4adcdedb8447f08e24c04f4b5cf8cf4&nltid=nba&nltdt=6"
+          }
+        ]
+      }
+    });
+  </script>
+
+</body>
+
+</html>
