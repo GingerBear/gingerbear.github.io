@@ -79,6 +79,8 @@
     function handleInput() {
       var msg = $('#input').val();
       var name = $('#name').val();
+      localStorage.setItem('name', name || '');
+
       if (msg) {
         $('#input').val('');
         writeMsg(name, msg);
@@ -91,10 +93,12 @@
     });
     $('#send').on('click', handleInput);
 
-    if (!$('#name').val()) {
-      $('#name').focus()
+
+    if (localStorage.getItem('name')) {
+      $('#name').val(localStorage.getItem('name'));
+      $('#input').focus()
     } else {
-      $('#input').focus();
+      $('#name').focus()
     }
   </script>
 
