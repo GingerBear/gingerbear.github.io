@@ -104,10 +104,9 @@
       $('body').on('click', '.light-button', function () {
         var id = $(this).data('id');
         var on = !$(this).data('on');
+        $(this).data('on', on);
 
         updateLight(id, { on: on });
-
-        $(this).data('on', on);
       });
     }
 
