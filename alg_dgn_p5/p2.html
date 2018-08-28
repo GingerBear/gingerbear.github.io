@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Problem 2</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<style type="text/css">
+		.found {
+			color: #ff0000;
+		}
+	</style>
+</head>
+<body>
+<div class="nav" style="position: absolute; right: 0; bottom: 0; font-size: 12px;">
+	<ul>
+		<h3>Others:</h3>
+		<li><a href="p1.html">Three Divied Merge Sort</a></li>
+		<li><b>Find Euler Paht</b></li>
+		<li><a href="p3.html">Three-Dimensional Tictactoe<a></li>
+		<li><a href="p4.html">Tourment Scheduling</a></li>
+	</ul>
+</div>
+<p class='another'><a href="">Try Another One</a></p>
+<div class='frame-ori'></div>
+<br>
+<div class='frame'></div>
+<div class='result'></div>
+<script>
+	//var eu = function(len) {
+	var LEN = getRandomInt(4, 15);
+	var nodes = [];
+	var tmp = [];
+	for(var i=0; i<LEN; i++){
+		tmp = [];
+		for(var j=0; j<LEN; j++){
+			if(i == j) {
+				tmp.push(0);
+			}else if(j>i){
+				tmp.push(getRandomInt(0,1))
+			}else{
+				tmp.push(nodes[j][i]);				
+			}
+		}
+		nodes.push(tmp);
+		$('.frame-ori').append(tmp+'<br>');
+	}
+
+	//console.log(nodes);
+
+	// print current nodes
+	function printNodes() {
+		$('.frame').html('');
+		for(var i=0; i<LEN; i++){
+			for(var j=0; j<LEN; j++){				
+				$('.frame').append(nodes[i][j]+',');
+			}
+			$('.frame').append('<br>');
+		}
+	}
+	
+	// generate random number
+	function getRandomInt (min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	var circuit = [];
+
+	// start construction Euler path
+	var makeEuler = function () {
+		circuPos = 0;
+		EulerTrail(0);
+	}
+	// recursively travel all nodes
+	var EulerTrail = function(u) {
+		for(var i = 0; i<nodes[u].length; i++){
+			if(nodes[u][i] == 1){
+				nodes[u][i] = 0;
+				nodes[i][u] = 0;
+				EulerTrail(i);
+			}
+		}
+		// put traveled node to path
+		circuit[circuPos++] = u;
+	}
+
+	// check connection number of a nodes
+	function checkConnNum(array) {
+		var num = 0;
+		for (var i = array.length - 1; i >= 0; i--) {
+			if(array[i] == '1'){
+				num++;
+			}
+		}
+		return num;
+	}
+
+	var ifOnlyTwoOdd = true, oddNum = 0;
+
+	// check odd node only two
+	for(var i = 0; i < LEN; i++) {
+		var connNum = checkConnNum(nodes[i]);
+		if(connNum != parseInt(connNum/2)*2){
+			oddNum++;
+		}
+		if(oddNum > 2){
+			ifOnlyTwoOdd = false;
+			break;
+		}
+	}
+
+	if(oddNum < 2) {
+		ifOnlyTwoOdd = false;
+	}
+
+	makeEuler();
+	//console.log(circuit);
+
+	var ifConnected = true;
+
+	// check array contain item
+	function arrayContain(array, item) {
+		for (var i = array.length - 1; i >= 0; i--) {
+			if(array[i] == item){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// check if connected graph by check tantative Euler path contian all nodes
+	for(var i=0; i<LEN; i++){
+		if (!arrayContain(circuit, i)) {
+			ifConnected = false;
+		}
+	}
+
+	console.log('ifOnlyTwoOdd: '+ifOnlyTwoOdd);
+	console.log('ifConnected: '+ifConnected);
+
+	if(ifOnlyTwoOdd && ifConnected) {
+		$('.result').append('<h2 class="found">Euler Path Found!</h2>');
+		$('.result').append('<p>'+circuit+'</p>');
+	}else{
+		$('.result').append('<h2>Eluer Path Not Exist...</h2>');		
+	}
+	//}
+
+	// for(var i = 1; i < 30; i++){
+	// 	var start = Date.now();
+	// 	eu(i*10);
+	// 	var end = Date.now();
+	// 	console.log((i*1000) + ':'+(end - start));
+	// }
+
+
+</script>
+</body>
+</html>

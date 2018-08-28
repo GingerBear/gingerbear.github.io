@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Problem 4</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<style type="text/css">
+		table {
+			border-collapse: collapse;
+		}
+		td{
+			padding: 5px 10px;
+			font-family: 'Arial';
+		}
+		.thead,.day  {
+			font-size: 18px;
+			font-weight: bold;
+			color: #aaa;
+		}
+		.thead td {
+			border-bottom: 1px solid #ccc;
+		}
+		.day {
+			border-right: 1px solid #ccc;
+		}
+		tr:hover{
+			background: #eee;
+		}
+		.another {
+
+		}
+	</style>
+</head>
+<body>
+<div class="nav" style="position: absolute; right: 0; bottom: 0; font-size: 12px;">
+	<ul>
+		<h3>Others:</h3>
+		<li><a href="p1.html">Three Divied Merge Sort</a></li>
+		<li><a href="p2.html">Find Euler Paht</a></li>
+		<li><a href="p3.html">Three-Dimensional Tictactoe<a></li>
+		<li><b>Tourment Scheduling</b></li>
+	</ul>
+</div>
+	<p class='another'><a href="">Try Another One</a></p>
+	<h2>Q 1</h2>
+	<table class="t1"></table>
+	<h2>Q 2 - Odd</h2>
+	<table class="t2-1"></table>
+	<h2>Q 2 - Even</h2>
+	<table class="t2-2"></table>
+<script>
+	// generate random number
+	function getRandomInt (min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	// Q1
+	var rotate = function(arr){
+		var tmpArr1 =[], tmpArr2 = [];
+		for(var i = 0; i < arr[0].length; i++){
+			if (i == 0){
+				tmpArr1[i] = arr[0][i];
+				tmpArr2[i] = arr[1][i+1];
+			// set exception for len 2
+			}else if (i == 1 && arr[0].length <= 2){
+				tmpArr1[i] = arr[1][i-1];
+				tmpArr2[i] = arr[0][i];
+			}else if (i == 1){
+				tmpArr1[i] = arr[1][i-1];
+				tmpArr2[i] = arr[1][i+1];
+			}else if (i == arr[0].length - 1) {
+				tmpArr1[i] = arr[0][i-1];
+				tmpArr2[i] = arr[0][i];
+			}else{
+				tmpArr1[i] = arr[0][i-1];
+				tmpArr2[i] = arr[1][i+1];					
+			}
+		}
+		return [tmpArr1, tmpArr2];
+	};
+
+	var getIndexOfArr = function(arr, item){
+		for(var i = 0; i < arr.length; i++){
+			if (item == arr[i]){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	var q1 = function(power){
+		var power = power;
+		var players = [], row1 = [], row2 = [];
+		for(var i = 0; i < Math.pow(2, power); i++){
+			if (i < Math.pow(2, power) / 2) {
+				row1.push(i);
+			}else{
+				row2.push(i);
+			}
+			players.push('p'+(i+1));
+		}
+		var thead = $('<tr class="thead"><td>DAY</td></tr>'), tbody = $('<tbody></tbody>');
+		for (var i = 0; i < players.length; i++) {
+			thead.append("<td>"+players[i]+"</td>");
+		}
+		for (var i = 0; i < players.length-1; i++) {
+			var tmp = $('<tr><td class="day">day'+(i+1)+'</td></tr>');
+			for (var j = 0; j < players.length; j++) {
+				if(getIndexOfArr(row1, j) != -1){
+					tmp.append("<td>"+players[row2[getIndexOfArr(row1, j)]]+"</td>");
+				}else if(getIndexOfArr(row2, j) != -1){
+					tmp.append("<td>"+players[row1[getIndexOfArr(row2, j)]]+"</td>");
+				}
+			}
+			// do rotation
+			tmpArr = rotate([row1, row2]);
+			row1 = tmpArr[0];
+			row2 = tmpArr[1];
+			tbody.append(tmp);
+		}
+		// load to HTML
+		thead.appendTo($('.t1'));
+		tbody.appendTo($('.t1'));
+	}
+
+	// Q2 - 1
+	var q21 = function(number) {
+		var power = power;
+		var players = [], row1 = [], row2 = [];
+		for(var i = 0; i < number; i++){
+			if (i < number / 2) {
+				row1.push(i);
+			}else{
+				row2.push(i);
+			}
+			players.push('p'+(i+1));
+		}
+		row2.push(number);
+		players.push('-');
+
+		var thead = $('<tr class="thead"><td>DAY</td></tr>'), tbody = $('<tbody></tbody>');
+		for (var i = 0; i < players.length-1; i++) {
+			thead.append("<td>"+players[i]+"</td>");
+		}
+		for (var i = 0; i < players.length-1; i++) {
+			var tmp = $('<tr><td class="day">day'+(i+1)+'</td></tr>');
+			for (var j = 0; j < players.length-1; j++) {
+				if(getIndexOfArr(row1, j) != -1){
+					tmp.append("<td>"+players[row2[getIndexOfArr(row1, j)]]+"</td>");
+				}else if(getIndexOfArr(row2, j) != -1){
+					tmp.append("<td>"+players[row1[getIndexOfArr(row2, j)]]+"</td>");
+				}
+			}
+			// do rotation
+			tmpArr = rotate([row1, row2]);
+			row1 = tmpArr[0];
+			row2 = tmpArr[1];
+			tbody.append(tmp);
+		}
+		thead.appendTo($('.t2-1'));
+		tbody.appendTo($('.t2-1'));
+	}
+	var q22 = function(number) {
+		var power = power;
+		var players = [], row1 = [], row2 = [];
+		for(var i = 0; i < number; i++){
+			if (i < number / 2) {
+				row1.push(i);
+			}else{
+				row2.push(i);
+			}
+			players.push('p'+(i+1));
+		}
+
+		var thead = $('<tr class="thead"><td>DAY</td></tr>'), tbody = $('<tbody></tbody>');
+		for (var i = 0; i < players.length; i++) {
+			thead.append("<td>"+players[i]+"</td>");
+		}
+		for (var i = 0; i < players.length-1; i++) {
+			var tmp = $('<tr><td class="day">day'+(i+1)+'</td></tr>');
+			for (var j = 0; j < players.length; j++) {
+				if(getIndexOfArr(row1, j) != -1){
+					tmp.append("<td>"+players[row2[getIndexOfArr(row1, j)]]+"</td>");
+				}else if(getIndexOfArr(row2, j) != -1){
+					tmp.append("<td>"+players[row1[getIndexOfArr(row2, j)]]+"</td>");
+				}
+			}
+			// do rotation
+			tmpArr = rotate([row1, row2]);
+			row1 = tmpArr[0];
+			row2 = tmpArr[1];
+			tbody.append(tmp);
+		}
+		thead.appendTo($('.t2-2'));
+		tbody.appendTo($('.t2-2'));
+	}
+	// for(var i = 1; i< 20; i+=2) {
+	// 	var start = Date.now();
+	// 	q22(i*10+1);
+	// 	var end = Date.now();
+	// 	console.log((i*10)+': '+(end-start));
+	// }
+	q1(getRandomInt(2,4));
+	q21(getRandomInt(2,9)*2+1);
+	q22(getRandomInt(2,9)*2);
+
+</script>
+</body>
+</html>

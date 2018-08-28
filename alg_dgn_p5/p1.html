@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Problem 1</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<style type="text/css">
+		.frame-old, .frame {
+			position: relative;
+		}
+		.frame-old span, .frame span {
+			display: inline-block;
+			border: 1px solid #ccc;
+			margin: 0;
+			width: 80px;
+			height: 70px;
+			font-size: 50px;
+			position: absolute;
+			text-align: center;
+			padding-top: 10px;
+		}
+		p.another {
+			position: absolute;
+			top: 100px;
+		}
+	</style>
+</head>
+<body>
+<div class="nav" style="position: absolute; right: 0; bottom: 0; font-size: 12px;">
+	<ul>
+		<h3>Others:</h3>
+		<li><b>Three Divied Merge Sort</b></li>
+		<li><a href="p2.html">Find Euler Paht</a></li>
+		<li><a href="p2.html">Three-Dimensional Tictactoe<a></li>
+		<li><a href="p4.html">Tourment Scheduling</a></li>
+	</ul>
+</div>
+<div class='frame'></div>
+<p class='another'><a href="">Try Another One</a></p>
+<!-- <div class='frame-old'></div> -->
+<script>
+	var numbers = [];
+	function getRandomInt (min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	function j(v) {
+		return JSON.stringify(v);
+	}
+	function init(n) {
+		var frameOld = $('.frame-old').html('');
+		var frame = $('.frame').html('');
+		var numItem = getRandomInt(8,15);
+		var ranTmp = 0;
+		numbers = [];
+		for (var i = 0; i < numItem; i++) {
+			ranTmp = getRandomInt(0,20);
+			frame.append("<span id="+i+">"+ranTmp+"</span>");
+			frameOld.append("<span id="+i+">"+ranTmp+"</span>");
+			numbers.push({i: i, num:ranTmp});
+		};
+		var items = $('.frame span');
+		for (var i = 0 - 1; i < items.length; i++) {
+			$(items[i]).css({'left': i*90});
+		};
+		var items = $('.frame-old span');
+		for (var i = 0 - 1; i < items.length; i++) {
+			$(items[i]).css({'left': i*90});
+		};
+	}
+	var items = $('.frame span');
+	function merge_sort(list) {
+		if (list.length <= 1) {
+			return list;
+		}
+		var left = [], mid = [], right = [];
+		// caculate the divider
+		var div1 = parseInt(list.length / 3), div2 = parseInt(list.length*2 / 3);
+		//console.log(div1 +': '+ div2);
+		for (var i=0; i<div1; i++) {
+			left.push(list[i]);
+		}
+		for (var i=div1; i<div2; i++) {
+			mid.push(list[i]);
+		}
+		for (var i=div2; i<list.length; i++) {
+			right.push(list[i]);
+		}
+
+		left = merge_sort(left);
+		mid = merge_sort(mid);
+		right = merge_sort(right);
+
+		return merge(left, mid, right);
+	}
+
+	var merge = function(left, mid, right) {
+
+		var result = [];
+		while(left.length > 0 || mid.length > 0 || right.length > 0) {
+			if (left.length > 0 && mid.length > 0 && right.length > 0) {
+				if (left[0].num <= right[0].num && left[0].num <= mid[0].num) {
+					result.push(left[0]);
+					left.shift();
+				}else if (mid[0].num <= left[0].num && mid[0].num <= right[0].num) {
+					result.push(mid[0]);
+					mid.shift();
+				}else{
+					result.push(right[0]);
+					right.shift();
+				}
+			}else if (left.length > 0 && mid.length > 0) {
+				if (left[0].num <= mid[0].num) {
+					result.push(left[0]);
+					left.shift();
+				}else{
+					result.push(mid[0]);
+					mid.shift();
+				}
+			}else if (mid.length > 0 && right.length > 0) {
+				if (right[0].num <= mid[0].num) {
+					result.push(right[0]);
+					right.shift();
+				}else{
+					result.push(mid[0]);
+					mid.shift();
+				}
+			}else if (right.length > 0 && left.length > 0) {
+				if (right[0].num <= left[0].num) {
+					result.push(right[0]);
+					right.shift();
+				}else{
+					result.push(left[0]);
+					left.shift();
+				}
+			}else if(left.length > 0) {
+				result.push(left[0]);
+				left.shift();
+			}else if(mid.length > 0) {
+				result.push(mid[0]);
+				mid.shift();
+			}else if(right.length > 0) {
+				result.push(right[0]);
+				right.shift();
+			}
+		}
+
+		console.log(':'+j(result));
+		var baseLeft = $('.frame span[id='+result[0].i+']').offset().left;
+		if(result.length == $('.frame span').length) {
+			baseLeft = 0;
+		}
+		for (var i = 0; i < result.length; i++) {
+			$('.frame span[id='+result[i].i+']').animate({'left': baseLeft + i*90}, 200);
+		};
+		return result;
+	}
+		init(10)
+		var t1='', t2='';
+		var r = merge_sort(numbers);
+		for(var i = 1; i < numbers.length; i++){
+			t1 += numbers[i].num+' ';
+			t2 += r[i].num+' ';
+		}
+		console.log(t1);
+		console.log(t2);
+		console.log('');
+		
+		init(10)
+		var t1='', t2='';
+		var r = merge_sort(numbers);
+		for(var i = 1; i < numbers.length; i++){
+			t1 += numbers[i].num+' ';
+			t2 += r[i].num+' ';
+		}
+		console.log(t1);
+		console.log(t2);
+		console.log('');
+		
+		init(10)
+		var t1='', t2='';
+		var r = merge_sort(numbers);
+		for(var i = 1; i < numbers.length; i++){
+			t1 += numbers[i].num+' ';
+			t2 += r[i].num+' ';
+		}
+		console.log(t1);
+		console.log(t2);
+		console.log('');
+		
+		init(10)
+		var t1='', t2='';
+		var r = merge_sort(numbers);
+		for(var i = 1; i < numbers.length; i++){
+			t1 += numbers[i].num+' ';
+			t2 += r[i].num+' ';
+		}
+		console.log(t1);
+		console.log(t2);
+		console.log('');
+		
+		init(10)
+		var t1='', t2='';
+		var r = merge_sort(numbers);
+		for(var i = 1; i < numbers.length; i++){
+			t1 += numbers[i].num+' ';
+			t2 += r[i].num+' ';
+		}
+		console.log(t1);
+		console.log(t2);
+		console.log('');
+	// for(var i = 1; i < 30; i++){
+	// 	init(i*10000);
+	// 	var start = Date.now();
+	// 	merge_sort(numbers);
+	// 	var end = Date.now();
+	// 	console.log((i*1000) + ':'+(end - start));
+	// }
+</script>
+</body>
+</html>
