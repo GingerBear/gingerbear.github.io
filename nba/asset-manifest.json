@@ -1,13 +1,13 @@
 {
-  "main.css": "/nba/static/css/main.4633fd21.chunk.css",
-  "main.js": "/nba/static/js/main.d7de3e5f.chunk.js",
-  "main.js.map": "/nba/static/js/main.d7de3e5f.chunk.js.map",
+  "main.css": "/nba/static/css/main.2c97cfdb.chunk.css",
+  "main.js": "/nba/static/js/main.2d709862.chunk.js",
+  "main.js.map": "/nba/static/js/main.2d709862.chunk.js.map",
   "static/js/1.0b66dbaa.chunk.js": "/nba/static/js/1.0b66dbaa.chunk.js",
   "static/js/1.0b66dbaa.chunk.js.map": "/nba/static/js/1.0b66dbaa.chunk.js.map",
   "runtime~main.js": "/nba/static/js/runtime~main.c921aa51.js",
   "runtime~main.js.map": "/nba/static/js/runtime~main.c921aa51.js.map",
-  "static/css/main.4633fd21.chunk.css.map": "/nba/static/css/main.4633fd21.chunk.css.map",
+  "static/css/main.2c97cfdb.chunk.css.map": "/nba/static/css/main.2c97cfdb.chunk.css.map",
   "index.html": "/nba/index.html",
-  "precache-manifest.11ff8bdcfa195aabcb783700a760a29a.js": "/nba/precache-manifest.11ff8bdcfa195aabcb783700a760a29a.js",
+  "precache-manifest.a265241150d06901c0bc58d8dc5cd506.js": "/nba/precache-manifest.a265241150d06901c0bc58d8dc5cd506.js",
   "service-worker.js": "/nba/service-worker.js"
 }
