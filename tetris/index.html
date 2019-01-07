@@ -1,0 +1,675 @@
+<h1><a id="Tetris_implemented_in_JavaScript_0"></a>Tetris implemented in JavaScript</h1>
+<p>A naive implementation of Tetris with HTML/CSS/JavaScript, just for fun.</p>
+<h2><a id="Why_write_a_Tetris_game_4"></a>Why write a Tetris game</h2>
+<p>
+  Tetris is a well known and simple game, while it’s still very complicated comparing to most
+  regular web UI development works. Writing a game like Tetris with regular HTML/CSS/JavaScript make
+  me think about how to managing complex code in a better way. Also the idea behind React (one
+  direction data flow) heavily influence the way I think about how to build UI, even without React.
+  So I want to see if writing this game in a React way make sense. Last, I have no experience about
+  writing game and I have no idea how to build a game like Tetris, and it’s a fun exercise to think
+  about it blindly and see how others do it.
+</p>
+<h2><a id="How_to_get_started_8"></a>How to get started</h2>
+<p>
+  To start, I would like to first think about what’s all the possible states needed for drawing the
+  game on the screen. In the normal Tetris game, there usually are a board, a block in a certain
+  shape that is moving down with a certain speed, and some blocks that stack up at the bottom.
+</p>
+<p>
+  With all the states that are necessary for drawing the game in a single frame, the rest will just
+  be figuring out how to change the state and redraw the frame, either by a timer or user’s keyboard
+  input.
+</p>
+<p>Let’s define all the states.</p>
+<p>
+  For the board, it’s usually won’t change, so it just need a width and height to represent how many
+  pixels in each row and column.
+</p>
+<pre><code class="language-js">{
+  width: <span class="hljs-number">20</span>,
+  height: <span class="hljs-number">40</span>
+}
+</code></pre>
+<p>
+  For the moving block, we need to know what’s the shape of it. There are 5 different shapes. And
+  each shape has different orientation. We can just use number (0,1,2,3,4) to represent the type of
+  shape and (0,1,2,3) for different orientation. We also need to know the location of the block, and
+  at what speed it’s moving.
+</p>
+<pre><code class="language-js"><span class="hljs-comment">/**
+ * shapes:
+ *
+ * 0.   1.    2.    3.     4.
+ * ##   ####  ##    ###     ##
+ * ##          ##    #     ##
+ *
+ *
+ */</span>
+</code></pre>
+<pre><code class="language-js">{
+  <span class="hljs-comment">// ...</span>
+  movingShape: <span class="hljs-number">0</span>,
+  movingShapeOrientation: <span class="hljs-number">0</span>,
+  currentPosition: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], <span class="hljs-comment">// [x, y]</span>
+  speed: <span class="hljs-number">300</span>
+}
+</code></pre>
+<p>
+  For the blocks that are stacked at the bottom, we can just represent them with a bunch of points.
+  We call the array as <code>bottomBlocks</code>
+</p>
+<pre><code class="language-js">{
+  <span class="hljs-comment">// ...</span>
+  bottomBlocks: [
+    [<span class="hljs-number">0</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">39</span>]
+  ],
+}
+</code></pre>
+<p>Last we need score to keep track of current score.</p>
+<pre><code class="language-js">{
+  <span class="hljs-comment">// ...</span>
+  score: <span class="hljs-number">0</span>,
+}
+</code></pre>
+<p>With these states, we should be able to draw something on the screen. Let’s do it.</p>
+<h2><a id="Draw_something_71"></a>Draw something</h2>
+<p>
+  Initially I was thinking about draw a div simply with <code>state.width</code> and
+  <code>state.height</code> as width and height as the board, then draw the moving block as divs on
+  top of the board with absolute position. Then I realized that an easier way is to treat the board
+  as a grid with <code>state.width * state.height</code> pixels in it. We draw each pixel
+  individually with a <code>&lt;span&gt;</code> tag.
+</p>
+<p>
+  When we draw each pixel in the grid, if we found the position of the pixel is also in the
+  <code>bottomBlocks</code> (the bottom stacked blocks) or is covered by the moving block, we give
+  the pixel a CSS class <code>filled</code>, so that we can show that pixel in dark color.
+</p>
+<p>Here is how the code looks like:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"canvas"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+  <span class="hljs-class">.canvas</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">400px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span> auto</span></span>;
+  }</span>
+
+  <span class="hljs-class">.pixel</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid <span class="hljs-hexcolor">#eee</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> absolute</span></span>;
+  }</span>
+
+  <span class="hljs-class">.pixel</span><span class="hljs-class">.filled</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+  }</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+</code></pre>
+<pre><code class="language-js"><span class="hljs-comment">// configuration</span>
+<span class="hljs-keyword">let</span> pixelSize = <span class="hljs-number">10</span>; <span class="hljs-comment">// how big we want one pixel to be</span>
+<span class="hljs-keyword">let</span> arr = len =&gt; [...new <span class="hljs-built_in">Array</span>(len)]; <span class="hljs-comment">// turn a number into an array of that number of items</span>
+
+<span class="hljs-comment">// the state</span>
+<span class="hljs-keyword">let</span> state = {
+  width: <span class="hljs-number">20</span>,
+  height: <span class="hljs-number">40</span>,
+  movingShape: <span class="hljs-number">0</span>,
+  movingShapeOrientation: <span class="hljs-number">0</span>,
+  currentPosition: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+  speed: <span class="hljs-number">300</span>,
+  bottomBlocks: [[<span class="hljs-number">0</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">39</span>]]
+};
+
+<span class="hljs-comment">// draw the board</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-keyword">const</span> pixels = arr(state.height).map((_, row) =&gt; {
+    <span class="hljs-keyword">return</span> arr(state.width).map((_, column) =&gt; {
+      <span class="hljs-keyword">const</span> isFilled =
+        isInBottomBlocks(state, [column, row]) || isInMovingBlock(state, [column, row]);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-string">`&lt;span
+              class="pixel <span class="hljs-subst">${column ? 'filled' : ''}</span>"
+              data-x="<span class="hljs-subst">${column}</span>"
+              data-y="<span class="hljs-subst">${row}</span>"
+              style="transform: translate(<span class="hljs-subst">${pixelSize * column}</span>px, <span class="hljs-subst">${pixelSize * row}</span>px);"
+            &gt;&lt;/span&gt;`</span>;
+    });
+  });
+
+  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.canvas'</span>).innerHTML = pixels;
+}
+</code></pre>
+<p>
+  To check if the current pixel in <code>state.bottomBlocks</code> is easy, we just loop over
+  <code>state.bottomBlocks</code> to check if there is a point match.
+</p>
+<pre><code class="language-js"><span class="hljs-comment">// check if current pixel if in the bottom blocks</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isInBottomBlocks</span>(<span class="hljs-params">state, [column, row]</span>) </span>{
+  !!state.bottomBlocks.find(([x, y]) =&gt; x === column &amp;&amp; y === row);
+}
+</code></pre>
+<p>
+  However, checking if the current pixel is covered by the moving block is a little complicated,
+  because we are using shapes and orientation instead of direct pixel points to represent the moving
+  block. So in order to do that, we have to convert shape, orientation and position into pixel
+  points before we can check if the current pixel is covered by one of them.
+</p>
+<p>
+  To do the conversion, we need to know how to represent each shape and orientation in pixels. Then
+  we can shift them into the correct position to get the pixel points of the moving block.
+</p>
+<p>The code looks like this:</p>
+<pre><code class="language-js"><span class="hljs-comment">// check if current pixel if covered by the moving block</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isInMovingBlock</span>(<span class="hljs-params">state, [column, row]</span>) </span>{
+  <span class="hljs-keyword">const</span> movingBlockPoints = shiftPixel(
+    getShapePixel(state.movingShape, state.movingShapeOrientation),
+    state.currentPosition
+  );
+
+  <span class="hljs-keyword">return</span> !!movingBlockPoints.find(([x, y]) =&gt; x === column &amp;&amp; y === row);
+}
+
+<span class="hljs-comment">// get pixel represent of each shape and orientation</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getShapePixel</span>(<span class="hljs-params">shape, shapeOrientation</span>) </span>{
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">0</span>) {
+    <span class="hljs-comment">/**
+     * ##
+     * ##
+     */</span>
+    <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]];
+  }
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">1</span>) {
+    <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">0</span> || shapeOrientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-comment">/**
+       * #
+       * #
+       * #
+       * #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">0</span>]];
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">/**
+       * ####
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">3</span>]];
+    }
+  }
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">2</span>) {
+    <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">0</span> || shapeOrientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-comment">/**
+       * ##
+       *  ##
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>]];
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">/**
+       *  #
+       * ##
+       * #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">2</span>]];
+    }
+  }
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">3</span>) {
+    <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">0</span>) {
+      <span class="hljs-comment">/**
+       * ###
+       *  #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]];
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">1</span>) {
+      <span class="hljs-comment">/**
+       *  #
+       * ##
+       *  #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]];
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-comment">/**
+       *  #
+       * ###
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>]];
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">/**
+       *  #
+       *  ##
+       *  #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">2</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]];
+    }
+  }
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">4</span>) {
+    <span class="hljs-keyword">if</span> (shapeOrientation === <span class="hljs-number">0</span> || shapeOrientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-comment">/**
+       *  ##
+       * ##
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]];
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">/**
+       * #
+       * ##
+       *  #
+       */</span>
+      <span class="hljs-keyword">return</span> [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]];
+    }
+  }
+}
+
+<span class="hljs-comment">// shift the pixels into the expected position</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">shiftPixel</span>(<span class="hljs-params">pixels, shiftPixel</span>) </span>{
+  <span class="hljs-keyword">return</span> pixels &amp;&amp; pixels.map(p =&gt; [p[<span class="hljs-number">0</span>] + shiftPixel[<span class="hljs-number">0</span>], p[<span class="hljs-number">1</span>] + shiftPixel[<span class="hljs-number">1</span>]]);
+}
+</code></pre>
+<h2><a id="Make_it_move_260"></a>Make it move</h2>
+<p>
+  Now we should be able to draw a frame on the screen with any kind of state. Next let’s make move.
+</p>
+<p>
+  The idea is that, to make it move, we just need to change the state and redraw the board with new
+  state, then change it the state again and redraw it again, and keep going. We can use a
+  <code>setIntervel</code> function to keep the circle going. The delay of the
+  <code>setIntervel</code> function is speed we defined in <code>state.speed</code>.
+</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span>(<span class="hljs-params"></span>) </span>{
+  setInterval(() =&gt; {
+    state = nextState(state);
+    render(state);
+  }, state.speed);
+}
+</code></pre>
+<p>Since we already know how to draw, the next thing is to determine how to change the state.</p>
+<p>
+  There are several possibilities on how to change state. Initially, when there is no moving block,
+  we need to set a random shape and orientation for the moving block. Next when the moving block is
+  in the middle of air, we need to move the <code>state.currentPosition</code> down one pixel.
+  Finally, if the moving block reach the bottom of the grid or collide with the blocks stacked at
+  the bottom, we should stop the moving and stack the current moving block at the bottom, then make
+  a new moving block.
+</p>
+<p>
+  Obviously there are more cases to handle, like removing a filled-up line, and user inputs. We will
+  deal with that later.
+</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nextState</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-keyword">const</span> nextState = { ...state };
+  nextState.movingPosition = [...nextState.movingPosition];
+
+  <span class="hljs-keyword">if</span> (nextState.movingShape === <span class="hljs-literal">null</span>) {
+    <span class="hljs-comment">// if no moving block, create a random one, and set the position to top</span>
+    nextState.movingPosition[<span class="hljs-number">0</span>] = <span class="hljs-number">8</span>;
+    nextState.movingShape = getRandomInt(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>);
+    nextState.movingShapeOrientation = getRandomInt(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>);
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// shift the position of moving block down, and check if it collide</span>
+    nextState.movingPosition[<span class="hljs-number">1</span>] = state.movingPosition[<span class="hljs-number">1</span>] + <span class="hljs-number">1</span>;
+    checkCollision(nextState, state);
+  }
+
+  <span class="hljs-keyword">return</span> nextState;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkCollision</span>(<span class="hljs-params">nextState, prevState</span>) </span>{
+  <span class="hljs-keyword">if</span> (collide(nextState)) {
+    nextState.bottomBlocks = [
+      ...nextState.bottomBlocks,
+      ...shiftPixel(
+        getShapePixel(prevState.movingShape, prevState.movingShapeOrientation),
+        prevState.movingPosition
+      )
+    ];
+
+    nextState.movingPosition = [<span class="hljs-number">8</span>, <span class="hljs-number">0</span>];
+    nextState.movingShape = getRandomInt.apply(<span class="hljs-literal">null</span>, possibleShapes);
+    nextState.movingShapeOrientation = getRandomInt.apply(<span class="hljs-literal">null</span>, possibleShapesOrientation);
+  }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collide</span>(<span class="hljs-params">{ movingPosition, movingShape, movingShapeOrientation, bottomBlocks, height }</span>) </span>{
+  <span class="hljs-keyword">const</span> movingShapePixel = shiftPixel(
+    getShapePixel(movingShape, movingShapeOrientation),
+    movingPosition
+  );
+
+  <span class="hljs-keyword">if</span> (!movingShapePixel) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+
+  <span class="hljs-keyword">const</span> isTouchBottom = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, movingShapePixel.map(p =&gt; p[<span class="hljs-number">1</span>])) &gt; height - <span class="hljs-number">1</span>;
+
+  <span class="hljs-keyword">const</span> collideWithbottomBlocks = !!bottomBlocks.find(bs =&gt; {
+    <span class="hljs-keyword">return</span> !!movingShapePixel.find(cs =&gt; cs[<span class="hljs-number">0</span>] === bs[<span class="hljs-number">0</span>] &amp;&amp; cs[<span class="hljs-number">1</span>] === bs[<span class="hljs-number">1</span>]);
+  });
+
+  <span class="hljs-keyword">if</span> (isTouchBottom || collideWithbottomBlocks) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+}
+</code></pre>
+<h2><a id="Add_keyboard_inputs_340"></a>Add keyboard inputs</h2>
+<p>
+  Now our game can move a block down, but we also want to move the block left and right when user
+  press left or right button. Also we want to be able to change the orientation of the block when
+  user press up button. Last, if user press down button, it should shift the moving block down It’s
+  pretty straight forward to implement them, because we just need add an event handle for keyboard
+  input, then update <code>state.movingPosition</code> to left/right, or change
+  <code>state.movingShapeOrientation</code> accordingly.
+</p>
+<p>
+  The only thing we need to pay attention is the potential collision. When collision could happen,
+  we shouldn’t let user move left/right or change orientation. An ease way to do this is that, we
+  try change the moving block’s position as user input regardless the collision, then check if the
+  new state is valid by check if it collide or over the boundary. If yes, then we simple revert the
+  position change. If no, then we draw with the new position.
+</p>
+<p>Let’s implement it.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bindKeyboardEvent</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">document</span>.addEventListener(<span class="hljs-string">'keydown'</span>, e =&gt; {
+    handleKeyBoardInput(e);
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleKeyBoardInput</span>(<span class="hljs-params">e</span>) </span>{
+  <span class="hljs-keyword">const</span> nextState = { ...state };
+  nextState.movingPosition = [...nextState.movingPosition];
+
+  <span class="hljs-keyword">if</span> (e.keyCode === <span class="hljs-number">38</span>) {
+    <span class="hljs-comment">// up</span>
+    nextState.movingShapeOrientation = nextState.movingShapeOrientation + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (nextState.movingShapeOrientation === <span class="hljs-number">4</span>) {
+      nextState.movingShapeOrientation = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">if</span> (invalidMove(nextState)) {
+      nextState.movingShapeOrientation = state.movingShapeOrientation;
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e.keyCode === <span class="hljs-number">37</span>) {
+    <span class="hljs-comment">// left</span>
+    nextState.movingPosition[<span class="hljs-number">0</span>] = nextState.movingPosition[<span class="hljs-number">0</span>] - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (invalidMove(nextState)) {
+      nextState.movingPosition[<span class="hljs-number">0</span>] = state.movingPosition[<span class="hljs-number">0</span>];
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e.keyCode === <span class="hljs-number">39</span>) {
+    <span class="hljs-comment">// right</span>
+    nextState.movingPosition[<span class="hljs-number">0</span>] = nextState.movingPosition[<span class="hljs-number">0</span>] + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (invalidMove(nextState)) {
+      nextState.movingPosition[<span class="hljs-number">0</span>] = state.movingPosition[<span class="hljs-number">0</span>];
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e.keyCode === <span class="hljs-number">40</span>) {
+    <span class="hljs-comment">// down</span>
+    nextState.movingPosition[<span class="hljs-number">1</span>] = nextState.movingPosition[<span class="hljs-number">1</span>] + <span class="hljs-number">1</span>;
+    checkCollision(nextState, state);
+  }
+
+  state = nextState;
+  render(nextState);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">invalidMove</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-keyword">const</span> overLeft = state.movingPosition[<span class="hljs-number">0</span>] &lt; <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">const</span> overRight =
+    state.movingPosition[<span class="hljs-number">0</span>] + getWidthByShape(state.movingShape, state.movingShapeOrientation) &gt;
+    state.width;
+
+  <span class="hljs-keyword">return</span> collide(state) || overLeft || overRight;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getWidthByShape</span>(<span class="hljs-params">shape, orientation</span>) </span>{
+  <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">1</span>) {
+    <span class="hljs-keyword">if</span> (orientation === <span class="hljs-number">1</span> || orientation === <span class="hljs-number">3</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">4</span>;
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">2</span>) {
+    <span class="hljs-keyword">if</span> (orientation === <span class="hljs-number">0</span> || orientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">3</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shape === <span class="hljs-number">3</span>) {
+    <span class="hljs-keyword">if</span> (orientation === <span class="hljs-number">0</span> || orientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">3</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    }
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">if</span> (orientation === <span class="hljs-number">0</span> || orientation === <span class="hljs-number">2</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">3</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    }
+  }
+}
+</code></pre>
+<h2><a id="Score_430"></a>Score</h2>
+<p>
+  Now we can almost play the Tetris game, except that it can’t eliminate the filled line and score.
+  The way to implement should be pretty straight forward, we just check
+  <code>state.bottomBlocks</code> (the blocks that stacked at the bottom), and see if there are
+  lines that are all filled with points. If there are ones, we can remove all the points at that
+  line from <code>state.bottomBlocks</code> and increment our score.
+</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFilledLines</span>(<span class="hljs-params">width, bottomBlocks</span>) </span>{
+  <span class="hljs-keyword">const</span> mostBottom = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, bottomBlocks.map(p =&gt; p[<span class="hljs-number">1</span>]));
+  <span class="hljs-keyword">const</span> mostTop = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-literal">null</span>, bottomBlocks.map(p =&gt; p[<span class="hljs-number">1</span>]));
+  <span class="hljs-keyword">const</span> filledLines = [];
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = mostTop; i &lt;= mostBottom; i++) {
+    <span class="hljs-keyword">const</span> pointsOfCurrentLine = bottomBlocks.filter(s =&gt; s[<span class="hljs-number">1</span>] === i).map(s =&gt; s[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">const</span> uniquePointsOfCurrentLine = uniqeArr(pointsOfCurrentLine);
+    <span class="hljs-keyword">if</span> (uniquePointsOfCurrentLine.length === width) {
+      filledLines.push(i);
+    }
+  }
+
+  <span class="hljs-keyword">return</span> filledLines;
+}
+</code></pre>
+<p>
+  The only tricky part is that, after the filled line are removed, we have to shift all the points
+  above that down down. If there are one line removed, we need to shift the the above point down
+  one, if there are two line removed, we need to to shift down two. We need to count that.
+</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeFilledLines</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-keyword">const</span> filledLines = getFilledLines(state.width, state.bottomBlocks);
+  <span class="hljs-keyword">const</span> toShiftMap = {};
+
+  <span class="hljs-comment">// remove the points within the filed lines</span>
+  filledLines.forEach(lineIndex =&gt; {
+    state.bottomBlocks = state.bottomBlocks.filter(s =&gt; s[<span class="hljs-number">1</span>] !== lineIndex);
+  });
+
+  <span class="hljs-comment">// mark the above point how many row need to shift down</span>
+  filledLines.forEach(lineIndex =&gt; {
+    state.bottomBlocks.forEach(s =&gt; {
+      <span class="hljs-keyword">if</span> (s[<span class="hljs-number">1</span>] &lt; lineIndex) {
+        toShiftMap[<span class="hljs-string">`<span class="hljs-subst">${s[0]}</span>,<span class="hljs-subst">${s[1]}</span>`</span>] = toShiftMap[<span class="hljs-string">`<span class="hljs-subst">${s[0]}</span>,<span class="hljs-subst">${s[1]}</span>`</span>] || <span class="hljs-number">0</span>;
+        toShiftMap[<span class="hljs-string">`<span class="hljs-subst">${s[0]}</span>,<span class="hljs-subst">${s[1]}</span>`</span>]++;
+      }
+    });
+  });
+
+  <span class="hljs-comment">// do the shift down</span>
+  state.bottomBlocks.forEach(s =&gt; {
+    <span class="hljs-keyword">if</span> (toShiftMap[<span class="hljs-string">`<span class="hljs-subst">${s[0]}</span>,<span class="hljs-subst">${s[1]}</span>`</span>]) {
+      s[<span class="hljs-number">1</span>] = s[<span class="hljs-number">1</span>] + toShiftMap[<span class="hljs-string">`<span class="hljs-subst">${s[0]}</span>,<span class="hljs-subst">${s[1]}</span>`</span>];
+    }
+  });
+
+  <span class="hljs-comment">// increment the scroree</span>
+  state.score = state.score + filledLines.length;
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">uniqeArr</span>(<span class="hljs-params">arr</span>) </span>{
+  <span class="hljs-keyword">const</span> _arr = [];
+  arr.forEach(i =&gt; {
+    <span class="hljs-keyword">if</span> (_arr.indexOf(i) === -<span class="hljs-number">1</span>) {
+      _arr.push(i);
+    }
+  });
+
+  <span class="hljs-keyword">return</span> _arr;
+}
+</code></pre>
+<p>We need to do this when a collision happens.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkCollision</span>(<span class="hljs-params">nextState, prevState</span>) </span>{
+  <span class="hljs-keyword">if</span> (collide(nextState)) {
+    <span class="hljs-comment">// ...</span>
+    removeFilledLines(nextState);
+  }
+}
+</code></pre>
+<p>Don’t forget to show the score</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"score"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+</code></pre>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.score'</span>).textContent = state.score;
+}
+</code></pre>
+<h2><a id="Optimization_520"></a>Optimization</h2>
+<p>
+  This is it. A playable Tetris game. Since this is a naive implementation, there are probably a lot
+  of ways to improve. One of the most obvious thing you might notices is that, the performance is
+  quite bad. The animation is not very smooth specially when the state changed quickly, and there is
+  always a lag of user’s input.
+</p>
+<p>
+  The reason is that every time we redrew, we remove all the existing
+  <code>&lt;span&gt;</code> elements and create new ones to replace it. When we want to do it very
+  quickly, it becomes expensive, thus the poor performance. In react, when we do
+  <code>setState</code> with new state, it has this magic DOM diff that only change the DOM that is
+  actually changed, and keep those are not changed. Maybe we can do some similar trick the improve
+  the performance.
+</p>
+<p>
+  So instead of get ride of all the existing <code>&lt;span&gt;</code>, we can just keep then and
+  only update the <code>filled</code> class of the existing ones.
+</p>
+<p>
+  Also a good abstraction we can make is to separate the concern of layout and rendering. Layout is
+  to figure out how we should render each pixel, black or white. Rendering is to actually draw the
+  pixel on the screen. The benefit of this is that we can now render the pixels on different target
+  without repeating the logic to figure how each pixel is like. It can be render with HTML, SVG,
+  canvas or even, console log.
+</p>
+<p>
+  Let’s first sperate the layout from rendering. All we need to do a build a 2d array that store
+  true/false to indicate it’s black/white.
+</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">layout</span>(<span class="hljs-params">{
+  width,
+  height,
+  bottomBlocks,
+  movingPosition,
+  movingShape,
+  movingShapeOrientation
+}</span>) </span>{
+  <span class="hljs-keyword">const</span> movingShapePixel = shiftPixel(
+    getShapePixel(movingShape, movingShapeOrientation),
+    movingPosition
+  );
+
+  <span class="hljs-keyword">if</span> (!movingShapePixel) {
+    <span class="hljs-keyword">return</span> [];
+  }
+
+  <span class="hljs-keyword">return</span> arr(height).map((_, row) =&gt; {
+    <span class="hljs-keyword">return</span> arr(width).map((_, column) =&gt; {
+      <span class="hljs-keyword">const</span> isInbottomBlocks = !!bottomBlocks.find(([x, y]) =&gt; x === column &amp;&amp; y === row);
+      <span class="hljs-keyword">const</span> isInMovingShape = !!movingShapePixel.find(([x, y]) =&gt; x === column &amp;&amp; y === row);
+      <span class="hljs-keyword">const</span> isFilled = isInbottomBlocks || isInMovingShape;
+
+      <span class="hljs-keyword">return</span> isFilled;
+    });
+  });
+}
+</code></pre>
+<p>Let’s do the rendering optimization of HTML by save the reference to DOM and reuse it.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> renderTarget = <span class="hljs-string">'HTML'</span>;
+<span class="hljs-keyword">const</span> pixelDOMMap = [];
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span>(<span class="hljs-params">state</span>) </span>{
+  <span class="hljs-keyword">const</span> pixelMap = layout(state);
+  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.score'</span>).textContent = state.score;
+
+  <span class="hljs-keyword">if</span> (renderTarget === <span class="hljs-string">'HTML'</span>) {
+    paintHTML(pixelMap);
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (renderTarget === <span class="hljs-string">'console'</span>) {
+    paintConsole(pixelMap);
+  }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">paintHTML</span>(<span class="hljs-params">pixelMap</span>) </span>{
+  <span class="hljs-keyword">if</span> (!pixelDOMMap.length) {
+    <span class="hljs-comment">// we have to build the HTML initially, and save the reference</span>
+    <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.canvas'</span>).innerHTML = pixelMap
+      .map((row, y) =&gt; {
+        <span class="hljs-keyword">return</span> row
+          .map((column, x) =&gt; {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">`&lt;span
+                class="pixel <span class="hljs-subst">${column ? 'filled' : ''}</span>"
+                data-x="<span class="hljs-subst">${x}</span>"
+                data-y="<span class="hljs-subst">${y}</span>"
+                style="transform: translate(<span class="hljs-subst">${pixelSize * x}</span>px, <span class="hljs-subst">${pixelSize * y}</span>px);"
+              &gt;&lt;/span&gt;`</span>;
+          })
+          .join(<span class="hljs-string">''</span>);
+      })
+      .join(<span class="hljs-string">''</span>);
+
+    pixelDOMMap = pixelMap.map((row, y) =&gt; {
+      <span class="hljs-keyword">return</span> row.map((_, x) =&gt; {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">`[data-x="<span class="hljs-subst">${x}</span>"][data-y="<span class="hljs-subst">${y}</span>"]`</span>);
+      });
+    });
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// if the reference exist, we just update it the css class.</span>
+    pixelMap.map((row, y) =&gt; {
+      <span class="hljs-keyword">return</span> row.map((column, x) =&gt; {
+        <span class="hljs-keyword">const</span> classList = pixelDOMMap[y][x].classList;
+        <span class="hljs-keyword">if</span> (column &amp;&amp; !classList.contains(<span class="hljs-string">'filled'</span>)) {
+          classList.add(<span class="hljs-string">'filled'</span>);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!column &amp;&amp; classList.contains(<span class="hljs-string">'filled'</span>)) {
+          classList.remove(<span class="hljs-string">'filled'</span>);
+        }
+      });
+    });
+  }
+}
+</code></pre>
+<p>Last, use console log as the rendering target. Super simple.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">paintConsole</span>(<span class="hljs-params">pixelMap</span>) </span>{
+  <span class="hljs-built_in">console</span>.clear();
+  <span class="hljs-built_in">console</span>.log(pixelMap.map(row =&gt; row.map(r =&gt; (r ? <span class="hljs-string">'■'</span> : <span class="hljs-string">'□'</span>)).join(<span class="hljs-string">' '</span>)).join(<span class="hljs-string">'\n'</span>));
+}
+</code></pre>
+<h2><a id="At_the_end_627"></a>At the end</h2>
+<p>
+  Building the Tetris game from scratch is fun. Especially the process of thinking about how to get
+  the game mechanics to work in a web development way. And I kinda get a peek about how doing game
+  development would feels like. The whole thing doesn’t take too long to finished, most of the time
+  is to get those edge cases covered.
+</p>
+<p>
+  As for using the idea of Read to build a game, it turns out to be great. After all state is
+  defined to draw a single frame, the entire process is pretty much unstopped because anything after
+  that is as simple as a re-render.
+</p>
+<p>
+  There is an aha moment when I realized that we can play the game in console with just two lines of
+  code.
+</p>
+<p>
+  You can find the full implementation at
+  <a href="https://github.com/GingerBear/tetris-js">https://github.com/GingerBear/tetris-js</a>.
+</p>

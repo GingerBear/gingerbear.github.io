@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://gxding.com/sitemap.xml 
