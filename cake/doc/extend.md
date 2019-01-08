@@ -251,7 +251,7 @@ that do not have similarly strict laws (i.e. from Germany to outside the EU).
 Thus a webmaster using the Google Analytics script may have to ensure that no
 personal (trackable) data is transferred to the US. You can do that with [the
 `_gat.anonymizeIp`
-option](http://code.google.com/apis/analytics/docs/gaJS/gaJSApi_gat.html#_gat._anonymizeIp).
+option](http://code.google.com/apis/analytics/docs/gaassets/js/gaJSApi_gat.html#_gat._anonymizeIp).
 In use it looks like this:
 
 ```js
@@ -336,7 +336,7 @@ $(function(){
   `-webkit-overflow-scrolling: touch`.
 
 * Automatic telephone number detection prevention for iOS and Android using
-  `<meta name="format-detection" content="telephone=no">`. 
+  `<meta name="format-detection" content="telephone=no">`.
   [Safari HTML Reference Supported Meta Tags](http://developer.apple.com/library/safari/#documentation/appleapplications/reference/SafariHTMLRef/Articles/MetaTags.html)
 
 * Avoid development/stage websites "leaking" into SERPs (search engine results

@@ -13,11 +13,11 @@ module.exports = function(grunt) {
             tasks: [ 'default' ]
         },
         css: {
-            files: [ 'css/**/*.css' ],
+            files: [ 'assets/css/**/*.css' ],
             tasks: [ 'default' ]
         },
         js: {
-            files: [ 'js/**/*.js' ],
+            files: [ 'assets/js/**/*.js' ],
             tasks: [ 'default' ]
         }
       }

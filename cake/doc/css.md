@@ -19,7 +19,7 @@ development preferences happen to be.
 
 Normalize.css is a modern, HTML5-ready alternative to CSS resets. It contains
 extensive inline documentation. Please refer to the [Normalize.css
-project](http://necolas.github.com/normalize.css/) for more information.
+project](http://necolas.github.com/normalize.assets/css/) for more information.
 
 
 ## Mobile Boilerplate defaults
@@ -69,9 +69,9 @@ not use this for SEO keyword stuffing. That is just not cool.
 Add the `.visuallyhidden` class to hide text from browsers but make it
 available for screen readers. You can use this to hide text that is specific to
 screen readers but that other users should not see. [About invisible
-content](http://www.webaim.org/techniques/css/invisiblecontent/), [Hiding
+content](http://www.webaim.org/techniques/assets/css/invisiblecontent/), [Hiding
 content for
-accessibility](http://snook.ca/archives/html_and_css/hiding-content-for-accessibility),
+accessibility](http://snook.ca/archives/html_and_assets/css/hiding-content-for-accessibility),
 [HTML5 Boilerplate
 issue/research](https://github.com/h5bp/html5-boilerplate/issues/194/).
 

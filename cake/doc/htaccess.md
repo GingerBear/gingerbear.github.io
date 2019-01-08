@@ -218,10 +218,10 @@ whenever you update those resources.
 #### Example:
 
 ```html
-<script src="/js/myscript.20120305.js"></script>
-<script src="/js/jqueryplugin.45.js"></script>
-<link rel="stylesheet" href="css/somestyle.49559939932.css">
-<link rel="stylesheet" href="css/anotherstyle.2.css">
+<script src="/assets/js/myscript.20120305.js"></script>
+<script src="/assets/js/jqueryplugin.45.js"></script>
+<link rel="stylesheet" href="assets/css/somestyle.49559939932.css">
+<link rel="stylesheet" href="assets/css/anotherstyle.2.css">
 ```
 
 **N.B. You do not have to rename the resource on the filesystem.** All you have
@@ -232,7 +232,7 @@ Traditional cache busting involved adding a query string to the end of your
 JavaScript or CSS filename whenever you updated it.
 
 ```html
-<script src="/js/all.js?v=12"></script>
+<script src="/assets/js/all.js?v=12"></script>
 ```
 
 However, as [Steve Souders](http://stevesouders.com/) explains in [*Revving
