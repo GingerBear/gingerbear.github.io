@@ -3,7 +3,7 @@
   "name": "NBA Daily",
   "icons": [
     {
-      "src": "/nba/assets/images/logo.png",
+      "src": "/nba/images/logo.png",
       "type": "image/png",
       "sizes": "144x144"
     }
