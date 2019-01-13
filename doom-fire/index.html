@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tetris implemented in JavaScript</title>
+    <link href="../assets/css/main.css" rel="stylesheet" />
+    <style>
+      .toolbar {
+        margin-bottom: 10px;
+      }
+      .fig {
+        display: flex;
+      }
+      .fig .toolbar {
+        margin-left: 10px;
+      }
+      .fig .toolbar button {
+        display: block;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header role="banner">
+      <hgroup>
+        <h1><a href="/">GingerBear's Web Log</a></h1>
+      </hgroup>
+    </header>
+
+    <h1><a id="doomfire_0"></a>Simulate Fire in DOOM</h1>
+    <p>
+      Few days ago I was browsing HN and found an article about how fire is implemented in DOOM
+      <a href="http://fabiensanglard.net/doom_fire_psx/">http://fabiensanglard.net/doom_fire_psx/</a
+      >. It’s very simple and the result is surprisingly good. I cannot stop but trying to
+      implemented in JavaScript right away. I managed to get it working and added some extra
+      controls. Since I found the original article still need a bit digestion to understand. I want
+      to talk about how it is implemented in my own (hopefully even simpler) words.
+    </p>
+    <h2><a id="The_Basic_4"></a>The Basic</h2>
+    <p>
+      To make fire in a pixel grid, the basic idea is that, we traverse each pixel and update each
+      pixel above them to be “cooler”. And we do it over and over again. This way, if we set all
+      bottom line of pixels to “hottest”. we can see just sit and let it grow up. Like this:
+    </p>
+
+    <div class="fig" id="fig-1">
+      <style>
+        #fig-1 .container {
+          display: inline-block;
+          border-top: 1px solid #333;
+          border-right: 1px solid #333;
+        }
+        #fig-1 .row span {
+          display: inline-block;
+          width: 25px;
+          height: 25px;
+          border-left: 1px solid #333;
+          border-bottom: 1px solid #333;
+          box-sizing: border-box;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+      <div class="container"></div>
+      <div class="toolbar">
+        <button onclick="fig1.startAnimate()">start animate</button>
+        <button onclick="fig1.stopAnimate()">stop animate</button>
+        <button onclick="fig1.handleNext()">frame by frame</button>
+        <button onclick="fig1.resetFrame()">reset</button>
+      </div>
+    </div>
+
+    <p>If we make it bigger and put fire's color on it, based on the number. It looks like this.</p>
+
+    <div class="fig" id="fig-2">
+      <style>
+        #fig-2 .container {
+          display: inline-block;
+          border-top: 1px solid #333;
+          border-right: 1px solid #333;
+          font-size: 10px;
+          line-height: 10px;
+        }
+        #fig-2 .row span {
+          display: inline-block;
+          width: 15px;
+          height: 12px;
+          border-left: 1px solid #333;
+          border-bottom: 1px solid #333;
+          box-sizing: border-box;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+      <div class="container"></div>
+      <div class="toolbar">
+        <button onclick="fig2.startAnimate()">start animate</button>
+        <button onclick="fig2.stopAnimate()">stop animate</button>
+        <button onclick="fig2.handleNext()">frame by frame</button>
+        <button onclick="fig2.resetFrame()">reset</button>
+      </div>
+    </div>
+
+    <h2><a id="The_Trick_16"></a>The Trick</h2>
+    <p>
+      But that doesn’t really look like fire, it’s too “linear”. The trick to make it look like fire
+      is adding some randomness on how the fire “grow” up.
+    </p>
+    <p>
+      First, instead of always make the above pixel “cooler”, we only do it by 50% chance. So 50%
+      chane the above pixel will be cooler, and 50% the above pixel won't change. It looks like
+      this:
+    </p>
+
+    <div class="fig" id="fig-3">
+      <style>
+        #fig-3 .container {
+          display: inline-block;
+          border-top: 1px solid #333;
+          border-right: 1px solid #333;
+          font-size: 10px;
+          line-height: 10px;
+        }
+        #fig-3 .row span {
+          display: inline-block;
+          width: 15px;
+          height: 12px;
+          border-left: 1px solid #333;
+          border-bottom: 1px solid #333;
+          box-sizing: border-box;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+      <div class="container"></div>
+      <div class="toolbar">
+        <button onclick="fig3.startAnimate()">start animate</button>
+        <button onclick="fig3.stopAnimate()">stop animate</button>
+        <button onclick="fig3.handleNext()">frame by frame</button>
+        <button onclick="fig3.resetFrame()">reset</button>
+      </div>
+    </div>
+
+    <p>
+      It looks better. Next, when we look for the above pixle, instead of going straight up, we can
+      add a shift to left or right randomly. In code, when we traverse each pixel, find the pixel
+      above, then either, update that pixel, or update the one on its left, or update the one on its
+      right. The result looks like this:
+    </p>
+
+    <div class="fig" id="fig-4">
+      <style>
+        #fig-4 .container {
+          display: inline-block;
+          border-top: 1px solid #333;
+          border-right: 1px solid #333;
+          font-size: 10px;
+          line-height: 10px;
+        }
+        #fig-4 .row span {
+          display: inline-block;
+          width: 15px;
+          height: 12px;
+          border-left: 1px solid #333;
+          border-bottom: 1px solid #333;
+          box-sizing: border-box;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+      <div class="container"></div>
+      <div class="toolbar">
+        <button onclick="fig4.startAnimate()">start animate</button>
+        <button onclick="fig4.stopAnimate()">stop animate</button>
+        <button onclick="fig4.handleNext()">frame by frame</button>
+        <button onclick="fig4.resetFrame()">reset</button>
+      </div>
+    </div>
+
+    <p>
+      Now it starts to look like fire. Let's try to add more pixels and render it on canvas instead
+      of HTML to get a better performance. We will also get ride of the pixel border and number.
+    </p>
+
+    <div class="fig" id="fig-5">
+      <style>
+        #fig-5 canvas {
+          border: 1px solid #333;
+        }
+      </style>
+      <canvas width="650" height="400" class="fire-convas container"></canvas>
+      <div class="toolbar">
+        <button onclick="fig5.startAnimate()">start animate</button>
+        <button onclick="fig5.stopAnimate()">stop animate</button>
+        <button onclick="fig5.handleNext()">frame by frame</button>
+        <button onclick="fig5.resetFrame()">reset</button>
+      </div>
+    </div>
+
+    <h2><a id="Control_fire_34"></a>Control fire</h2>
+    <h3><a id="wind_36"></a>wind</h3>
+    <p>
+      In the original article, the author left an exercise for readers to simulate wind. If you get
+      the idea how the fire is generated, it’s pretty straight forward to know wind can be
+      simulated. All we need to do adjust the shift of left or right when update the above pixel. If
+      we shift more to the left, it will cause the pixel leaning toward left, which makes it look
+      like there is a wind blow from right to left. And the same goes to the other way.
+    </p>
+    <h3><a id="Fade_the_fire_40"></a>Fade the fire</h3>
+    <p>
+      Fading the fire can be simulated by gradually updating the bottom section of the pixel to be
+      “cooler”. It will not only “fade” the bottom section but also “fade” all the pixels above,
+      because they are propagated.
+    </p>
+    <h3><a id="fire_intensity_44"></a>fire intensity</h3>
+    <p>
+      Fire intensity basically means how long does it take for a pixel to get “cool down” as it
+      propagates up. Currently, we set it to be 50% chance to cool down. So if we want the fire to
+      be more “intense”, we just need to make let less possible to cool down.
+    </p>
+    <p>You can try to control the fire here:</p>
+
+    <div class="fig" id="fig-6">
+      <style>
+        #fig-5 canvas {
+          border: 1px solid #333;
+        }
+      </style>
+      <canvas width="650" height="400" class="fire-convas container"></canvas>
+
+      <div class="toolbar">
+        <button onclick="fig6.startAnimate()">start animate</button>
+        <button onclick="fig6.stopAnimate()">stop animate</button>
+        <button onclick="fig6.handleNext()">frame by frame</button>
+        <button onclick="fig6.resetFrame()">reset</button>
+        <button onclick="fig6.fade()">fade</button>
+        <div>
+          <span>wind</span>
+          <input style="vertical-align: middle" type="range" oninput="fig6.changeWind(event)" />
+        </div>
+
+        <div>
+          <span>intensity</span>
+          <input
+            style="vertical-align: middle"
+            type="range"
+            oninput="fig6.changeIntensity(event)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <p>
+      You can find the source code at
+      <a href="https://github.com/GingerBear/doom-fire">https://github.com/GingerBear/doom-fire</a>
+    </p>
+  </body>
+  <script src="./doom-fire.js"></script>
+</html>
