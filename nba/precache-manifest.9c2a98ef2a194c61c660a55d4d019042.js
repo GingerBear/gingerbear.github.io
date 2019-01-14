@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/nba/static/js/runtime~main.c921aa51.js"
   },
   {
-    "revision": "bfead13426e67b75e8e6",
-    "url": "/nba/static/js/main.bfead134.chunk.js"
+    "revision": "559dc06eea00e8c1baee",
+    "url": "/nba/static/js/main.559dc06e.chunk.js"
   },
   {
     "revision": "438d448c9a4ba9cbf812",
     "url": "/nba/static/js/1.438d448c.chunk.js"
   },
   {
-    "revision": "bfead13426e67b75e8e6",
-    "url": "/nba/static/css/main.41d122b2.chunk.css"
+    "revision": "559dc06eea00e8c1baee",
+    "url": "/nba/static/css/main.1dcfa032.chunk.css"
   },
   {
-    "revision": "ef237ac3672d89acc88cc0df20ebc0de",
+    "revision": "954ebbe4d845141ab694118a9d8ab246",
     "url": "/nba/index.html"
   }
 ];
