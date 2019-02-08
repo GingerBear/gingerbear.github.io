@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Flexbox interactive reference</title>
+    <link href="../assets/css/main.css" rel="stylesheet" />
+    <style>
+      .flex-container {
+        background: rgb(107, 164, 240);
+        border: 2px solid rgb(11, 114, 248);
+        display: flex;
+
+        /* interactive */
+        /* flex-direction: row; */
+      }
+
+      .flex-item {
+        background: rgb(247, 145, 63);
+        border: 2px solid rgb(143, 65, 2);
+        margin: 10px;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+
+        /* interactive */
+      }
+
+      .selector-button {
+        margin-right: 5px;
+        height: 30px;
+      }
+
+      .selector-button.selected {
+        background: rgb(11, 114, 248);
+        color: white;
+        border: 1px solid rgb(11, 114, 248);
+      }
+
+      .prop-container {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .num-box-input {
+        width: 50px;
+      }
+
+      .prop-name {
+        font-size: 15px;
+        width: 120px;
+      }
+
+      .num-box-container {
+        display: flex;
+        align-items: center;
+      }
+
+      .num-box-title {
+        font-size: 15px;
+        width: 120px;
+      }
+    </style>
+
+    <style class="style-container"></style>
+  </head>
+  <body>
+    <header role="banner">
+      <hgroup>
+        <h1><a href="/">GingerBear's Web Log</a></h1>
+      </hgroup>
+    </header>
+
+    <h1>Flexbox interactive reference</h1>
+    <p>
+      Flexbox is always something is better to explianed visually than verbally. So it might be
+      helpful to have a reference of all the flexbox properties with how it looks.
+    </p>
+
+    <div class="control-panel"></div>
+    <div class="flex-container"></div>
+
+    <p>
+      To get a full coverage of flexbox. I will add more control over properies of each individual
+      box in the future.
+    </p>
+  </body>
+  <script src="./flexbox-interactive-reference.js"></script>
+</html>

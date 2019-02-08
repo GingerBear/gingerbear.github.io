@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Tetris implemented in JavaScript</title>
+    <title>Simulate Fire in DOOM</title>
     <link href="../assets/css/main.css" rel="stylesheet" />
     <style>
       .toolbar {
@@ -110,7 +110,7 @@
     </p>
     <p>
       First, instead of always make the above pixel “cooler”, we only do it by 50% chance. So 50%
-      chane the above pixel will be cooler, and 50% the above pixel won't change. It looks like
+      chance the above pixel will be cooler, and 50% the above pixel won't change. It looks like
       this:
     </p>
 
@@ -144,7 +144,7 @@
     </div>
 
     <p>
-      It looks better. Next, when we look for the above pixle, instead of going straight up, we can
+      It looks better. Next, when we look for the above pixel, instead of going straight up, we can
       add a shift to left or right randomly. In code, when we traverse each pixel, find the pixel
       above, then either, update that pixel, or update the one on its left, or update the one on its
       right. The result looks like this:
