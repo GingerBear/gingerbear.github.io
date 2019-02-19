@@ -60,11 +60,6 @@ function main() {
 
   const itemProps = [
     {
-      name: 'order',
-      description: 'desc of order',
-      isInteger: true
-    },
-    {
       name: 'flex-grow',
       description: 'desc of flex-grow',
       isInteger: true
@@ -80,6 +75,11 @@ function main() {
       isInteger: true
     },
     {
+      name: 'order',
+      description: 'desc of order',
+      isInteger: true
+    },
+    {
       name: 'align-self',
       description: 'desc of align-self',
       options: [
@@ -92,7 +92,15 @@ function main() {
 
   const state = {
     numOfBox: 5,
-    containState: {}
+    selectedBox: 0,
+    containState: {},
+    boxState: {
+      0: {},
+      1: {},
+      2: {},
+      3: {},
+      4: {}
+    }
   };
 
   const controlPanel = document.querySelector('.control-panel');
@@ -104,7 +112,25 @@ function main() {
 
   function initEventHandler() {
     window.handleSelect = function(category, key, value) {
-      state[category][key] = value;
+      if (category === 'containState') {
+        if (value === null) {
+          delete state[category][key];
+        } else {
+          state[category][key] = value;
+        }
+      } else {
+        if (value === null) {
+          delete state[category][state.selectedBox][key];
+        } else {
+          state[category][state.selectedBox][key] = value;
+        }
+      }
+
+      render(state);
+    };
+
+    window.handleSelectBox = function(boxIndex) {
+      state.selectedBox = boxIndex;
       render(state);
     };
 
@@ -146,50 +172,74 @@ function main() {
                 </div>`;
 
     const containerHTML = containerProps
-      .map(prop => {
-        return `<div class="prop-container">
-                  <div class="prop-name">${prop.name}</div>
-                  <div class="button-container">
-                    ${prop.options
-                      .map(
-                        option =>
-                          `
-                    <button
-                      class="selector-button ${
-                        state.containState[prop.name] === option.name ? 'selected' : ''
-                      }"
-                      onclick="handleSelect('containState', '${prop.name}','${option.name}')"
-                    >
-                      ${option.name}
-                    </button>
-                          `
-                      )
-                      .join('')}
-                  </div>
-              </div>`;
-      })
+      .map(prop => renderProperty('containState', prop, state))
       .join('');
+    const itemHTML = itemProps.map(prop => renderProperty('boxState', prop, state)).join('');
 
     return `
       ${numBoxHTML}
+
       <div class="container-props">
         <h2>The Container</h2>
         ${containerHTML}
       </div>
+
+      <div class="container-props">
+        <h2>The Box (selected box: ${state.selectedBox})</h2>
+        ${itemHTML}
+      </div>
     `;
+  }
 
-    // const itemHTML = itemProps
-    //   .map(prop => {
-    //     return `<div>
-    //               <div class="prop-name">${prop.name}</div>
-    //               <select class="prop-options">
-    //               ${prop.options.map(o => `<option>${o.name}</option>`).join('')}
-    //               </select>
-    //             </div>`;
-    //   })
-    //   .join('');
+  function renderProperty(controlType, prop, state) {
+    const selectedBox = state.boxState[state.selectedBox] || {};
+    const isValueUndefined = selectedBox[prop.name] === undefined;
+    return `<div class="prop-container">
+        <div class="prop-name">${prop.name}</div>
 
-    // return containerHTML + itemHTML;
+        <div class="button-container">
+        ${(prop.options &&
+          prop.options
+            .map(option => {
+              const propValue =
+                controlType === 'containState'
+                  ? state.containState[prop.name]
+                  : selectedBox[prop.name];
+              return `
+                <button
+                  class="selector-button ${propValue === option.name ? 'selected' : ''}"
+                  onclick="handleSelect('${controlType}', '${prop.name}',${
+                propValue === option.name ? 'null' : `'${option.name}'`
+              })"
+                >
+                  ${option.name}
+                </button>
+              `;
+            })
+            .join('')) ||
+          ''}
+
+          ${(prop.isInteger &&
+            `
+            <button
+              onclick="handleSelect('${controlType}', '${prop.name}', ${
+              isValueUndefined ? 1 : selectedBox[prop.name] - 1
+            })">-</button>
+
+            <input
+            style="width: 80px"
+            onchange="handleSelect('${controlType}', '${prop.name}', event.target.value)"
+            type="text" value="${isValueUndefined ? '' : selectedBox[prop.name]}" />
+
+            <button onclick="handleSelect('${controlType}', '${prop.name}', ${
+              isValueUndefined ? 1 : selectedBox[prop.name] + 1
+            })">+</button>
+
+            <button onclick="handleSelect('${controlType}',  '${prop.name}', null)">&times;</button>
+            `) ||
+            ''}
+        </div>
+    </div>`;
   }
 
   function renderBoxes({ state }) {
@@ -197,14 +247,32 @@ function main() {
       .map(
         (_, i) => `
         <div
+          onclick="handleSelectBox(${i})"
           style="
             width: ${getWidth(i)}px;
             height: ${getHeight(i)}px;
-            padding-top: ${getPaddingTop(i)}px
-          "
-          class="flex-item flex-item-${i}"
+            padding-top: ${getPaddingTop(i)}px;
+            ${itemProps
+              .map(item => {
+                const box = state.boxState[i] || {};
+                return box[item.name] && `${item.name}: ${box[item.name]};`;
+              })
+              .join('')}"
+          class="flex-item flex-item-${i} ${state.selectedBox === i ? 'selected-box' : ''}"
         >
           <span>${i}</span>
+
+
+          <div class="box-properties">
+          ${itemProps
+            .map(item => {
+              const box = state.boxState[i] || {};
+              return box[item.name] && `<span>${item.name}: ${box[item.name]};</span>`;
+            })
+            .filter(Boolean)
+            .join('')}
+          </div>
+
         </div>
       `
       )

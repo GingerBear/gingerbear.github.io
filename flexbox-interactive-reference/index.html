@@ -24,6 +24,8 @@
         color: white;
         font-size: 20px;
         font-weight: bold;
+        box-sizing: border-box;
+        position: relative;
 
         /* interactive */
       }
@@ -62,6 +64,32 @@
       .num-box-title {
         font-size: 15px;
         width: 120px;
+      }
+
+      .selected-box {
+        background: rgb(252, 201, 159);
+      }
+
+      .flex-item:hover .box-properties {
+        display: flex;
+      }
+
+      .box-properties {
+        position: absolute;
+        display: none;
+        flex-direction: column;
+        left: 100%;
+        top: 0;
+        pointer-events: none;
+        font-size: 12px;
+        background: black;
+        z-index: 2;
+        width: 80px;
+        font-weight: normal;
+        align-items: flex-start;
+      }
+      .box-properties span {
+        padding: 1px 3px;
       }
     </style>
 
