@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Path Finding</title>
+    <link href="../assets/css/main.css" rel="stylesheet" />
+    <style>
+      .grid {
+        border-top: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        display: inline-block;
+      }
+
+      .row {
+        height: 20px;
+      }
+
+      .row .node {
+        box-sizing: border-box;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      .row .path {
+        background: #ddd;
+      }
+
+      .row .hill {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        background: #555;
+      }
+
+      .row .from {
+        background: red;
+      }
+
+      .row .to {
+        background: green;
+      }
+
+      .visited {
+        background: #eee;
+      }
+    </style>
+
+    <style class="style-container"></style>
+  </head>
+  <body>
+    <header role="banner">
+      <hgroup>
+        <h1><a href="/">GingerBear's Web Log</a></h1>
+      </hgroup>
+    </header>
+
+    <h1>Path Finding</h1>
+
+    <div class="grid"></div>
+  </body>
+  <script src="./path-finding.js"></script>
+</html>
