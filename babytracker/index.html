@@ -139,7 +139,7 @@
     </div>
 
     <!-- MAIN HUB PORTAL -->
-    <main id="hubView" class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-20 no-scrollbar">
+    <main id="hubView" class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] no-scrollbar">
 
         <!-- DYNAMIC ONGOING STATUS BANNERS -->
         <div class="space-y-2">
@@ -242,7 +242,7 @@
 
     <!-- GOOGLE CALENDAR 24-HOUR TIMELINE SCHEDULE PORTAL -->
     <main id="timelineView"
-        class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-20 space-y-2">
+        class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] space-y-2">
         <!-- Pinned Top Header Controls: Single Combined Toolbar -->
         <div
             class="shrink-0 flex items-center justify-between gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-2.5 py-1.5 shadow-xs">
@@ -266,8 +266,8 @@
         <!-- 24-HOUR CALENDAR TIME GRID CONTAINER (EXPANDED DEDICATED SCROLL VIEW) -->
         <div id="calendarScrollContainer"
             class="flex-1 overflow-y-auto bg-slate-950/90 border border-slate-800 rounded-2xl shadow-2xl relative scroll-smooth no-scrollbar">
-            <!-- 24 Hour Lines Background (1344px = 24 * 56px) -->
-            <div class="relative w-full pb-24" style="height: 1344px;" id="calendarGridCanvas">
+            <!-- 24 Hour Lines Background (1344px = 24 * 56px + bottom padding buffer) -->
+            <div class="relative w-full pb-32" style="min-height: 1400px; height: 1400px;" id="calendarGridCanvas">
                 <!-- Hour Rows, Red current time line, and Event Blocks rendered here dynamically -->
             </div>
         </div>
@@ -346,10 +346,13 @@
         const {
             ROUTINE_CONFIG,
             parseTimeToMinutes,
+            formatMinutesToTime,
             formatMinsToHhMm,
+            formatDuration,
             getAdaptiveWakeWindow,
             getAdaptiveNapDuration,
             shouldScheduleBridgeCatnap,
+            simulateDaySchedule,
             calculateDaySchedule,
             calculateLiveSleepStatus
         } = (typeof AdaptiveEngine !== 'undefined') ? AdaptiveEngine : {};
@@ -717,6 +720,11 @@
             const HOUR_HEIGHT = 56;
             const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
 
+            const escapeToastStr = (s) => {
+                if (!s) return '';
+                return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r?\n/g, ' ');
+            };
+
             let gridHtml = '';
 
             for (let hour = 0; hour < 24; hour++) {
@@ -837,19 +845,31 @@
                 } else {
                     // Active Sleep - calculate estimated wake & remaining time
                     const nowMins = (today.getHours() * 60) + today.getMinutes();
-                    const isBridge = (startMins >= 930);
-                    const typicalNapDur = getAdaptiveNapDuration(startMins, isBridge);
-                    const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
-                    let estWakeMins = startMins + typicalNapDur;
-                    if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
-
                     const isDayActiveNap = (startMins >= NIGHT_SLEEP_CUTOFF_MINS && startMins < (ROUTINE_CONFIG.bedtime.nightCutoffHour * 60));
                     const activeTagTitle = isDayActiveNap ? "Nap" : "Night Sleep";
+                    const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
 
-                    const sWakeH = Math.floor(estWakeMins / 60);
-                    const sWakeM = estWakeMins % 60;
-                    const estWakeStr = `${String(sWakeH).padStart(2, '0')}:${String(sWakeM).padStart(2, '0')}`;
-                    const remMins = Math.max(0, estWakeMins - nowMins);
+                    let estWakeMins;
+                    let estWakeStr;
+                    let remMins;
+
+                    if (!isDayActiveNap) {
+                        // Night Sleep -> Target morning wake is 08:00 AM (DWT)
+                        estWakeMins = DWT_MINS;
+                        estWakeStr = ROUTINE_CONFIG.wake.desiredWakeTime;
+                        remMins = (nowMins < DWT_MINS) ? (DWT_MINS - nowMins) : 0;
+                    } else {
+                        // Daytime Nap -> Adaptive nap duration
+                        const isBridge = (startMins >= 930);
+                        const typicalNapDur = getAdaptiveNapDuration(startMins, isBridge);
+                        estWakeMins = startMins + typicalNapDur;
+                        if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
+                        const sWakeH = Math.floor(estWakeMins / 60);
+                        const sWakeM = estWakeMins % 60;
+                        estWakeStr = `${String(sWakeH).padStart(2, '0')}:${String(sWakeM).padStart(2, '0')}`;
+                        remMins = Math.max(0, estWakeMins - nowMins);
+                    }
+
                     const remDurStr = formatMinsToHhMm(remMins);
 
                     // Block spans from start of nap to projected wake time (or now if overdue)
@@ -991,11 +1011,6 @@
                     ? 'calc((100% - 42px) * 0.65 - 6px)'
                     : `calc(((100% - 42px) * 0.65 - 6px) * ${colFraction} - 2px)`;
 
-                const escapeToastStr = (s) => {
-                    if (!s) return '';
-                    return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r?\n/g, ' ');
-                };
-
                 if (ev.eventType === 'feed') {
                     const isBottle = ev.eventLower.includes('bottle');
                     if (isBottle) {
@@ -1104,143 +1119,72 @@
             });
 
             // Inject Playbook-Based Projections for Today (Next Feed & Next Sleep/Wake)
-            if (selectedTimelineDate === todayStr) {
+            if (selectedTimelineDate === todayStr && typeof simulateDaySchedule === 'function') {
                 const nowMins = (today.getHours() * 60) + today.getMinutes();
                 const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
                 const nightCutoffMins = ROUTINE_CONFIG.bedtime.nightCutoffHour * 60;
-                const bedtimeTargetMins = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.targetTime);
-                const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
 
-                const isCurrentlySleeping = daySleepPortions.some(e => !e.isClosed);
-                // Any sleep happening within cutoff before DWT is night sleep, not daytime nap
-                const completedDaytimeNaps = daySleepPortions.filter(e => e.isClosed && !e.startsBeforeMidnight && e.startMinutes >= morningStartMins && e.startMinutes < nightCutoffMins);
-                const napCount = completedDaytimeNaps.length;
-
-                // Check if preceding wake window was stretched over threshold
-                let prevWWStretched = false;
-                let morningWakeMins = DWT_MINS; // Default DWT (8:00 AM)
-                let lastNapDur = null;
-
-                // Find the final overnight sleep session ending between 05:00 AM (300m) and 10:30 AM (630m)
+                // Find morning wake
+                let morningWakeMins = DWT_MINS;
                 const overnightSleeps = daySleepPortions.filter(e => e.isClosed && e.endMinutes >= 300 && e.endMinutes <= 630 && (e.startsBeforeMidnight || e.startMinutes < morningStartMins));
                 if (overnightSleeps.length > 0) {
                     morningWakeMins = overnightSleeps[overnightSleeps.length - 1].endMinutes;
                 }
 
-                if (completedDaytimeNaps.length > 0) {
-                    const lastIdx = completedDaytimeNaps.length - 1;
-                    const lastNap = completedDaytimeNaps[lastIdx];
-                    lastNapDur = lastNap.endMinutes - lastNap.startMinutes;
-                    const prevWakeStart = (lastIdx === 0) ? morningWakeMins : completedDaytimeNaps[lastIdx - 1].endMinutes;
-                    const actualPrevWW = lastNap.startMinutes - prevWakeStart;
-                    const prevPrevNapDur = (lastIdx > 0) ? (completedDaytimeNaps[lastIdx - 1].endMinutes - completedDaytimeNaps[lastIdx - 1].startMinutes) : null;
-                    const expectedPrevWW = getAdaptiveWakeWindow(prevWakeStart, prevPrevNapDur, false, false);
-                    if (actualPrevWW >= expectedPrevWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
-                        prevWWStretched = true;
-                    }
-                } else if (isCurrentlySleeping) {
-                    const activeSleep = daySleepPortions.find(e => !e.isClosed);
-                    if (activeSleep && !activeSleep.startsBeforeMidnight && activeSleep.startMinutes >= morningStartMins) {
-                        const actualWW = activeSleep.startMinutes - morningWakeMins;
-                        const expectedWW = getAdaptiveWakeWindow(morningWakeMins, null, false, false);
-                        if (actualWW >= expectedWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
-                            prevWWStretched = true;
-                        }
-                    }
+                const completedNaps = daySleepPortions.filter(e => e.isClosed && !e.startsBeforeMidnight && e.startMinutes >= morningStartMins && e.startMinutes < nightCutoffMins).map(e => ({
+                    startMinutes: e.startMinutes,
+                    endMinutes: e.endMinutes
+                }));
+
+                const activeSleepPortion = daySleepPortions.find(e => !e.isClosed);
+                let activeSleepObj = null;
+                if (activeSleepPortion) {
+                    activeSleepObj = {
+                        startMinutes: activeSleepPortion.startMinutes,
+                        isNightSleep: (activeSleepPortion.startsBeforeMidnight || activeSleepPortion.startMinutes < morningStartMins || activeSleepPortion.startMinutes >= nightCutoffMins)
+                    };
                 }
+
+                const sim = simulateDaySchedule({
+                    morningWakeMins: morningWakeMins,
+                    currentTimeMins: nowMins,
+                    completedNaps: completedNaps,
+                    activeSleep: activeSleepObj,
+                    lastWake: (lastSleepEndMinutes !== null) ? formatMinutesToTime(lastSleepEndMinutes) : undefined
+                });
 
                 // ==========================================
                 // 1. ADAPTIVE SLEEP PROJECTIONS (Naps & Bedtime)
                 // ==========================================
-                let sleepCursorWakeMins = (completedDaytimeNaps.length > 0)
-                    ? completedDaytimeNaps[completedDaytimeNaps.length - 1].endMinutes
-                    : morningWakeMins;
-                let napNumber = napCount + 1;
+                sim.remainingDayEstimates.forEach(est => {
+                    const startM = parseTimeToMinutes(est.startTime);
+                    const endM = (est.type === 'bedtime') ? 1440 : parseTimeToMinutes(est.endTime);
+                    const topPos = startM * MINUTE_HEIGHT;
 
-                if (isCurrentlySleeping) {
-                    const activeSleep = daySleepPortions.find(e => !e.isClosed);
-                    if (activeSleep) {
-                        const isNightSleep = (activeSleep.startsBeforeMidnight || activeSleep.startMinutes >= nightCutoffMins || activeSleep.startMinutes < morningStartMins);
-                        if (isNightSleep) {
+                    if (est.type === 'wake_window') {
+                        if (est.durationMins >= 15 && startM >= nowMins) {
+                            const wwHeight = Math.max(28, est.durationMins * MINUTE_HEIGHT);
                             gridHtml += `
-                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: 1312px; height: 26px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake-Up: Tomorrow at ${ROUTINE_CONFIG.wake.desiredWakeTime} (Desired Wake Time)', true)">
-                                    <div class="w-full h-full bg-indigo-950/50 border border-dashed border-indigo-400/60 rounded-xl px-1.5 flex items-center justify-between text-[9px] font-bold text-indigo-200 shadow-xs">
-                                        <span class="flex items-center gap-1 truncate"><span>☀️</span><span>Tomorrow</span></span>
-                                        <span class="font-mono text-indigo-300">${ROUTINE_CONFIG.wake.desiredWakeTime}</span>
-                                    </div>
-                                </div>
-                            `;
-                            sleepCursorWakeMins = 1440; // Done for the day
-                        } else {
-                            const isBridge = (activeSleep.startMinutes >= 930);
-                            const typicalNapDur = getAdaptiveNapDuration(activeSleep.startMinutes, isBridge);
-                            let estWakeMins = activeSleep.startMinutes + typicalNapDur;
-                            if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
-
-                            sleepCursorWakeMins = Math.max(nowMins, estWakeMins);
-                            lastNapDur = Math.max(nowMins, estWakeMins) - activeSleep.startMinutes;
-                            prevWWStretched = false;
-                            napNumber = napCount + 2;
-                        }
-                    }
-                }
-
-                // Dynamic projection loop: project forward until Bedtime
-                let cursor = sleepCursorWakeMins;
-                let prevNapDuration = lastNapDur;
-                let prevStretched = prevWWStretched;
-
-                while (cursor < 1440) {
-                    const timeToBed = bedtimeTargetMins - cursor;
-
-                    // Direct Bedtime Transition check:
-                    // If wake time is after 17:30 (1050m) OR time-to-bed is within max pre-bed WW + 15m (<= 150m):
-                    if (timeToBed <= ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins + 15 || cursor >= 1050) {
-                        let estBedStart = cursor + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
-                        estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
-                        const estWWMins = Math.max(60, estBedStart - cursor);
-                        let wwLabel = formatMinsToHhMm(estWWMins);
-
-                        if (!isCurrentlySleeping && cursor <= nowMins && (nowMins - cursor) >= ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
-                            estBedStart = nowMins;
-                            wwLabel = 'Due Now';
-                        }
-
-                        const sH = Math.floor(estBedStart / 60);
-                        const sM = estBedStart % 60;
-                        const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                        const eStr = `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`;
-
-                        // Render Estimated Pre-Bed Wake block
-                        if (estWWMins >= 15 && cursor >= nowMins) {
-                            const wwTop = cursor * MINUTE_HEIGHT;
-                            const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
-                            const wakeStartH = Math.floor(cursor / 60);
-                            const wakeStartM = cursor % 60;
-                            const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
-                            gridHtml += `
-                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before Bedtime: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${escapeToastStr(est.title)}: ${est.startTime} → ${est.endTime} (${est.durationStr})', true)">
                                     <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
                                         <div class="flex justify-between items-center gap-1">
                                             <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
                                                 <span>☀️</span> <span>Est. Wake</span>
                                             </span>
-                                            <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
+                                            <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${est.durationStr}</span>
                                         </div>
                                         <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                            ${wakeStartStr} → ${sStr}
+                                            ${est.startTime} → ${est.endTime}
                                         </div>
                                     </div>
                                 </div>
                             `;
                         }
-
-                        const todayPortionMins = 1440 - estBedStart;
+                    } else if (est.type === 'bedtime') {
+                        const todayPortionMins = 1440 - startM;
                         const blockHeight = Math.max(48, todayPortionMins * MINUTE_HEIGHT);
-                        const toastMsg = `🌙 Est. Bedtime: ${sStr} → ${eStr} (WW: ${wwLabel}, Wake: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM)`;
-
                         gridHtml += `
-                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estBedStart * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${escapeToastStr(est.title)}: ${est.startTime} → ${est.endTime}', true)">
                                 <div class="w-full h-full bg-gradient-to-b from-indigo-950/60 to-purple-950/50 border-indigo-400/80 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
                                     <div class="flex justify-between items-center gap-1">
                                         <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
@@ -1249,149 +1193,34 @@
                                         <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">Night</span>
                                     </div>
                                     <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                        ${sStr} → ${eStr}
+                                        ${est.startTime} → ${est.endTime}
                                     </div>
                                     <span class="text-[7px] text-indigo-400/80 font-bold uppercase tracking-wider">🌙 Wake time ${ROUTINE_CONFIG.wake.desiredWakeTime} AM</span>
                                 </div>
                             </div>
                         `;
-                        break;
-                    }
-
-                    // Otherwise, project a daytime nap (or catnap)
-                    const isBridge = (cursor >= 900 && timeToBed >= 150 && timeToBed <= 290);
-                    const targetWW = getAdaptiveWakeWindow(cursor, prevNapDuration, prevStretched, false, isBridge);
-                    let estSleepStartMins = cursor + targetWW;
-                    let wwBadgeLabel = formatMinsToHhMm(targetWW);
-                    if (prevStretched) wwBadgeLabel += ` (-${ROUTINE_CONFIG.wakeWindows.overdueWwReductionMins}m)`;
-                    else if (prevNapDuration && prevNapDuration < ROUTINE_CONFIG.wakeWindows.shortNapThresholdMins) wwBadgeLabel += ` (-${ROUTINE_CONFIG.wakeWindows.shortNapWwReductionMins}m)`;
-
-                    // If overdue right now:
-                    if (!isCurrentlySleeping && cursor <= nowMins && (nowMins - cursor) >= targetWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
-                        estSleepStartMins = nowMins;
-                        wwBadgeLabel = 'Due Now';
-                    }
-
-                    // If nap start is too late to fit a catnap before 18:00 hard stop (after 17:45), skip to Bedtime
-                    if (estSleepStartMins >= hardStopMins - 15) {
-                        let estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, cursor + ROUTINE_CONFIG.bedtime.minWakeWindowBeforeBedMins));
-                        const estWWMins = Math.max(60, estBedStart - cursor);
-                        const sH = Math.floor(estBedStart / 60);
-                        const sM = estBedStart % 60;
-                        const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                        const eStr = `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`;
-
-                        // Render Estimated Pre-Bed Wake block
-                        if (estWWMins >= 15 && cursor >= nowMins) {
-                            const wwTop = cursor * MINUTE_HEIGHT;
-                            const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
-                            const wakeStartH = Math.floor(cursor / 60);
-                            const wakeStartM = cursor % 60;
-                            const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
-                            gridHtml += `
-                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before Bedtime: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
-                                    <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
-                                        <div class="flex justify-between items-center gap-1">
-                                            <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
-                                                <span>☀️</span> <span>Est. Wake</span>
-                                            </span>
-                                            <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
-                                        </div>
-                                        <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                            ${wakeStartStr} → ${sStr}
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-
-                        const todayPortionMins = 1440 - estBedStart;
-                        const blockHeight = Math.max(48, todayPortionMins * MINUTE_HEIGHT);
-                        const toastMsg = `🌙 Est. Bedtime: ${sStr} → ${eStr} (WW: ${formatMinsToHhMm(estWWMins)}, Wake: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM)`;
-
+                    } else {
+                        // Nap / Catnap
+                        const durMins = endM - startM;
+                        const blockHeight = Math.max(28, durMins * MINUTE_HEIGHT);
                         gridHtml += `
-                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estBedStart * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
-                                <div class="w-full h-full bg-gradient-to-b from-indigo-950/60 to-purple-950/50 border-indigo-400/80 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
-                                    <div class="flex justify-between items-center gap-1">
-                                        <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
-                                            <span>🌙</span> <span>Est. Bedtime</span>
-                                        </span>
-                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">Night</span>
-                                    </div>
-                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                        ${sStr} → ${eStr}
-                                    </div>
-                                    <span class="text-[7px] text-indigo-400/80 font-bold uppercase tracking-wider">🌙 Wake time ${ROUTINE_CONFIG.wake.desiredWakeTime} AM</span>
-                                </div>
-                            </div>
-                        `;
-                        break;
-                    }
-
-                    let napDur = getAdaptiveNapDuration(estSleepStartMins, isBridge);
-                    let estSleepEndMins = estSleepStartMins + napDur;
-                    if (estSleepEndMins > hardStopMins) estSleepEndMins = hardStopMins; // 18:00 hard stop
-
-                    const napTitle = isBridge ? 'Est. Catnap' : `Est. Nap ${napNumber}`;
-                    const sH = Math.floor(estSleepStartMins / 60);
-                    const sM = estSleepStartMins % 60;
-                    const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                    const eH = Math.floor(estSleepEndMins / 60);
-                    const eM = estSleepEndMins % 60;
-                    const eStr = `${String(eH).padStart(2, '0')}:${String(eM).padStart(2, '0')}`;
-
-                    // Render Estimated Wake block before this nap
-                    const estWWMins = estSleepStartMins - cursor;
-                    if (estWWMins >= 15 && cursor >= nowMins) {
-                        const wwTop = cursor * MINUTE_HEIGHT;
-                        const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
-                        const wakeStartH = Math.floor(cursor / 60);
-                        const wakeStartM = cursor % 60;
-                        const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
-                        gridHtml += `
-                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before ${napTitle}: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
-                                <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
-                                    <div class="flex justify-between items-center gap-1">
-                                        <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
-                                            <span>☀️</span> <span>Est. Wake</span>
-                                        </span>
-                                        <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
-                                    </div>
-                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                        ${wakeStartStr} → ${sStr}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    if (estSleepEndMins > nowMins) {
-                        const sleepDurStr = formatMinsToHhMm(estSleepEndMins - estSleepStartMins);
-                        const blockHeight = Math.max(28, (estSleepEndMins - estSleepStartMins) * MINUTE_HEIGHT);
-                        const toastMsg = `💤 ${napTitle}: ${sStr} → ${eStr} (WW: ${wwBadgeLabel})`;
-
-                        gridHtml += `
-                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estSleepStartMins * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${escapeToastStr(est.title)}: ${est.startTime} → ${est.endTime} (${est.durationStr})', true)">
                                 <div class="w-full h-full bg-gradient-to-b from-indigo-950/40 to-indigo-900/30 border-indigo-400/70 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
                                     <div class="flex justify-between items-center gap-1">
                                         <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
-                                            <span>💤</span> <span>${napTitle}</span>
+                                            <span>💤</span> <span>${est.title}</span>
                                         </span>
-                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">${sleepDurStr}</span>
+                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">${est.durationStr}</span>
                                     </div>
                                     <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
-                                        ${sStr} → ${eStr}
+                                        ${est.startTime} → ${est.endTime}
                                     </div>
+                                    ${est.details ? `<span class="text-[7px] text-indigo-400/80 font-bold uppercase tracking-wider">${est.details}</span>` : ''}
                                 </div>
                             </div>
                         `;
                     }
-
-                    cursor = estSleepEndMins;
-                    prevNapDuration = estSleepEndMins - estSleepStartMins;
-                    prevStretched = false;
-                    napNumber++;
-                }
+                });
 
                 // ==========================================
                 // 2. FULL-DAY FEED PROJECTIONS (Configurable Intervals)
@@ -1609,136 +1438,14 @@
         }
 
         function getLiveSleepWakeProjection() {
-            const now = new Date();
-            const nowMins = now.getHours() * 60 + now.getMinutes();
-            const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
-            const nightCutoffMins = ROUTINE_CONFIG.bedtime.nightCutoffHour * 60;
-            const bedtimeTargetMins = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.targetTime);
-            const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
-
-            if (activeSleepRow) {
-                if (!activeSleepStartTimeMs) {
-                    return {
-                        state: 'asleep',
-                        isNightSleep: false,
-                        targetNapMins: 90,
-                        projWakeStr: '',
-                        startTimeStr: activeSleepTimeString || ''
-                    };
-                }
-                const sleepStartDate = new Date(activeSleepStartTimeMs);
-                const sleepStartHours = sleepStartDate.getHours();
-                const sleepStartMins = sleepStartHours * 60 + sleepStartDate.getMinutes();
-                const isNightSleep = (sleepStartMins < morningStartMins || sleepStartMins >= nightCutoffMins);
-
-                if (isNightSleep) {
-                    const targetWakeDate = new Date(sleepStartDate);
-                    if (sleepStartHours >= 12) targetWakeDate.setDate(targetWakeDate.getDate() + 1);
-                    const dwtParts = ROUTINE_CONFIG.wake.desiredWakeTime.split(':');
-                    targetWakeDate.setHours(parseInt(dwtParts[0], 10), parseInt(dwtParts[1], 10), 0, 0);
-                    const targetNapMins = Math.max(60, Math.round((targetWakeDate.getTime() - activeSleepStartTimeMs) / 60000));
-                    return {
-                        state: 'asleep',
-                        isNightSleep: true,
-                        targetNapMins: targetNapMins,
-                        projWakeStr: ROUTINE_CONFIG.wake.desiredWakeTime,
-                        startTimeStr: activeSleepTimeString || ''
-                    };
-                } else {
-                    const isBridge = (sleepStartMins >= 930);
-                    const typicalNapDur = getAdaptiveNapDuration(sleepStartMins, isBridge);
-                    let estWakeMins = sleepStartMins + typicalNapDur;
-                    if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
-                    const targetNapMins = estWakeMins - sleepStartMins;
-                    const sWakeH = Math.floor(estWakeMins / 60);
-                    const sWakeM = estWakeMins % 60;
-                    const projWakeStr = `${String(sWakeH).padStart(2, '0')}:${String(sWakeM).padStart(2, '0')}`;
-                    return {
-                        state: 'asleep',
-                        isNightSleep: false,
-                        targetNapMins: targetNapMins,
-                        projWakeStr: projWakeStr,
-                        startTimeStr: activeSleepTimeString || ''
-                    };
-                }
-            } else if (lastWakeUpTimeMs) {
-                const wakeUpDate = new Date(lastWakeUpTimeMs);
-                const wakeUpMins = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes();
-                const wakeUpTimeStr = `${String(wakeUpDate.getHours()).padStart(2, '0')}:${String(wakeUpDate.getMinutes()).padStart(2, '0')}`;
-
-                // Check if this is a nighttime awakening (before 07:00 AM or after 19:00 PM)
-                if (wakeUpMins < morningStartMins || wakeUpMins >= nightCutoffMins) {
-                    const targetWWMins = 30;
-                    const estSleepStartMins = (wakeUpMins + targetWWMins) % 1440;
-                    const sH = Math.floor(estSleepStartMins / 60);
-                    const sM = estSleepStartMins % 60;
-                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                    return {
-                        state: 'awake',
-                        isNightAwake: true,
-                        isBedtime: false,
-                        targetWWMins: targetWWMins,
-                        projSleepStr: projSleepStr,
-                        wakeUpTimeStr: wakeUpTimeStr
-                    };
-                }
-
-                const lastNapDur = getLastCompletedNapDurationMins();
-                const timeToBed = bedtimeTargetMins - wakeUpMins;
-
-                // 1. Check direct bedtime transition (within max pre-bed WW or late afternoon wake)
-                if (timeToBed <= ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins + 15 || wakeUpMins >= 1050) {
-                    let estBedStart = wakeUpMins + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
-                    estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
-                    const estWWMins = Math.max(60, estBedStart - wakeUpMins);
-                    const sH = Math.floor(estBedStart / 60);
-                    const sM = estBedStart % 60;
-                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                    return {
-                        state: 'awake',
-                        isNightAwake: false,
-                        isBedtime: true,
-                        targetWWMins: estWWMins,
-                        projSleepStr: projSleepStr,
-                        wakeUpTimeStr: wakeUpTimeStr
-                    };
-                }
-
-                // 2. Check bridge catnap vs daytime nap
-                const isBridge = (wakeUpMins >= 900 && timeToBed >= 150 && timeToBed <= 290);
-                const targetWW = getAdaptiveWakeWindow(wakeUpMins, lastNapDur, false, false, isBridge);
-                let estSleepStartMins = wakeUpMins + targetWW;
-
-                // 3. If nap would start too close to hard stop (18:00), skip to Bedtime
-                if (estSleepStartMins >= hardStopMins - 15) {
-                    let estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, wakeUpMins + ROUTINE_CONFIG.bedtime.minWakeWindowBeforeBedMins));
-                    const estWWMins = Math.max(60, estBedStart - wakeUpMins);
-                    const sH = Math.floor(estBedStart / 60);
-                    const sM = estBedStart % 60;
-                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                    return {
-                        state: 'awake',
-                        isNightAwake: false,
-                        isBedtime: true,
-                        targetWWMins: estWWMins,
-                        projSleepStr: projSleepStr,
-                        wakeUpTimeStr: wakeUpTimeStr
-                    };
-                }
-
-                const sH = Math.floor(estSleepStartMins / 60);
-                const sM = estSleepStartMins % 60;
-                const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
-                return {
-                    state: 'awake',
-                    isNightAwake: false,
-                    isBedtime: false,
-                    targetWWMins: targetWW,
-                    projSleepStr: projSleepStr,
-                    wakeUpTimeStr: wakeUpTimeStr
-                };
+            if (typeof calculateLiveSleepStatus === 'function') {
+                return calculateLiveSleepStatus({
+                    activeSleepStartTimeMs: activeSleepStartTimeMs,
+                    lastWakeUpTimeMs: lastWakeUpTimeMs,
+                    lastCompletedNapDurMins: getLastCompletedNapDurationMins(),
+                    nowMs: Date.now()
+                });
             }
-
             return null;
         }
 
