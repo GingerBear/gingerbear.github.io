@@ -93,7 +93,7 @@
 </head>
 <!-- Increased bottom padding on body to ensure content clears the taller footer -->
 
-<body class="bg-slate-900 text-slate-100 font-sans antialiased h-screen overflow-hidden flex flex-col select-none"
+<body class="bg-slate-900 text-slate-100 font-sans antialiased overflow-hidden flex flex-col select-none"
     onload="initPage()">
 
     <!-- Header with App Title and Sync / Refresh Status in Top Right -->
@@ -109,8 +109,9 @@
                 class="hidden text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">0
                 Pending</span>
 
-            
-            <button id="pwaSettingsBtn" type="button" onclick="openPwaSettingsModal(false)" title="API & Security Settings"
+
+            <button id="pwaSettingsBtn" type="button" onclick="openPwaSettingsModal(false)"
+                title="API & Security Settings"
                 class="flex items-center justify-center bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 hover:text-white w-9 h-9 min-w-[36px] min-h-[36px] rounded-xl text-sm font-semibold active:scale-90 transition shadow-xs cursor-pointer z-40">
                 ⚙️
             </button>
@@ -129,7 +130,7 @@
     </div>
 
     <!-- MAIN HUB PORTAL -->
-    <main id="hubView" class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-20 no-scrollbar">
+    <main id="hubView" class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-14 no-scrollbar">
 
         <!-- DYNAMIC ONGOING STATUS BANNERS -->
         <div class="space-y-2">
@@ -180,7 +181,8 @@
                     <span class="font-bold text-sm text-indigo-400">Feed</span>
                 </div>
                 <div id="nextFeedDisplayTime"
-                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">Loading...</div>
+                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
+                    Loading...</div>
             </button>
 
             <button onclick="openPanel('pump')"
@@ -190,7 +192,8 @@
                     <span class="font-bold text-sm text-purple-400">Pump</span>
                 </div>
                 <div id="lastPumpDisplay"
-                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">Loading...</div>
+                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
+                    Loading...</div>
             </button>
 
 
@@ -230,7 +233,7 @@
 
     <!-- GOOGLE CALENDAR 24-HOUR TIMELINE SCHEDULE PORTAL -->
     <main id="timelineView"
-        class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-20 space-y-2">
+        class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-14 space-y-2">
         <!-- Pinned Top Header Controls: Single Combined Toolbar -->
         <div
             class="shrink-0 flex items-center justify-between gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-2.5 py-1.5 shadow-xs">
@@ -262,25 +265,25 @@
     </main>
 
     <!-- FIXED PERSISTENT BOTTOM NAVIGATION TAB BAR (ACTIONS / TIMELINE / SHEET) -->
-    <nav
-        class="fixed bottom-0 left-0 right-0 border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-lg z-30 px-6 pt-2 pb-5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
-        <div class="max-w-md mx-auto grid grid-cols-3 gap-3">
+    <nav id="bottomNav"
+        class="fixed bottom-0 left-0 right-0 border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-lg z-30 px-4 pt-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
+        <div class="max-w-md mx-auto grid grid-cols-3 gap-2">
             <button id="tabDashboardBtn" onclick="switchMainTab('dashboard')"
-                class="py-2 px-2 text-[10px] font-extrabold rounded-2xl transition-all text-white bg-indigo-600 shadow-md flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]">
-                <span class="text-xl leading-none">⚡</span>
+                class="py-1 px-2 text-[10px] font-extrabold rounded-xl transition-all text-white bg-indigo-600 shadow-xs flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[40px]">
+                <span class="text-base leading-none">⚡</span>
                 <span class="tracking-wide">Actions</span>
             </button>
 
             <button id="tabTimelineBtn" onclick="switchMainTab('timeline')"
-                class="py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]">
-                <span class="text-xl leading-none">📅</span>
+                class="py-1 px-2 text-[10px] font-bold rounded-xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[40px]">
+                <span class="text-base leading-none">📅</span>
                 <span class="tracking-wide">Timeline</span>
             </button>
 
             <a href="https://docs.google.com/spreadsheets/d/1-LYuxoxcRescgFiq0UM2J0Il-IIhmVtASMmhT9YBoxU/edit"
                 target="_blank" title="Open Spreadsheet Log File"
-                class="py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px] decoration-none">
-                <span class="text-xl leading-none">📊</span>
+                class="py-1 px-2 text-[10px] font-bold rounded-xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[40px] decoration-none">
+                <span class="text-base leading-none">📊</span>
                 <span class="tracking-wide">Sheet</span>
             </a>
         </div>
@@ -324,7 +327,7 @@
     </div>
 
     <!-- Include Standalone Adaptive Schedule Engine -->
-    
+
     <script src="./AdaptiveEngine.js"></script>
     <script src="./api.js"></script>
 
@@ -2936,49 +2939,60 @@
     </script>
 
     <!-- PWA SETTINGS MODAL -->
-    <div id="pwaSettingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="pwaSettingsModal"
+        class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
                     <span>⚙️</span> API & Security Settings
                 </h3>
-                <button type="button" onclick="closePwaSettingsModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">✕</button>
+                <button type="button" onclick="closePwaSettingsModal()"
+                    class="text-slate-400 hover:text-white text-lg font-bold p-1">✕</button>
             </div>
-            <div id="pwaAuthAlert" class="hidden p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-semibold">
+            <div id="pwaAuthAlert"
+                class="hidden p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-semibold">
                 ⚠️ Invalid API Key! Please enter your valid Family PIN.
             </div>
             <div class="space-y-3.5">
                 <div>
                     <div class="flex justify-between items-baseline mb-1">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Secret API Key (Family PIN)</label>
-                        <span id="pwaKeyStatusBadge" class="text-[10px] text-emerald-400 font-semibold font-mono"></span>
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Secret API
+                            Key (Family PIN)</label>
+                        <span id="pwaKeyStatusBadge"
+                            class="text-[10px] text-emerald-400 font-semibold font-mono"></span>
                     </div>
                     <div class="relative">
                         <input type="password" id="pwaApiKeyInput" placeholder="Enter API Key"
                             class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
-                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-sm p-1">
+                        <button type="button" onclick="toggleApiKeyVisibility()"
+                            class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-sm p-1">
                             <span id="pwaEyeIcon">👁️</span>
                         </button>
                     </div>
                     <p class="text-[10px] text-slate-400 mt-1 leading-normal">
-                        Saved in this device's <code class="text-indigo-300">localStorage</code>. Only devices with this PIN can access your Sheet.
+                        Saved in this device's <code class="text-indigo-300">localStorage</code>. Only devices with this
+                        PIN can access your Sheet.
                     </p>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps Script Web App URL</label>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps
+                        Script Web App URL</label>
                     <input type="text" id="pwaApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
                         class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
                 </div>
             </div>
             <div class="pt-2 flex flex-col gap-2">
-                <button type="button" onclick="savePwaSettings()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                <button type="button" onclick="savePwaSettings()"
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     💾 Save & Connect
                 </button>
                 <div class="flex gap-2">
-                    <button type="button" onclick="resetPwaKeyToDefault()" class="flex-1 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
+                    <button type="button" onclick="resetPwaKeyToDefault()"
+                        class="flex-1 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
                         Reset Default Key
                     </button>
-                    <button type="button" onclick="closePwaSettingsModal()" class="px-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
+                    <button type="button" onclick="closePwaSettingsModal()"
+                        class="px-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
                         Cancel
                     </button>
                 </div>
