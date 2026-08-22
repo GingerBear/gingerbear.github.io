@@ -15,13 +15,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Prevent iOS Safari from zooming when focusing input fields */
-        @media screen and (max-width: 800px) {
-            input, select, textarea, button {
-                font-size: 16px !important;
-            }
-        }
-
         body {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -2944,8 +2937,8 @@
                     </div>
                     <div class="relative">
                         <input type="password" id="pwaApiKeyInput" placeholder="Enter API Key"
-                            class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-base text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
-                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-base p-1">
+                            class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
+                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-sm p-1">
                             <span id="pwaEyeIcon">👁️</span>
                         </button>
                     </div>
@@ -2956,7 +2949,7 @@
                 <div>
                     <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps Script Web App URL</label>
                     <input type="text" id="pwaApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
-                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-base text-white outline-none focus:border-indigo-500 font-mono">
+                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
                 </div>
             </div>
             <div class="pt-2 flex flex-col gap-2">
