@@ -347,7 +347,7 @@
 
 
     <script>
-        window.APP_BUILD_VERSION = 'v1.5 • 8/22 4:49 PM';
+        window.APP_BUILD_VERSION = 'v1.5 • 8/22 4:57 PM';
 
         // Destructure AdaptiveEngine methods & configuration for direct global use
         const {
@@ -2741,8 +2741,13 @@
 
             <!-- Auth Error Alert -->
             <div id="pwaAuthAlert"
-                class="hidden p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-semibold">
-                ⚠️ Invalid API Key! Please enter your valid Family PIN.
+                class="hidden p-3 rounded-xl bg-rose-950/90 border border-rose-600/80 text-rose-200 text-xs font-semibold space-y-1 shadow-md animate-pulse">
+                <div class="flex items-center gap-1.5 text-rose-100 font-extrabold text-xs">
+                    <span>🔒</span> 401 Unauthorized: Invalid or missing API key
+                </div>
+                <div class="text-[11px] font-normal text-rose-300">
+                    Please enter your valid Family PIN below to reconnect.
+                </div>
             </div>
 
             <!-- Dynamic Update Notification Card -->
@@ -2840,7 +2845,20 @@
                 const versionBadge = document.getElementById('pwaAppVersionBadge');
                 if (versionBadge) versionBadge.textContent = window.APP_BUILD_VERSION || 'v1.5';
                 const alertBox = document.getElementById('pwaAuthAlert');
-                if (alertBox) isAuthError ? alertBox.classList.remove('hidden') : alertBox.classList.add('hidden');
+                if (alertBox) {
+                    if (isAuthError) {
+                        alertBox.classList.remove('hidden');
+                        setTimeout(() => {
+                            const keyInput = document.getElementById('pwaApiKeyInput');
+                            if (keyInput) {
+                                keyInput.focus();
+                                keyInput.select();
+                            }
+                        }, 100);
+                    } else {
+                        alertBox.classList.add('hidden');
+                    }
+                }
                 
                 const updateCard = document.getElementById('pwaModalUpdateCard');
                 if (updateCard) {

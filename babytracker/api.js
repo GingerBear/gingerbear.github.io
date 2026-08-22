@@ -136,6 +136,16 @@ const BabyTrackerAPI = (function () {
     flushOutbox();
   });
 
+  function handleAuthError() {
+    console.warn('[API Auth] 401 Unauthorized: Invalid or missing API key.');
+    if (typeof window.openPwaSettingsModal === 'function') {
+      window.openPwaSettingsModal(true);
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('🔒 401 Unauthorized: Please update your API Key', false);
+    }
+  }
+
   // --- CORE HTTP POST DISPATCHER ---
   async function executePost(action, payload = {}) {
     const url = getUrl();
@@ -159,13 +169,17 @@ const BabyTrackerAPI = (function () {
 
     if (!res.ok) {
       if (res.status === 401) {
-        throw new Error('401 Unauthorized: Invalid API Key');
+        handleAuthError();
+        throw new Error('401 Unauthorized: Invalid or missing API key');
       }
       throw new Error(`HTTP Error ${res.status}`);
     }
 
     const data = await res.json();
     if (data.success === false) {
+      if (data.error && (data.error.includes('401') || data.error.toLowerCase().includes('unauthorized') || data.error.toLowerCase().includes('api key'))) {
+        handleAuthError();
+      }
       throw new Error(data.error || 'Server error');
     }
 
@@ -181,9 +195,12 @@ const BabyTrackerAPI = (function () {
         localStorage.setItem(STORAGE_KEY_CACHE, JSON.stringify(data));
         return data;
       } catch (err) {
+        if (err.message && (err.message.includes('401') || err.message.toLowerCase().includes('unauthorized'))) {
+          handleAuthError();
+        }
         // If offline / network error, return cached data if available
         const cached = localStorage.getItem(STORAGE_KEY_CACHE);
-        if (cached) {
+        if (cached && !(err.message && err.message.includes('401'))) {
           console.warn('[API] Using cached offline data due to fetch failure:', err);
           return JSON.parse(cached);
         }
@@ -224,7 +241,8 @@ const BabyTrackerAPI = (function () {
     getDefaultUrl,
     flushOutbox,
     updateSyncBadge,
-    getCachedInitialData
+    getCachedInitialData,
+    handleAuthError
   };
 })();
 
@@ -248,9 +266,6 @@ if (typeof google === 'undefined' || !google.script) {
         BabyTrackerAPI.call('getInitialData')
           .then(res => this._success && this._success(res))
           .catch(err => {
-            if (err.message && (err.message.includes('401') || err.message.includes('Unauthorized'))) {
-              if (typeof openPwaSettingsModal === 'function') openPwaSettingsModal(true);
-            }
             if (this._failure) this._failure(err);
           });
       },
