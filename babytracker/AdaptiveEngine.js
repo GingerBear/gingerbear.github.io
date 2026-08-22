@@ -269,7 +269,40 @@
             lastNapDur = napDur;
         });
 
-        // --- STEP 2: Assess Current Live State ---
+        // --- STEP 2: Assess Current Live State & Forward Simulation Setup ---
+        const remainingDayEstimates = [];
+
+        function appendBedtimeProjection(startCursor, detailsNote) {
+            let estBedStart = startCursor + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
+            estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
+            if (estBedStart - startCursor > ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins) {
+                estBedStart = startCursor + ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins;
+            }
+            const estWWMins = Math.max(60, estBedStart - startCursor);
+
+            if (startCursor < estBedStart) {
+                remainingDayEstimates.push({
+                    type: 'wake_window',
+                    title: '☀️ Pre-Bed Wake Window',
+                    startTime: formatMinutesToTime(startCursor),
+                    endTime: formatMinutesToTime(estBedStart),
+                    durationMins: estWWMins,
+                    durationStr: formatMinsToHhMm(estWWMins),
+                    details: detailsNote || `Pre-bed window (${formatMinsToHhMm(estWWMins)}, max 2h)`
+                });
+            }
+
+            remainingDayEstimates.push({
+                type: 'bedtime',
+                title: '🌙 Bedtime',
+                startTime: formatMinutesToTime(estBedStart),
+                endTime: `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`,
+                durationMins: null,
+                durationStr: 'Night Sleep',
+                details: `Bedtime window: ${ROUTINE_CONFIG.bedtime.window[0]}–${ROUTINE_CONFIG.bedtime.window[1]}`
+            });
+        }
+
         let currentStatus = {};
         let cursor = lastWakeMins;
         let napIndex = rawCompletedNaps.length + 1;
@@ -388,10 +421,31 @@
                         : `☀️ Awake for ${formatMinsToHhMm(elapsedAwakeMins)} (Next Sleep: ${formatMinutesToTime(scheduledSleepStartMins)}, in ${formatMinsToHhMm(remAwakeMins)})`)
             };
 
-            if (currentTimeMins > scheduledSleepStartMins) {
-                cursor = currentTimeMins;
-                if (elapsedAwakeMins >= targetWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
-                    prevWWStretched = true;
+            if (currentTimeMins >= scheduledSleepStartMins) {
+                // Baby is currently DUE NOW or OVERDUE for sleep -> Nap starts right NOW
+                if (isPreBed) {
+                    appendBedtimeProjection(currentTimeMins, 'Bedtime due now');
+                    cursor = 1440; // Finished for the day
+                } else {
+                    let napDur = getAdaptiveNapDuration(currentTimeMins, isBridge);
+                    let estSleepEndMins = Math.min(hardStopMins, currentTimeMins + napDur);
+                    const napTitle = isBridge ? '💤 Est. Bridge Catnap' : `💤 Est. Nap ${napIndex}`;
+
+                    remainingDayEstimates.push({
+                        type: isBridge ? 'catnap' : 'nap',
+                        title: napTitle,
+                        napNumber: isBridge ? 'Catnap' : napIndex,
+                        startTime: formatMinutesToTime(currentTimeMins),
+                        endTime: formatMinutesToTime(estSleepEndMins),
+                        durationMins: napDur,
+                        durationStr: formatMinsToHhMm(napDur),
+                        details: isBridge ? `Bridge Catnap to ${ROUTINE_CONFIG.naps.hardStop}` : 'Target daytime nap (Due now)'
+                    });
+
+                    cursor = estSleepEndMins;
+                    lastNapDur = napDur;
+                    prevWWStretched = isOverdue;
+                    napIndex++;
                 }
             } else {
                 cursor = lastWakeMins;
@@ -399,39 +453,6 @@
         }
 
         // --- STEP 3: Forward Day Simulation (Phases 2 & 3) ---
-        const remainingDayEstimates = [];
-
-        function appendBedtimeProjection(startCursor, detailsNote) {
-            let estBedStart = startCursor + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
-            estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
-            if (estBedStart - startCursor > ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins) {
-                estBedStart = startCursor + ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins;
-            }
-            const estWWMins = Math.max(60, estBedStart - startCursor);
-
-            if (startCursor < estBedStart) {
-                remainingDayEstimates.push({
-                    type: 'wake_window',
-                    title: '☀️ Pre-Bed Wake Window',
-                    startTime: formatMinutesToTime(startCursor),
-                    endTime: formatMinutesToTime(estBedStart),
-                    durationMins: estWWMins,
-                    durationStr: formatMinsToHhMm(estWWMins),
-                    details: detailsNote || `Pre-bed window (${formatMinsToHhMm(estWWMins)}, max 2h)`
-                });
-            }
-
-            remainingDayEstimates.push({
-                type: 'bedtime',
-                title: '🌙 Bedtime',
-                startTime: formatMinutesToTime(estBedStart),
-                endTime: `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`,
-                durationMins: null,
-                durationStr: 'Night Sleep',
-                details: `Bedtime window: ${ROUTINE_CONFIG.bedtime.window[0]}–${ROUTINE_CONFIG.bedtime.window[1]}`
-            });
-        }
-
         while (cursor < 1440) {
             const isBridge = shouldScheduleBridgeCatnap(cursor, bedtimeTargetMins, hardStopMins);
             const timeToEarliestBed = BEDTIME_START_MINS - cursor;
