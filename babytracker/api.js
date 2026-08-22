@@ -26,7 +26,23 @@ const BabyTrackerAPI = (function () {
   }
 
   function setKey(key) {
-    if (key) localStorage.setItem(STORAGE_KEY_KEY, key.trim());
+    if (key) {
+      localStorage.setItem(STORAGE_KEY_KEY, key.trim());
+    } else {
+      localStorage.removeItem(STORAGE_KEY_KEY);
+    }
+  }
+
+  function hasConfiguredKey() {
+    return !!localStorage.getItem(STORAGE_KEY_KEY);
+  }
+
+  function getDefaultKey() {
+    return DEFAULT_API_KEY;
+  }
+
+  function getDefaultUrl() {
+    return DEFAULT_API_URL;
   }
 
   // --- OUTBOX QUEUE MANAGEMENT (OFFLINE SYNC) ---
@@ -175,8 +191,52 @@ const BabyTrackerAPI = (function () {
     setUrl,
     getKey,
     setKey,
+    hasConfiguredKey,
+    getDefaultKey,
+    getDefaultUrl,
     flushOutbox,
     updateSyncBadge,
     getCachedInitialData
   };
 })();
+
+// --- DROP-IN GOOGLE APPS SCRIPT ADAPTER ---
+// Enables Index.html to run 100% untouched without modifying its source code
+if (typeof google === 'undefined' || !google.script) {
+  window.google = window.google || {};
+  window.google.script = {
+    run: {
+      withSuccessHandler(successCb) {
+        const runner = Object.create(this);
+        runner._success = successCb;
+        return runner;
+      },
+      withFailureHandler(failureCb) {
+        const runner = Object.create(this);
+        runner._failure = failureCb;
+        return runner;
+      },
+      getInitialAppInitializationData() {
+        BabyTrackerAPI.call('getInitialData')
+          .then(res => this._success && this._success(res))
+          .catch(err => {
+            if (err.message && (err.message.includes('401') || err.message.includes('Unauthorized'))) {
+              if (typeof openPwaSettingsModal === 'function') openPwaSettingsModal(true);
+            }
+            if (this._failure) this._failure(err);
+          });
+      },
+      closeActiveRowSession(rowNum, targetTimestamp, isMinutesUnit, note) {
+        BabyTrackerAPI.call('closeSession', { rowNum, endTimestamp: targetTimestamp, isMinutesUnit, note })
+          .then(res => this._success && this._success(res))
+          .catch(err => this._failure && this._failure(err));
+      },
+      addLogEntry(event, value, note, targetTimestamp) {
+        BabyTrackerAPI.call('addLogEntry', { event, value, note, passedTimestamp: targetTimestamp })
+          .then(res => this._success && this._success(res))
+          .catch(err => this._failure && this._failure(err));
+      }
+    }
+  };
+}
+

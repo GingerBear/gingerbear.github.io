@@ -81,7 +81,7 @@
                 Pending</span>
 
             
-            <button id="pwaSettingsBtn" onclick="openPwaSettingsModal()" title="API & Endpoint Settings"
+            <button id="pwaSettingsBtn" onclick="openPwaSettingsModal()" title="API & Security Settings"
                 class="flex items-center justify-center bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white p-2 rounded-xl text-xs font-semibold active:scale-95 transition shadow-xs">
                 ⚙️
             </button>
@@ -2406,17 +2406,18 @@
             if (refBtn) refBtn.disabled = true;
             if (icon) icon.className = "text-xs inline-block animate-spin";
 
-            BabyTrackerAPI.call('getInitialData')
-                .then((response) => {
+            google.script.run
+                .withSuccessHandler((response) => {
                     if (refBtn) refBtn.disabled = false;
                     if (icon) icon.className = "text-xs inline-block";
                     applyAppStatusData(response);
                 })
-                .catch((err) => {
+                .withFailureHandler(() => {
                     if (refBtn) refBtn.disabled = false;
                     if (icon) icon.className = "text-xs inline-block";
-                    showToast("Sync check failed: " + err.message, false);
-                });
+                    showToast("Sync check failed", false);
+                })
+                .getInitialAppInitializationData();
         }
 
         function initPage() {
@@ -2791,24 +2792,18 @@
             let note = document.getElementById('modNote')?.value || '';
 
             if (currentModule === 'sleep' && activeSleepRow) {
-                BabyTrackerAPI.call('closeSession', { rowNum: activeSleepRow, endTimestamp: targetTimestamp, isMinutesUnit: false, note })
-                    .then((res) => { 
-                        closePanel(); 
-                        checkGlobalAppStatus(); 
-                        if (res && res.success) showToast(res.queuedOffline ? "Saved offline (pending sync)" : `Logged wake up: ${res.duration} hrs`, true); 
-                    })
-                    .catch(() => { closePanel(); showToast("Network timeout", false); });
+                google.script.run
+                    .withSuccessHandler((res) => { closePanel(); checkGlobalAppStatus(); if (res && res.success) showToast(`Logged wake up: ${res.duration} hrs`, true); })
+                    .withFailureHandler(() => { closePanel(); showToast("Network timeout", false); })
+                    .closeActiveRowSession(activeSleepRow, targetTimestamp, false, note);
                 return;
             }
 
             if (currentModule === 'breast_active_manager' && activeBreastRow) {
-                BabyTrackerAPI.call('closeSession', { rowNum: activeBreastRow, endTimestamp: targetTimestamp, isMinutesUnit: true, note })
-                    .then((res) => { 
-                        closePanel(); 
-                        checkGlobalAppStatus(); 
-                        if (res && res.success) showToast(res.queuedOffline ? "Saved offline (pending sync)" : `Logged feed: ${res.duration} mins`, true); 
-                    })
-                    .catch(() => { closePanel(); showToast("Network timeout", false); });
+                google.script.run
+                    .withSuccessHandler((res) => { closePanel(); checkGlobalAppStatus(); if (res && res.success) showToast(`Logged feed: ${res.duration} mins`, true); })
+                    .withFailureHandler(() => { closePanel(); showToast("Network timeout", false); })
+                    .closeActiveRowSession(activeBreastRow, targetTimestamp, true, note);
                 return;
             }
 
@@ -2830,8 +2825,8 @@
             }
             else if (currentModule === 'health') { event = activeOtherMethod; value = document.getElementById('modValue').value; }
 
-            BabyTrackerAPI.call('addLogEntry', { event, value, note, passedTimestamp: targetTimestamp })
-                .then((res) => {
+            google.script.run
+                .withSuccessHandler((res) => {
                     closePanel();
                     if (event === 'pee' && latestDiaperCounts && latestDiaperCounts.today) latestDiaperCounts.today.pee = (latestDiaperCounts.today.pee || 0) + 1;
                     if (event === 'poop' && latestDiaperCounts && latestDiaperCounts.today) latestDiaperCounts.today.poop = (latestDiaperCounts.today.poop || 0) + 1;
@@ -2902,12 +2897,10 @@
                     }
 
                     checkGlobalAppStatus();
-                    showToast(res && res.queuedOffline ? "Saved offline (pending sync)" : "Logged to Sheets!", true);
+                    if (res && res.success) showToast("Logged to Sheets!", true);
                 })
-                .catch(() => {
-                    closePanel();
-                    showToast("Network error", false);
-                });
+                .withFailureHandler(() => { closePanel(); showToast("Network error", false); })
+                .addLogEntry(event, value, note, targetTimestamp);
         }
 
         function initRetryLoop() { }
@@ -2918,26 +2911,98 @@
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
-                    <span>⚙️</span> Endpoint & Security Settings
+                    <span>⚙️</span> API & Security Settings
                 </h3>
                 <button onclick="closePwaSettingsModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
             </div>
-            <div class="space-y-3">
+            <div id="pwaAuthAlert" class="hidden p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-semibold">
+                ⚠️ Invalid API Key! Please enter your valid Family PIN.
+            </div>
+            <div class="space-y-3.5">
+                <div>
+                    <div class="flex justify-between items-baseline mb-1">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Secret API Key (Family PIN)</label>
+                        <span id="pwaKeyStatusBadge" class="text-[10px] text-emerald-400 font-semibold font-mono"></span>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="pwaApiKeyInput" placeholder="Enter API Key"
+                            class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
+                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-200 text-sm">
+                            <span id="pwaEyeIcon">👁️</span>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 leading-normal">
+                        Saved in this device's <code class="text-indigo-300">localStorage</code>. Only devices with this PIN can access your Sheet.
+                    </p>
+                </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps Script Web App URL</label>
-                    <input type="text" id="pwaApiUrlInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Secret API Key (Family PIN)</label>
-                    <input type="text" id="pwaApiKeyInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
+                    <input type="text" id="pwaApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
+                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
                 </div>
             </div>
-            <div class="pt-2 flex gap-2">
-                <button onclick="savePwaSettings()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition">Save & Sync</button>
-                <button onclick="closePwaSettingsModal()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-xl text-xs transition">Cancel</button>
+            <div class="pt-2 flex flex-col gap-2">
+                <button onclick="savePwaSettings()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                    💾 Save & Connect
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="resetPwaKeyToDefault()" class="flex-1 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
+                        Reset Default Key
+                    </button>
+                    <button onclick="closePwaSettingsModal()" class="px-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- PWA SETTINGS LOGIC -->
+    <script>
+        function openPwaSettingsModal(isAuthError = false) {
+            const modal = document.getElementById('pwaSettingsModal');
+            if (modal) {
+                document.getElementById('pwaApiUrlInput').value = BabyTrackerAPI.getUrl();
+                document.getElementById('pwaApiKeyInput').value = BabyTrackerAPI.getKey();
+                const badge = document.getElementById('pwaKeyStatusBadge');
+                if (badge) badge.textContent = BabyTrackerAPI.hasConfiguredKey() ? '✓ Saved in LocalStorage' : 'Default Key';
+                const alertBox = document.getElementById('pwaAuthAlert');
+                if (alertBox) isAuthError ? alertBox.classList.remove('hidden') : alertBox.classList.add('hidden');
+                modal.classList.remove('hidden');
+            }
+        }
+        function closePwaSettingsModal() {
+            const modal = document.getElementById('pwaSettingsModal');
+            if (modal) modal.classList.add('hidden');
+        }
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('pwaApiKeyInput');
+            const icon = document.getElementById('pwaEyeIcon');
+            if (input.type === 'password') { input.type = 'text'; icon.textContent = '🔒'; }
+            else { input.type = 'password'; icon.textContent = '👁️'; }
+        }
+        function resetPwaKeyToDefault() {
+            const defaultKey = BabyTrackerAPI.getDefaultKey();
+            document.getElementById('pwaApiKeyInput').value = defaultKey;
+            BabyTrackerAPI.setKey(defaultKey);
+            document.getElementById('pwaKeyStatusBadge').textContent = 'Default Key';
+            showToast("Reset to default key", true);
+        }
+        function savePwaSettings() {
+            const newUrl = document.getElementById('pwaApiUrlInput').value.trim();
+            const newKey = document.getElementById('pwaApiKeyInput').value.trim();
+            if (newUrl) BabyTrackerAPI.setUrl(newUrl);
+            if (newKey) BabyTrackerAPI.setKey(newKey);
+            closePwaSettingsModal();
+            showToast("PIN saved. Syncing...", true);
+            checkGlobalAppStatus();
+        }
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.warn('[PWA SW]', err));
+            });
+        }
+    </script>
 
 </body>
 
