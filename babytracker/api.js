@@ -73,7 +73,19 @@ const BabyTrackerAPI = (function () {
 
   function updateSyncBadge() {
     const count = getOutbox().length;
+    const banner = document.getElementById('pendingSyncBanner');
+    const countText = document.getElementById('pendingSyncCountText');
     const badge = document.getElementById('syncBadge');
+    
+    if (banner) {
+      if (count > 0) {
+        if (countText) countText.textContent = `${count} Pending Sync`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
     if (badge) {
       if (count > 0) {
         badge.textContent = `${count} Pending`;
@@ -84,24 +96,35 @@ const BabyTrackerAPI = (function () {
     }
   }
 
+  let isFlushing = false;
+
   async function flushOutbox() {
+    if (isFlushing) return;
     const queue = getOutbox();
     if (queue.length === 0 || !navigator.onLine) return;
 
-    console.log(`[API Outbox] Flushing ${queue.length} pending mutations...`);
+    isFlushing = true;
+    console.log(`[API Outbox] Background syncing ${queue.length} pending mutation(s)...`);
     const remaining = [];
+    let anySuccess = false;
 
     for (const item of queue) {
       try {
         await executePost(item.action, item.payload);
-        console.log(`[API Outbox] Successfully synced: ${item.action}`);
+        console.log(`[API Outbox] ✓ Successfully synced: ${item.action}`);
+        anySuccess = true;
       } catch (err) {
-        console.warn(`[API Outbox] Failed to sync ${item.action}, will retry:`, err);
+        console.warn(`[API Outbox] Failed to sync ${item.action}, will retry:`, err.message);
         remaining.push(item);
       }
     }
 
     saveOutbox(remaining);
+    isFlushing = false;
+
+    if (anySuccess && remaining.length === 0) {
+      console.log('[API Outbox] All pending actions successfully synced to Google Sheets!');
+    }
   }
 
   // Auto-flush when device comes back online
@@ -115,22 +138,26 @@ const BabyTrackerAPI = (function () {
     const url = getUrl();
     const apiKey = getKey();
 
-    const requestBody = JSON.stringify({
-      apiKey,
-      action,
-      payload
-    });
+    if (!url) {
+      throw new Error('Missing Google Apps Script Web App URL');
+    }
 
     const res = await fetch(url, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'text/plain;charset=utf-8'
       },
-      body: requestBody
+      body: JSON.stringify({
+        action,
+        apiKey,
+        ...payload
+      })
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        throw new Error('401 Unauthorized: Invalid API Key');
+      }
       throw new Error(`HTTP Error ${res.status}`);
     }
 
@@ -144,7 +171,7 @@ const BabyTrackerAPI = (function () {
 
   // --- PUBLIC API METHODS ---
   async function call(action, payload = {}) {
-    // 1. If fetching initial data
+    // 1. If fetching initial app data (read-only query)
     if (action === 'getInitialData' || action === 'getInitialAppInitializationData') {
       try {
         const data = await executePost('getInitialData', payload);
@@ -161,19 +188,17 @@ const BabyTrackerAPI = (function () {
       }
     }
 
-    // 2. Mutations (addLogEntry / closeSession / etc.)
-    try {
-      if (!navigator.onLine) {
-        throw new Error('Offline');
-      }
-      const data = await executePost(action, payload);
-      return data;
-    } catch (err) {
-      // If mutation fails due to offline/network, queue to outbox and return optimistic success
-      console.warn(`[API] Network failure on ${action}, saving to offline outbox:`, err.message);
-      queueMutation(action, payload);
-      return { success: true, queuedOffline: true };
-    }
+    // 2. Optimistic Mutations (addLogEntry, closeSession, etc.)
+    // Queue immediately for 0ms instant UI response
+    console.log(`[API Optimistic] Fast-submitting mutation: ${action}`, payload);
+    queueMutation(action, payload);
+
+    // Trigger background sync immediately without blocking UI
+    setTimeout(() => {
+      flushOutbox();
+    }, 50);
+
+    return { success: true, optimistic: true };
   }
 
   function getCachedInitialData() {

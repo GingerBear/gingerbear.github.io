@@ -46,7 +46,7 @@
 
         nav#bottomNav {
             padding-top: 0.375rem !important;
-            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.25rem) !important;
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.25rem + 5px) !important;
         }
 
         .active-btn {
@@ -104,11 +104,6 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <span id="syncBadge"
-                class="hidden text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">0
-                Pending</span>
-
-
             <button id="pwaSettingsBtn" type="button" onclick="openPwaSettingsModal(false)"
                 title="API & Security Settings"
                 class="flex items-center justify-center bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 hover:text-white w-9 h-9 min-w-[36px] min-h-[36px] rounded-xl text-sm font-semibold active:scale-90 transition shadow-xs cursor-pointer z-40">
@@ -123,6 +118,21 @@
             </button>
         </div>
     </header>
+
+    <!-- COMPACT OFFLINE PENDING SYNC BANNER ROW -->
+    <div id="pendingSyncBanner"
+        class="hidden shrink-0 bg-amber-950/90 border-b border-amber-500/40 px-3 py-1 flex items-center justify-between gap-2 shadow-xs z-30">
+        <div class="flex items-center gap-1.5 text-[11px] text-amber-200 min-w-0">
+            <span class="text-xs">⏳</span>
+            <span id="pendingSyncCountText" class="font-bold text-amber-300 truncate">1 Pending Sync</span>
+            <span class="text-[10px] text-amber-400/70 hidden sm:inline">(Saved locally)</span>
+        </div>
+        <button onclick="checkGlobalAppStatus()"
+            class="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold text-[10px] rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
+            <span>Sync</span>
+            <span class="font-mono">⟳</span>
+        </button>
+    </div>
 
     <div id="statusToast"
         class="hidden fixed top-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl text-sm font-semibold shadow-2xl transition-all duration-300 z-50">
@@ -264,7 +274,7 @@
     </main>
 
     <!-- FIXED PERSISTENT BOTTOM NAVIGATION TAB BAR (ACTIONS / TIMELINE / SHEET) -->
-    <nav
+    <nav id="bottomNav"
         class="fixed bottom-0 left-0 right-0 border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-lg z-30 px-6 pt-2 pb-5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
         <div class="max-w-md mx-auto grid grid-cols-3 gap-3">
             <button id="tabDashboardBtn" onclick="switchMainTab('dashboard')"
@@ -2437,6 +2447,10 @@
             if (refBtn) refBtn.disabled = true;
             if (icon) icon.className = "text-xs inline-block animate-spin";
 
+            if (typeof BabyTrackerAPI !== 'undefined') {
+                BabyTrackerAPI.flushOutbox();
+            }
+
             google.script.run
                 .withSuccessHandler((response) => {
                     if (refBtn) refBtn.disabled = false;
@@ -2457,6 +2471,12 @@
                 timeInput.addEventListener('input', onExplicitTimeChanged);
                 timeInput.addEventListener('change', onExplicitTimeChanged);
             }
+
+            if (typeof BabyTrackerAPI !== 'undefined') {
+                BabyTrackerAPI.updateSyncBadge();
+                BabyTrackerAPI.flushOutbox();
+            }
+
             if (typeof preloadedData !== 'undefined' && preloadedData && preloadedData.success) {
                 applyAppStatusData(preloadedData);
             } else {
