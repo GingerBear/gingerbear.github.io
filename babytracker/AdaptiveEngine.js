@@ -30,7 +30,7 @@
             targetTime: "20:00",               // 8:00 PM Bedtime target
             window: ["19:30", "20:30"],        // Bedtime window range (flexible 7:30 PM - 8:30 PM)
             minWakeWindowBeforeBedMins: 90,    // Minimum 1.5h awake before bedtime
-            maxWakeWindowBeforeBedMins: 120,   // Max 2h awake before bedtime (strict 2h cap)
+            maxWakeWindowBeforeBedMins: 135,   // Max 2h 15m awake before bedtime (strict 2h 15m cap)
             eveningPrepStartHour: 16,          // Wake-ups after 4:00 PM transition towards bedtime prep
             nightCutoffHour: 19                // Sleeps after 7:00 PM count as bedtime
         },
@@ -40,10 +40,10 @@
             morningBaseMins: 75,              // Morning wake window (< 11:30 AM)
             middayBaseMins: 90,               // Midday wake window (11:30 AM - 15:00)
             afternoonBaseMins: 105,           // Afternoon wake window (15:00 - 17:30)
-            bridgeCatnapPreWwMins: 75,        // Target wake window before a bridge catnap (75m)
+            bridgeCatnapPreWwMins: 105,       // Target wake window before a bridge catnap (1h 45m / 105m)
             bridgeCatnapMinPreWwMins: 45,     // Minimum wake window before a bridge catnap (can flex down to 45m)
             bridgeCatnapAbsoluteMinWwMins: 40,// Absolute floor with short nap reduction (40m)
-            preBedtimeBaseMins: 120,          // Before bedtime wake window (target 2h max)
+            preBedtimeBaseMins: 120,          // Before bedtime base wake window (120m / 2h)
             minWakeWindowMins: 50,            // General daytime wake window floor (50m)
             shortNapThresholdMins: 45,        // Naps < 45m considered short
             shortNapWwReductionMins: 15,      // Reduce next WW by 15m after a short nap
@@ -59,7 +59,7 @@
             middayTargetDurMins: 90,          // Moderate midday nap (1h 30m)
             afternoonTargetDurMins: 60,       // Late afternoon nap (1h)
             bridgeCatnapMinDurMins: 30,       // Minimum bridge catnap duration (30m)
-            bridgeCatnapMaxDurMins: 45,       // Maximum bridge catnap duration (45m)
+            bridgeCatnapMaxDurMins: 30,       // Maximum bridge catnap duration (30m target power snooze)
             morningNapCutoffTime: "12:00",    // Naps before 12:00 PM get morningTargetDurMins
             middayNapCutoffTime: "15:30",     // Naps before 3:30 PM get middayTargetDurMins
             hardStop: "18:00"                 // All daytime naps must end by 6:00 PM
@@ -273,7 +273,13 @@
         const remainingDayEstimates = [];
 
         function appendBedtimeProjection(startCursor, detailsNote) {
+            const targetBedMins = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.targetTime);
             let estBedStart = startCursor + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
+            
+            if (startCursor + ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins >= BEDTIME_START_MINS) {
+                estBedStart = Math.max(BEDTIME_START_MINS, Math.min(targetBedMins, startCursor + ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins));
+            }
+
             estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
             if (estBedStart - startCursor > ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins) {
                 estBedStart = startCursor + ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins;
@@ -288,7 +294,7 @@
                     endTime: formatMinutesToTime(estBedStart),
                     durationMins: estWWMins,
                     durationStr: formatMinsToHhMm(estWWMins),
-                    details: detailsNote || `Pre-bed window (${formatMinsToHhMm(estWWMins)}, max 2h)`
+                    details: detailsNote || `Pre-bed window (${formatMinsToHhMm(estWWMins)}, max 2h 15m)`
                 });
             }
 
