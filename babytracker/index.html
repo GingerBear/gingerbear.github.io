@@ -1152,7 +1152,9 @@
                 // ==========================================
                 // 1. ADAPTIVE SLEEP PROJECTIONS (Naps & Bedtime)
                 // ==========================================
-                let sleepCursorWakeMins = (lastSleepEndMinutes !== null) ? lastSleepEndMinutes : morningWakeMins;
+                let sleepCursorWakeMins = (completedDaytimeNaps.length > 0)
+                    ? completedDaytimeNaps[completedDaytimeNaps.length - 1].endMinutes
+                    : morningWakeMins;
                 let napNumber = napCount + 1;
 
                 if (isCurrentlySleeping) {
@@ -1663,6 +1665,24 @@
                 const wakeUpDate = new Date(lastWakeUpTimeMs);
                 const wakeUpMins = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes();
                 const wakeUpTimeStr = `${String(wakeUpDate.getHours()).padStart(2, '0')}:${String(wakeUpDate.getMinutes()).padStart(2, '0')}`;
+
+                // Check if this is a nighttime awakening (before 07:00 AM or after 19:00 PM)
+                if (wakeUpMins < morningStartMins || wakeUpMins >= nightCutoffMins) {
+                    const targetWWMins = 30;
+                    const estSleepStartMins = (wakeUpMins + targetWWMins) % 1440;
+                    const sH = Math.floor(estSleepStartMins / 60);
+                    const sM = estSleepStartMins % 60;
+                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                    return {
+                        state: 'awake',
+                        isNightAwake: true,
+                        isBedtime: false,
+                        targetWWMins: targetWWMins,
+                        projSleepStr: projSleepStr,
+                        wakeUpTimeStr: wakeUpTimeStr
+                    };
+                }
+
                 const lastNapDur = getLastCompletedNapDurationMins();
                 const timeToBed = bedtimeTargetMins - wakeUpMins;
 
@@ -1676,6 +1696,7 @@
                     const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
                     return {
                         state: 'awake',
+                        isNightAwake: false,
                         isBedtime: true,
                         targetWWMins: estWWMins,
                         projSleepStr: projSleepStr,
@@ -1697,6 +1718,7 @@
                     const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
                     return {
                         state: 'awake',
+                        isNightAwake: false,
                         isBedtime: true,
                         targetWWMins: estWWMins,
                         projSleepStr: projSleepStr,
@@ -1709,6 +1731,7 @@
                 const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
                 return {
                     state: 'awake',
+                    isNightAwake: false,
                     isBedtime: false,
                     targetWWMins: targetWW,
                     projSleepStr: projSleepStr,
@@ -1807,14 +1830,32 @@
             const s = elapsedSecs % 60;
             const timerStr = h > 0 ? `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s` : `${m}m ${String(s).padStart(2, '0')}s`;
 
+            const isNightAwake = proj ? proj.isNightAwake : false;
             const isBedtime = proj ? proj.isBedtime : false;
             const targetWWMins = proj ? proj.targetWWMins : 90;
             const projSleepStr = proj ? proj.projSleepStr : '';
             const wakeUpTimeStr = proj ? proj.wakeUpTimeStr : '';
 
-            if (sIcon) sIcon.innerText = "☀️";
-            if (sTitle) { sTitle.innerText = isBedtime ? "Baby is Awake (Before Bed)" : "Baby is Awake"; sTitle.className = "font-extrabold text-xs text-slate-200"; }
-            if (sSublabel) sSublabel.innerText = wakeUpTimeStr ? `Awake since ${wakeUpTimeStr}` : "Awake tracking active";
+            if (sIcon) sIcon.innerText = isNightAwake ? "🌙" : "☀️";
+            if (sTitle) {
+                if (isNightAwake) {
+                    sTitle.innerText = "Night Waking / Feed";
+                    sTitle.className = "font-extrabold text-xs text-indigo-200";
+                } else if (isBedtime) {
+                    sTitle.innerText = "Baby is Awake (Before Bed)";
+                    sTitle.className = "font-extrabold text-xs text-slate-200";
+                } else {
+                    sTitle.innerText = "Baby is Awake";
+                    sTitle.className = "font-extrabold text-xs text-slate-200";
+                }
+            }
+            if (sSublabel) {
+                if (isNightAwake) {
+                    sSublabel.innerText = wakeUpTimeStr ? `Awake since ${wakeUpTimeStr} · Goal: Sleep soon` : "Night waking active";
+                } else {
+                    sSublabel.innerText = wakeUpTimeStr ? `Awake since ${wakeUpTimeStr}` : "Awake tracking active";
+                }
+            }
             if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base sm:text-lg font-extrabold font-mono text-white tracking-tight leading-none"; }
 
             const remainingMins = targetWWMins - elapsedMins;
@@ -1825,7 +1866,7 @@
             if (sCountdown) {
                 if (remainingMins > 0) {
                     sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (${remDurStr} left)` : `${remDurStr} left (${pct}%)`;
-                    sCountdown.className = "text-[10px] font-mono font-bold text-amber-300";
+                    sCountdown.className = isNightAwake ? "text-[10px] font-mono font-bold text-indigo-300" : "text-[10px] font-mono font-bold text-amber-300";
                 } else {
                     sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (Due Now)` : `Ready for sleep (Due Now)`;
                     sCountdown.className = "text-[10px] font-mono font-bold text-rose-400";
@@ -1833,12 +1874,16 @@
             }
 
             if (sBadge) {
-                if (isBedtime) {
+                if (isNightAwake) {
+                    sBadge.innerText = projSleepStr ? `Back to Sleep ${projSleepStr}` : `Goal: Back to sleep`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-500/40";
+                } else if (isBedtime) {
                     sBadge.innerText = projSleepStr ? `Bedtime ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Bedtime (${formatMinsToHhMm(targetWWMins)})`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
                 } else {
                     sBadge.innerText = projSleepStr ? `Sleep ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Target: ${formatMinsToHhMm(targetWWMins)}`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
                 }
-                sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
             }
 
             if (sProgress) {

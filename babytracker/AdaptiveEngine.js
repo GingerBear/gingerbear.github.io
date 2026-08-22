@@ -283,7 +283,13 @@
         if (activeSleep) {
             const sleepStartMins = activeSleep.startMinutes;
             const isNight = activeSleep.isNightSleep || sleepStartMins >= nightCutoffMins || sleepStartMins < morningStartMins;
-            const elapsedMins = Math.max(0, currentTimeMins - sleepStartMins);
+            let elapsedMins = 0;
+            if (currentTimeMins >= sleepStartMins) {
+                elapsedMins = currentTimeMins - sleepStartMins;
+            } else {
+                // Wrapped across midnight (e.g. 20:00 to 01:00 = 1440 - 1200 + 60 = 300m)
+                elapsedMins = (1440 - sleepStartMins) + currentTimeMins;
+            }
 
             if (isNight) {
                 currentStatus = {
@@ -332,8 +338,39 @@
                 prevWWStretched = false;
                 napIndex = rawCompletedNaps.length + 2;
             }
+        } else if (currentTimeMins < morningStartMins) {
+            // Baby is awake in the middle of the night (Overnight Awakening / Night Feed)
+            const nightWakeMins = (params.lastWake || params.lastWakeTime) ? parseTimeToMinutes(params.lastWake || params.lastWakeTime) : currentTimeMins;
+            let elapsedAwakeMins = 0;
+            if (currentTimeMins >= nightWakeMins) {
+                elapsedAwakeMins = currentTimeMins - nightWakeMins;
+            } else {
+                elapsedAwakeMins = (1440 - nightWakeMins) + currentTimeMins;
+            }
+            const targetWWMins = 30; // Night wakings goal: back to sleep within ~30m
+            const estSleepTimeMins = (nightWakeMins + targetWWMins) % 1440;
+            const remAwakeMins = Math.max(0, targetWWMins - elapsedAwakeMins);
+
+            currentStatus = {
+                state: 'awake',
+                isNightAwake: true,
+                lastWakeTime: formatMinutesToTime(nightWakeMins),
+                elapsedMins: elapsedAwakeMins,
+                elapsedStr: formatMinsToHhMm(elapsedAwakeMins),
+                targetWWMins,
+                targetWWStr: `${targetWWMins}m`,
+                isOverdue: elapsedAwakeMins >= targetWWMins + 15,
+                isDueNow: elapsedAwakeMins >= targetWWMins,
+                isPreBed: false,
+                isBridge: false,
+                nextEventName: 'Night Sleep Resumption',
+                targetSleepTime: formatMinutesToTime(estSleepTimeMins),
+                summary: `🌙 Night Feed / Waking (Goal: Back to sleep in ~30m · Morning DWT: ${ROUTINE_CONFIG.wake.desiredWakeTime})`
+            };
+
+            cursor = morningWakeMins;
         } else {
-            // Baby is currently awake
+            // Baby is currently awake during the day
             const elapsedAwakeMins = Math.max(0, currentTimeMins - lastWakeMins);
             const isBridge = shouldScheduleBridgeCatnap(lastWakeMins, bedtimeTargetMins, hardStopMins);
             const timeToEarliestBed = BEDTIME_START_MINS - lastWakeMins;
@@ -355,6 +392,7 @@
 
             currentStatus = {
                 state: 'awake',
+                isNightAwake: false,
                 lastWakeTime: formatMinutesToTime(lastWakeMins),
                 elapsedMins: elapsedAwakeMins,
                 elapsedStr: formatMinsToHhMm(elapsedAwakeMins),
