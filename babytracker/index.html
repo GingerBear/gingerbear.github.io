@@ -347,7 +347,7 @@
 
 
     <script>
-        window.APP_BUILD_VERSION = 'v1.5 • 8/22 4:03 PM';
+        window.APP_BUILD_VERSION = 'v1.5 • 8/22 4:49 PM';
 
         // Destructure AdaptiveEngine methods & configuration for direct global use
         const {
@@ -2206,14 +2206,18 @@
             }
         }
 
-        function checkGlobalAppStatus() {
+        async function checkGlobalAppStatus() {
             const refBtn = document.getElementById('manualRefreshBtn');
             const icon = document.getElementById('refreshSpinnerIcon');
             if (refBtn) refBtn.disabled = true;
             if (icon) icon.className = "text-xs inline-block animate-spin";
 
-            if (typeof BabyTrackerAPI !== 'undefined') {
-                BabyTrackerAPI.flushOutbox();
+            if (typeof BabyTrackerAPI !== 'undefined' && BabyTrackerAPI.flushOutbox) {
+                try {
+                    await BabyTrackerAPI.flushOutbox();
+                } catch (e) {
+                    console.warn('[Sync] Outbox flush error:', e);
+                }
             }
 
             google.script.run

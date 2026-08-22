@@ -123,7 +123,10 @@ const BabyTrackerAPI = (function () {
     isFlushing = false;
 
     if (anySuccess && remaining.length === 0) {
-      console.log('[API Outbox] All pending actions successfully synced to Google Sheets!');
+      console.log('[API Outbox] All pending actions successfully synced to Google Sheets! Auto-refreshing app data...');
+      if (typeof window.checkGlobalAppStatus === 'function') {
+        window.checkGlobalAppStatus();
+      }
     }
   }
 
