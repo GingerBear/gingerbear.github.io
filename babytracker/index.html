@@ -1,0 +1,2944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Baby Tracker Mobile</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .active-btn {
+            background-color: rgb(79, 70, 229) !important;
+            color: white !important;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .pulse-amber {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                border-color: rgba(245, 158, 11, 0.6);
+                background-color: rgba(120, 53, 4, 0.3);
+            }
+
+            50% {
+                opacity: .8;
+                border-color: rgba(245, 158, 11, 0.2);
+                background-color: rgba(120, 53, 4, 0.15);
+            }
+        }
+    </style>
+
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icons/icon.svg">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="application-name" content="BabyTracker">
+
+</head>
+<!-- Increased bottom padding on body to ensure content clears the taller footer -->
+
+<body class="bg-slate-900 text-slate-100 font-sans antialiased h-screen overflow-hidden flex flex-col select-none"
+    onload="initPage()">
+
+    <!-- Header with App Title and Sync / Refresh Status in Top Right -->
+    <header
+        class="px-4 py-2.5 flex justify-between items-center border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0 z-40">
+        <div class="flex items-center gap-2">
+            <span class="text-xl">👶</span>
+            <h1 class="text-sm font-extrabold tracking-tight text-white">Baby Tracker</h1>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span id="syncBadge"
+                class="hidden text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">0
+                Pending</span>
+
+            
+            <button id="pwaSettingsBtn" onclick="openPwaSettingsModal()" title="API & Endpoint Settings"
+                class="flex items-center justify-center bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white p-2 rounded-xl text-xs font-semibold active:scale-95 transition shadow-xs">
+                ⚙️
+            </button>
+
+            <button id="manualRefreshBtn" onclick="checkGlobalAppStatus()"
+                class="flex items-center gap-1.5 bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-white py-1.5 px-3 rounded-xl text-xs font-semibold active:scale-95 transition shadow-xs">
+                <span id="refreshSpinnerIcon" class="text-xs inline-block">⟳</span>
+                <span class="text-slate-400 font-semibold text-[10px]">Sync:</span>
+                <span id="lastRefreshedLabel" class="text-[11px] font-mono text-slate-200 font-bold">Updating...</span>
+            </button>
+        </div>
+    </header>
+
+    <div id="statusToast"
+        class="hidden fixed top-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl text-sm font-semibold shadow-2xl transition-all duration-300 z-50">
+    </div>
+
+    <!-- MAIN HUB PORTAL -->
+    <main id="hubView" class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-36 no-scrollbar">
+
+        <!-- DYNAMIC ONGOING STATUS BANNERS -->
+        <div class="space-y-2">
+            <!-- Sleep / Wake Status Compact Card -->
+            <button id="sleepGridBtn" onclick="openPanel('sleep')"
+                class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700/70 rounded-xl flex flex-col gap-1 active:scale-98 transition relative shadow-xs overflow-hidden text-left">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-1.5">
+                        <span id="sleepBtnIcon" class="text-sm">⏳</span>
+                        <span id="sleepBtnTitle" class="font-extrabold text-xs text-slate-400">Loading Status...</span>
+                    </div>
+                    <span id="sleepBtnBadge"
+                        class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50">Syncing</span>
+                </div>
+
+                <!-- Live Timer & Countdown Display -->
+                <div class="flex items-baseline justify-between w-full pt-0.5">
+                    <span id="sleepBtnTimer"
+                        class="text-base sm:text-lg font-extrabold font-mono text-slate-400 tracking-tight leading-none">--:--</span>
+                    <span id="sleepBtnCountdown" class="text-[10px] font-bold text-slate-400">Syncing status...</span>
+                </div>
+
+                <!-- Live Progress Bar -->
+                <div class="w-full bg-slate-800/90 h-1 rounded-full overflow-hidden border border-slate-700/50">
+                    <div id="sleepProgressBar" class="h-full bg-slate-700 rounded-full transition-all duration-300"
+                        style="width: 0%;"></div>
+                </div>
+            </button>
+
+            <!-- Breastfeed Status Banner Row -->
+            <button id="breastGridBtn" onclick="openPanel('breast_active_manager')"
+                class="w-full py-3.5 bg-slate-800/60 border border-slate-700/60 rounded-xl flex items-center justify-center gap-3 active:scale-98 transition relative hidden">
+                <span class="text-xl">🤱</span>
+                <div class="text-left flex flex-col">
+                    <span class="font-bold text-xs text-amber-400 animate-pulse">Nursing Session In Progress</span>
+                    <span id="breastBtnSubtitle" class="text-[10px] text-amber-500/80 font-semibold">Active
+                        feeding...</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- CORE 2-COLUMN ACTION GRID -->
+        <div class="grid grid-cols-2 gap-3.5">
+            <button onclick="openPanel('feed')"
+                class="py-4 px-2.5 bg-indigo-950/25 border border-indigo-900/40 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition shadow-sm min-h-[128px]">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-2xl">🍼</span>
+                    <span class="font-bold text-sm text-indigo-400">Feed</span>
+                </div>
+                <div id="nextFeedDisplayTime"
+                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">Loading...</div>
+            </button>
+
+            <button onclick="openPanel('pump')"
+                class="py-4 px-2.5 bg-purple-950/25 border border-purple-900/40 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition shadow-sm min-h-[128px]">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-2xl">🐳</span>
+                    <span class="font-bold text-sm text-purple-400">Pump</span>
+                </div>
+                <div id="lastPumpDisplay"
+                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">Loading...</div>
+            </button>
+
+
+            <button onclick="openPanel('pee')"
+                class="py-5 px-3 bg-blue-950/25 border border-blue-900/40 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px]">
+                <span class="text-3xl">💧</span>
+                <span class="font-bold text-sm text-blue-400">Pee</span>
+                <span id="peeCountDisplay"
+                    class="text-[11px] text-slate-300 font-semibold tracking-wide text-center">Loading...</span>
+            </button>
+
+            <button onclick="openPanel('poop')"
+                class="py-5 px-3 bg-amber-950/25 border border-amber-900/30 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px]">
+                <span class="text-3xl">💩</span>
+                <span class="font-bold text-sm text-amber-500">Poop</span>
+                <span id="poopCountDisplay"
+                    class="text-[11px] text-slate-300 font-semibold tracking-wide text-center">Loading...</span>
+            </button>
+
+            <button onclick="openPanel('health')"
+                class="py-5 px-3 bg-emerald-950/25 border border-emerald-900/40 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px]">
+                <span class="text-3xl">💊</span>
+                <span class="font-bold text-sm text-emerald-400">Health & Routine</span>
+                <span id="healthSummaryDisplay"
+                    class="text-[10px] text-slate-300 font-semibold tracking-wide text-center leading-snug">Loading...</span>
+            </button>
+
+            <button onclick="openPanel('note')"
+                class="py-5 px-3 bg-cyan-950/25 border border-cyan-900/40 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px]">
+                <span class="text-3xl">📝</span>
+                <span class="font-bold text-sm text-cyan-400">Note</span>
+                <span id="lastNoteDisplay"
+                    class="text-[10px] text-slate-300 font-semibold tracking-wide text-center leading-snug">Loading...</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- GOOGLE CALENDAR 24-HOUR TIMELINE SCHEDULE PORTAL -->
+    <main id="timelineView"
+        class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-24 space-y-2">
+        <!-- Pinned Top Header Controls: Single Combined Toolbar -->
+        <div
+            class="shrink-0 flex items-center justify-between gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-2.5 py-1.5 shadow-xs">
+            <!-- Date Selector Dropdown Button -->
+            <div class="relative flex items-center shrink-0">
+                <select id="timelineDateSelect" onchange="setTimelineDate(this.value)"
+                    class="bg-indigo-950/90 text-indigo-200 font-extrabold text-xs pl-2.5 pr-6 py-1 rounded-lg border border-indigo-700/60 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer appearance-none shadow-xs">
+                    <!-- Dynamically injected date options -->
+                </select>
+                <span class="absolute right-2 text-[10px] text-indigo-400 pointer-events-none">▾</span>
+            </div>
+
+            <div class="h-4 w-px bg-slate-700/70 shrink-0"></div>
+
+            <!-- Daily Summary Stats (Sleep & Awake) -->
+            <div id="timelineDaySummaryBanner" class="flex-1 flex items-center justify-around text-xs">
+                <!-- Dynamic stats for selected day -->
+            </div>
+        </div>
+
+        <!-- 24-HOUR CALENDAR TIME GRID CONTAINER (EXPANDED DEDICATED SCROLL VIEW) -->
+        <div id="calendarScrollContainer"
+            class="flex-1 overflow-y-auto bg-slate-950/90 border border-slate-800 rounded-2xl shadow-2xl relative scroll-smooth no-scrollbar">
+            <!-- 24 Hour Lines Background (1344px = 24 * 56px) -->
+            <div class="relative w-full pb-24" style="height: 1344px;" id="calendarGridCanvas">
+                <!-- Hour Rows, Red current time line, and Event Blocks rendered here dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- FIXED PERSISTENT BOTTOM NAVIGATION TAB BAR (ACTIONS / TIMELINE / SHEET) -->
+    <nav
+        class="fixed bottom-0 left-0 right-0 border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-lg z-30 px-6 pt-2 pb-5 shadow-[0_-8px_24px_rgba(0,0,0,0.4)]">
+        <div class="max-w-md mx-auto grid grid-cols-3 gap-3">
+            <button id="tabDashboardBtn" onclick="switchMainTab('dashboard')"
+                class="py-2 px-2 text-[10px] font-extrabold rounded-2xl transition-all text-white bg-indigo-600 shadow-md flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]">
+                <span class="text-xl leading-none">⚡</span>
+                <span class="tracking-wide">Actions</span>
+            </button>
+
+            <button id="tabTimelineBtn" onclick="switchMainTab('timeline')"
+                class="py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]">
+                <span class="text-xl leading-none">📅</span>
+                <span class="tracking-wide">Timeline</span>
+            </button>
+
+            <a href="https://docs.google.com/spreadsheets/d/1-LYuxoxcRescgFiq0UM2J0Il-IIhmVtASMmhT9YBoxU/edit"
+                target="_blank" title="Open Spreadsheet Log File"
+                class="py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px] decoration-none">
+                <span class="text-xl leading-none">📊</span>
+                <span class="tracking-wide">Sheet</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- FLOATING WORKFLOW PANEL CONTAINER -->
+    <div id="actionPanel" onclick="handleBackdropClick(event)"
+        class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex flex-col justify-end opacity-0 transition-opacity duration-200">
+        <div id="panelSheet"
+            class="bg-slate-800 rounded-t-[32px] p-6 max-w-md mx-auto w-full space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto text-slate-200 transform translate-y-full transition-transform duration-300 ease-out">
+
+            <div class="flex justify-between items-center">
+                <h3 id="panelTitle" class="text-xl font-extrabold tracking-tight capitalize text-white">Log Event</h3>
+                <button onclick="closePanel()"
+                    class="w-8 h-8 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center font-bold active:bg-slate-600">×</button>
+            </div>
+
+            <div id="panelFormContent" class="space-y-4"></div>
+
+            <!-- NATIVE TIME WHEEL PICKER -->
+            <div id="timeFieldContainer" class="space-y-2 border-t border-slate-700/60 pt-4">
+                <div class="flex justify-between items-center">
+                    <label id="timeFieldLabel"
+                        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Event Time</label>
+                    <button type="button" onclick="resetTimeToNow()"
+                        class="text-[11px] text-indigo-400 font-bold active:text-indigo-300">Reset to Now</button>
+                </div>
+                <div
+                    class="relative bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 flex items-center justify-between">
+                    <span id="timeFieldPrompt" class="text-sm text-slate-400 font-medium">Set explicit time:</span>
+                    <input id="explicitTimeInput" type="time"
+                        class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 font-mono font-bold text-white text-base focus:outline-hidden">
+                </div>
+            </div>
+
+            <button id="panelSubmitBtn" onclick="executePanelSubmit()"
+                class="w-full bg-indigo-600 text-white font-extrabold py-3.5 rounded-2xl tracking-wide shadow-lg active:scale-98 transition flex justify-center items-center">
+                Confirm & Save Log
+            </button>
+        </div>
+    </div>
+
+    <!-- Include Standalone Adaptive Schedule Engine -->
+    
+    <script src="./AdaptiveEngine.js"></script>
+    <script src="./api.js"></script>
+
+
+    <script>
+        // Destructure AdaptiveEngine methods & configuration for direct global use
+        const {
+            ROUTINE_CONFIG,
+            parseTimeToMinutes,
+            formatMinsToHhMm,
+            getAdaptiveWakeWindow,
+            getAdaptiveNapDuration,
+            shouldScheduleBridgeCatnap,
+            calculateDaySchedule,
+            calculateLiveSleepStatus
+        } = (typeof AdaptiveEngine !== 'undefined') ? AdaptiveEngine : {};
+
+        const DWT_MINS = parseTimeToMinutes(ROUTINE_CONFIG.wake.desiredWakeTime);
+        const NIGHT_SLEEP_CUTOFF_MINS = DWT_MINS - ROUTINE_CONFIG.wake.nightSleepCutoffBeforeDwtMins;
+        const BEDTIME_START_MINS = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.window[0]);
+        const BEDTIME_END_MINS = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.window[1]);
+        const FEED_BEDTIME_THRESHOLD_MINS = parseTimeToMinutes(ROUTINE_CONFIG.feeds.bedtimeCutoff);
+
+
+        // Inject preloaded initial data during server rendering
+        const preloadedData = null;
+
+        let currentModule = '';
+        let localQueueRunner = false;
+
+        let activeSleepRow = null;
+        let activeBreastRow = null;
+        let activeBreastSideString = '';
+
+        let activeDiaperScale = 2;
+        let activeFeedMethod = 'breast left';
+        let activeOtherMethod = 'medicine';
+
+        let lastFetchedEpochTime = null;
+        let liveLabelIntervalId = null;
+        let liveTimer1sIntervalId = null;
+        let toastTimeoutId = null;
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('statusToast');
+            if (!toast) return;
+
+            if (toastTimeoutId) {
+                clearTimeout(toastTimeoutId);
+                toastTimeoutId = null;
+            }
+
+            toast.innerText = message;
+            toast.className = isSuccess
+                ? "fixed top-4 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-[0_12px_36px_rgba(99,102,241,0.45)] bg-slate-900/95 text-indigo-100 border-2 border-indigo-400/90 ring-2 ring-indigo-500/30 max-w-[92vw] text-center z-50 transition-all duration-200 backdrop-blur-md"
+                : "fixed top-4 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-2xl text-xs font-extrabold shadow-[0_12px_36px_rgba(244,63,94,0.45)] bg-rose-950/95 text-rose-100 border-2 border-rose-400/90 ring-2 ring-rose-500/30 max-w-[92vw] text-center z-50 transition-all duration-200 backdrop-blur-md";
+            toast.classList.remove('hidden');
+
+            toastTimeoutId = setTimeout(() => {
+                toast.classList.add('hidden');
+                toastTimeoutId = null;
+            }, 3000);
+        }
+
+        function formatSheetsTimeValue(str) {
+            if (!str) return '';
+            const d = new Date(str);
+            if (!isNaN(d.getTime()) && str.includes('GMT')) return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            return String(str).split(' ')[0].substring(0, 5);
+        }
+
+        function getTodaySheetsDateString() {
+            const d = new Date();
+            return `${d.getMonth() + 1}/${d.getDate()}`;
+        }
+
+        function parseRowTimeSafe(rawTime) {
+            let h = 0, m = 0;
+            if (rawTime instanceof Date) {
+                h = rawTime.getHours();
+                m = rawTime.getMinutes();
+            } else if (rawTime) {
+                const parts = String(rawTime).split(':');
+                h = parseInt(parts[0], 10) || 0;
+                m = parseInt(parts[1], 10) || 0;
+            }
+            return { h, m };
+        }
+
+
+        let lastWakeUpTimeMs = null;
+        let activeSleepStartTimeMs = null;
+        let activeSleepTimeString = '';
+        let activeBreastStartTimeMs = null;
+        let activeBreastTimeString = '';
+        let lastFeedData = null;
+        let lastPumpData = null;
+        let lastNoteData = null;
+        let latestDiaperCounts = null;
+        let latestHealthSummary = { meds: [], tummyMins: 0 };
+        let currentActiveTab = 'dashboard';
+        let globalRawRowsData = [];
+        let globalStartRow = 2;
+        let selectedTimelineDate = null;
+        let selectedTimelineCategory = 'all';
+
+        function switchMainTab(tabName) {
+            currentActiveTab = tabName;
+            const hub = document.getElementById('hubView');
+            const timeline = document.getElementById('timelineView');
+            const tabDashBtn = document.getElementById('tabDashboardBtn');
+            const tabTlBtn = document.getElementById('tabTimelineBtn');
+
+            if (tabName === 'dashboard') {
+                if (hub) hub.classList.remove('hidden');
+                if (timeline) timeline.classList.add('hidden');
+                if (tabDashBtn) tabDashBtn.className = "py-2 px-2 text-[10px] font-extrabold rounded-2xl transition-all text-white bg-indigo-600 shadow-md flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]";
+                if (tabTlBtn) tabTlBtn.className = "py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]";
+            } else {
+                if (hub) hub.classList.add('hidden');
+                if (timeline) timeline.classList.remove('hidden');
+                if (tabDashBtn) tabDashBtn.className = "py-2 px-2 text-[10px] font-bold rounded-2xl transition-all text-slate-400 hover:text-slate-200 bg-slate-800/70 border border-slate-700/60 flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]";
+                if (tabTlBtn) tabTlBtn.className = "py-2 px-2 text-[10px] font-extrabold rounded-2xl transition-all text-white bg-indigo-600 shadow-md flex flex-col items-center justify-center gap-0.5 active:scale-95 min-h-[50px]";
+                renderTimelineView();
+            }
+        }
+
+        let globalDistinctDates = [];
+
+        function navigateTimelineDate(direction) {
+            if (!globalDistinctDates || globalDistinctDates.length === 0) return;
+            const currIdx = globalDistinctDates.indexOf(selectedTimelineDate);
+            if (currIdx === -1) return;
+            const newIdx = currIdx + direction;
+            if (newIdx >= 0 && newIdx < globalDistinctDates.length) {
+                selectedTimelineDate = globalDistinctDates[newIdx];
+                renderTimelineView();
+            }
+        }
+
+        function setTimelineDate(dStr) {
+            selectedTimelineDate = dStr;
+            renderTimelineView();
+        }
+
+        function renderTimelineView() {
+            const canvas = document.getElementById('calendarGridCanvas');
+            const dateSelect = document.getElementById('timelineDateSelect');
+            const summaryBanner = document.getElementById('timelineDaySummaryBanner');
+            const scrollContainer = document.getElementById('calendarScrollContainer');
+            if (!canvas) return;
+
+            if (!globalRawRowsData || globalRawRowsData.length === 0) {
+                canvas.innerHTML = `<div class="text-center py-16 text-slate-500 text-sm">No log entries found. Tap Sync to refresh.</div>`;
+                if (summaryBanner) summaryBanner.innerHTML = '';
+                return;
+            }
+
+            const rows = globalRawRowsData;
+            const startRow = globalStartRow || 2;
+            const today = new Date();
+            const todayStr = (today.getMonth() + 1) + '/' + today.getDate();
+            const yesterday = new Date(Date.now() - 86400000);
+            const yesterdayStr = (yesterday.getMonth() + 1) + '/' + yesterday.getDate();
+
+            const formatDateString = (rawDate) => {
+                if (!rawDate) return '';
+                if (rawDate instanceof Date) return (rawDate.getMonth() + 1) + '/' + rawDate.getDate();
+                const str = String(rawDate).trim();
+                const parts = str.split('/');
+                if (parts.length >= 2) return parseInt(parts[0], 10) + '/' + parseInt(parts[1], 10);
+                return str;
+            };
+
+            const formatTimeString = (rawTime) => {
+                if (!rawTime) return '';
+                if (rawTime instanceof Date) return String(rawTime.getHours()).padStart(2, '0') + ':' + String(rawTime.getMinutes()).padStart(2, '0');
+                const str = String(rawTime).trim();
+                const parts = str.split(':');
+                if (parts.length >= 2) return String(parts[0]).padStart(2, '0') + ':' + String(parts[1]).padStart(2, '0');
+                return str;
+            };
+
+            // Collect distinct dates
+            const rowDateStrs = new Array(rows.length);
+            let lastSeenDate = todayStr;
+            const distinctDatesRaw = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const rawDate = rows[i][0];
+                if (rawDate !== "" && rawDate !== undefined && rawDate !== null) {
+                    lastSeenDate = formatDateString(rawDate);
+                }
+                rowDateStrs[i] = lastSeenDate;
+                if (lastSeenDate && !distinctDatesRaw.includes(lastSeenDate)) {
+                    distinctDatesRaw.push(lastSeenDate);
+                }
+            }
+
+            // Exclude the earliest/oldest date (first index) if multiple dates exist, since it contains partial data due to the 100-row limit
+            const distinctDates = distinctDatesRaw.length > 1 ? distinctDatesRaw.slice(1) : distinctDatesRaw;
+
+            globalDistinctDates = distinctDates;
+
+            if (!selectedTimelineDate || !distinctDates.includes(selectedTimelineDate)) {
+                selectedTimelineDate = distinctDates.includes(todayStr) ? todayStr : (distinctDates[distinctDates.length - 1] || todayStr);
+            }
+
+            // Render Date Selector Dropdown Options
+            if (dateSelect) {
+                const reversedDates = [...distinctDates].reverse();
+                dateSelect.innerHTML = reversedDates.map(d => {
+                    const isSelected = (d === selectedTimelineDate);
+                    let label = d;
+                    if (d === todayStr) label = `Today (${d})`;
+                    else if (d === yesterdayStr) label = `Yesterday (${d})`;
+                    return `<option value="${d}" ${isSelected ? 'selected' : ''}>${label}</option>`;
+                }).join('');
+            }
+
+            const parseRowTime = (rowTime) => {
+                let h = 0, m = 0;
+                if (rowTime instanceof Date) {
+                    h = rowTime.getHours();
+                    m = rowTime.getMinutes();
+                } else if (rowTime) {
+                    const parts = String(rowTime).split(':');
+                    h = parseInt(parts[0], 10) || 0;
+                    m = parseInt(parts[1], 10) || 0;
+                }
+                return { h, m, timeStr: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}` };
+            };
+
+            // Determine timestamp boundaries for selected date
+            const selParts = selectedTimelineDate.split('/');
+            const selMonth = parseInt(selParts[0], 10) - 1;
+            const selDay = parseInt(selParts[1], 10);
+            const selYear = today.getFullYear();
+
+            const dayStartMs = new Date(selYear, selMonth, selDay, 0, 0, 0, 0).getTime();
+            const dayEndMs = new Date(selYear, selMonth, selDay + 1, 0, 0, 0, 0).getTime();
+
+            const parseRowDateTimeToMs = (dateStr, h, m) => {
+                if (!dateStr || !dateStr.includes('/')) return dayStartMs;
+                const dParts = dateStr.split('/');
+                const rMonth = parseInt(dParts[0], 10) - 1;
+                const rDay = parseInt(dParts[1], 10);
+                return new Date(selYear, rMonth, rDay, h, m, 0, 0).getTime();
+            };
+
+            const dayEvents = [];
+            const daySleepPortions = [];
+            let totalSleepMinsOnThisDay = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const eventRaw = rows[i][2];
+                if (!eventRaw) continue;
+
+                const eventLower = String(eventRaw).toLowerCase().trim();
+                const rawTime = rows[i][1];
+                const { h, m, timeStr } = parseRowTime(rawTime);
+                const valStr = String(rows[i][3] !== null && rows[i][3] !== undefined ? rows[i][3] : '').trim();
+                const unitStr = String(rows[i][4] !== null && rows[i][4] !== undefined ? rows[i][4] : '').trim();
+                const noteStr = String(rows[i][5] || '').trim();
+                const rowDateStr = rowDateStrs[i];
+
+                let fullNote = noteStr;
+                if (!fullNote && eventLower.includes('note')) {
+                    fullNote = [valStr, unitStr].filter(Boolean).join(' ');
+                } else if (valStr && !eventLower.includes('note') && isNaN(parseFloat(valStr))) {
+                    fullNote = fullNote ? `${valStr} - ${fullNote}` : valStr;
+                }
+
+                if (eventLower.includes('sleep')) {
+                    const isClosed = (valStr !== '' && !isNaN(parseFloat(valStr)));
+                    const durHours = isClosed ? parseFloat(valStr) : 0;
+                    const sleepStartMs = parseRowDateTimeToMs(rowDateStr, h, m);
+                    const sleepEndMs = isClosed ? (sleepStartMs + Math.round(durHours * 3600000)) : (selectedTimelineDate === todayStr ? Date.now() : dayEndMs);
+
+                    // Check if this sleep session overlaps with the selected date [dayStartMs, dayEndMs]
+                    if (sleepStartMs < dayEndMs && sleepEndMs > dayStartMs) {
+                        const portionStartMs = Math.max(dayStartMs, sleepStartMs);
+                        const portionEndMs = Math.min(dayEndMs, sleepEndMs);
+
+                        const startMinutes = Math.max(0, Math.min(1440, Math.round((portionStartMs - dayStartMs) / 60000)));
+                        const endMinutes = Math.max(0, Math.min(1440, Math.round((portionEndMs - dayStartMs) / 60000)));
+                        const portionMins = Math.max(0, endMinutes - startMinutes);
+
+                        totalSleepMinsOnThisDay += portionMins;
+
+                        const startsBeforeMidnight = sleepStartMs < dayStartMs;
+                        const endsAfterMidnight = sleepEndMs > dayEndMs;
+
+                        const origStartDate = new Date(sleepStartMs);
+                        const origEndDate = new Date(sleepEndMs);
+                        const origStartStr = `${String(origStartDate.getHours()).padStart(2, '0')}:${String(origStartDate.getMinutes()).padStart(2, '0')}`;
+                        const origEndStr = `${String(origEndDate.getHours()).padStart(2, '0')}:${String(origEndDate.getMinutes()).padStart(2, '0')}`;
+
+                        daySleepPortions.push({
+                            rowNumber: startRow + i,
+                            isClosed: isClosed,
+                            totalDurationHours: durHours,
+                            portionMins: portionMins,
+                            startMinutes: startMinutes,
+                            endMinutes: endMinutes,
+                            startsBeforeMidnight: startsBeforeMidnight,
+                            endsAfterMidnight: endsAfterMidnight,
+                            origStartStr: origStartStr,
+                            origEndStr: origEndStr,
+                            note: fullNote
+                        });
+                    }
+                } else if (rowDateStr === selectedTimelineDate) {
+                    let eventType = 'other';
+                    if (eventLower.includes('breast') || eventLower.includes('bottle')) eventType = 'feed';
+                    else if (eventLower.includes('pump')) eventType = 'pump';
+                    else if (eventLower.includes('pee') || eventLower.includes('poop')) eventType = 'diaper';
+
+                    const totalMinutes = (h * 60) + m;
+
+                    dayEvents.push({
+                        rowNumber: startRow + i,
+                        timeStr: timeStr,
+                        hours: h,
+                        minutes: m,
+                        totalMinutes: totalMinutes,
+                        eventLower: eventLower,
+                        rawEvent: String(eventRaw).trim(),
+                        valStr: valStr,
+                        unitStr: unitStr,
+                        note: fullNote,
+                        eventType: eventType
+                    });
+                }
+            }
+
+            dayEvents.sort((a, b) => a.totalMinutes - b.totalMinutes);
+            daySleepPortions.sort((a, b) => a.startMinutes - b.startMinutes);
+
+            let totalWakeMins = 0;
+            if (selectedTimelineDate === todayStr) {
+                const elapsedTodayMins = (today.getHours() * 60) + today.getMinutes();
+                totalWakeMins = Math.max(0, elapsedTodayMins - totalSleepMinsOnThisDay);
+            } else {
+                totalWakeMins = Math.max(0, 1440 - totalSleepMinsOnThisDay);
+            }
+
+
+            const daytimeNapPortions = daySleepPortions.filter(e => !e.startsBeforeMidnight && e.startMinutes >= NIGHT_SLEEP_CUTOFF_MINS && e.startMinutes < (ROUTINE_CONFIG.bedtime.nightCutoffHour * 60));
+            const daytimeSleepMins = daytimeNapPortions.reduce((sum, e) => sum + (e.portionMins || 0), 0);
+            const daytimeSleepStr = formatMinsToHhMm(daytimeSleepMins);
+
+            const sleepHoursStr = formatMinsToHhMm(totalSleepMinsOnThisDay);
+            const wakeHoursStr = formatMinsToHhMm(totalWakeMins);
+
+            if (summaryBanner) {
+                summaryBanner.innerHTML = `
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs">💤</span>
+                        <span class="text-[10px] text-slate-400 font-medium hidden xs:inline">Total Sleep:</span>
+                        <span class="font-extrabold text-white text-xs">${sleepHoursStr}</span>
+                    </div>
+                    <div class="h-3 w-px bg-slate-700/60"></div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs">🧸</span>
+                        <span class="text-[10px] text-indigo-300/80 font-medium hidden xs:inline">Day Naps:</span>
+                        <span class="font-extrabold text-indigo-300 text-xs">${daytimeSleepStr}</span>
+                    </div>
+                    <div class="h-3 w-px bg-slate-700/60"></div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs">☀️</span>
+                        <span class="text-[10px] text-amber-400/80 font-medium hidden xs:inline">Awake:</span>
+                        <span class="font-extrabold text-amber-300 text-xs">${wakeHoursStr}</span>
+                    </div>
+                `;
+            }
+
+            const HOUR_HEIGHT = 56;
+            const MINUTE_HEIGHT = HOUR_HEIGHT / 60;
+
+            let gridHtml = '';
+
+            for (let hour = 0; hour < 24; hour++) {
+                const topPos = hour * HOUR_HEIGHT;
+                const hourDisplay12 = hour === 0 ? '12a' : (hour === 12 ? '12p' : (hour > 12 ? `${hour - 12}p` : `${hour}a`));
+
+                gridHtml += `
+                    <div class="absolute left-0 right-0 border-t border-slate-800/70 flex items-start" style="top: ${topPos}px; height: ${HOUR_HEIGHT}px;">
+                        <div class="w-9 shrink-0 pr-1 text-right -mt-2 text-[9px] font-mono font-bold text-slate-500 select-none">
+                            ${hourDisplay12}
+                        </div>
+                        <div class="flex-1 h-full border-l border-slate-800/80 relative">
+                            <div class="absolute left-0 right-0 border-t border-dashed border-slate-800/30" style="top: 28px;"></div>
+                            <div class="absolute top-0 bottom-0 border-r border-slate-800/40" style="left: 35%;"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let lastSleepEndMinutes = null;
+
+            daySleepPortions.forEach((ev) => {
+                const startMins = ev.startMinutes;
+                const endMins = ev.endMinutes;
+                const portionDurationMins = ev.portionMins;
+
+                if (lastSleepEndMinutes !== null && startMins > lastSleepEndMinutes) {
+                    const wakeMins = startMins - lastSleepEndMinutes;
+                    if (wakeMins >= 10) {
+                        const wakeTop = lastSleepEndMinutes * MINUTE_HEIGHT;
+                        const wakeHeight = Math.max(28, wakeMins * MINUTE_HEIGHT);
+                        const wDurStr = formatMinsToHhMm(wakeMins);
+                        const wStartH = Math.floor(lastSleepEndMinutes / 60);
+                        const wStartM = lastSleepEndMinutes % 60;
+                        const wEndH = Math.floor(startMins / 60);
+                        const wEndM = startMins % 60;
+                        const wTimeRange = `${String(wStartH).padStart(2, '0')}:${String(wStartM).padStart(2, '0')} → ${String(wEndH).padStart(2, '0')}:${String(wEndM).padStart(2, '0')}`;
+
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-98 transition-transform" style="top: ${wakeTop}px; height: ${wakeHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Awake: ${wTimeRange} (${wDurStr})', true)">
+                                <div class="w-full h-full bg-gradient-to-b from-amber-950/80 to-slate-900/90 border border-amber-500/70 rounded-xl p-1.5 text-white shadow-md flex flex-col justify-between overflow-hidden">
+                                    <div class="flex justify-between items-center gap-1">
+                                        <span class="font-extrabold text-[10px] text-amber-300 truncate flex items-center gap-0.5">
+                                            <span>☀️</span> <span>Awake</span>
+                                        </span>
+                                        <span class="text-[8px] font-extrabold bg-amber-950 px-1 py-0.5 rounded border border-amber-600/60 text-amber-300 shrink-0">${wDurStr}</span>
+                                    </div>
+                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                        ${wTimeRange}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else if (lastSleepEndMinutes === null && startMins >= 20) {
+                    const wakeMins = startMins;
+                    const wakeTop = 0;
+                    const wakeHeight = Math.max(28, wakeMins * MINUTE_HEIGHT);
+                    const wDurStr = formatMinsToHhMm(wakeMins);
+                    const wEndH = Math.floor(startMins / 60);
+                    const wEndM = startMins % 60;
+                    const wTimeRange = `00:00 → ${String(wEndH).padStart(2, '0')}:${String(wEndM).padStart(2, '0')}`;
+
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-98 transition-transform" style="top: ${wakeTop}px; height: ${wakeHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Awake: ${wTimeRange} (${wDurStr})', true)">
+                            <div class="w-full h-full bg-gradient-to-b from-amber-950/80 to-slate-900/90 border border-amber-500/70 rounded-xl p-1.5 text-white shadow-md flex flex-col justify-between overflow-hidden">
+                                <div class="flex justify-between items-center gap-1">
+                                    <span class="font-extrabold text-[10px] text-amber-300 truncate flex items-center gap-0.5">
+                                        <span>☀️</span> <span>Awake</span>
+                                    </span>
+                                    <span class="text-[8px] font-extrabold bg-amber-950 px-1 py-0.5 rounded border border-amber-600/60 text-amber-300 shrink-0">${wDurStr}</span>
+                                </div>
+                                <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                    ${wTimeRange}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                lastSleepEndMinutes = endMins;
+
+                const topPos = startMins * MINUTE_HEIGHT;
+                const blockHeight = Math.max(28, portionDurationMins * MINUTE_HEIGHT);
+                const portionDurStr = formatMinsToHhMm(portionDurationMins);
+
+                let timeRangeLabel = `${ev.origStartStr} → ${ev.origEndStr}`;
+                const isDaytimeNap = (!ev.startsBeforeMidnight && ev.startMinutes >= NIGHT_SLEEP_CUTOFF_MINS && ev.startMinutes < (ROUTINE_CONFIG.bedtime.nightCutoffHour * 60));
+                let tagTitle = isDaytimeNap ? "Nap" : "Night Sleep";
+                if (ev.startsBeforeMidnight && ev.endsAfterMidnight) {
+                    timeRangeLabel = `All Day`;
+                    tagTitle = "Night Sleep";
+                } else if (ev.startsBeforeMidnight) {
+                    timeRangeLabel = `00:00 → ${ev.origEndStr}`;
+                    tagTitle = "Night Sleep";
+                } else if (ev.endsAfterMidnight) {
+                    timeRangeLabel = `${ev.origStartStr} → 24:00`;
+                    if (!isDaytimeNap) tagTitle = "Night Sleep";
+                }
+
+                if (ev.isClosed) {
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-98 transition-transform" style="top: ${topPos}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('💤 ${tagTitle}: ${ev.origStartStr} → ${ev.origEndStr} (${portionDurStr} today)${ev.note ? ' - ' + ev.note : ''}', true)">
+                            <div class="w-full h-full bg-gradient-to-b from-indigo-900/95 to-indigo-950/95 border border-indigo-500/70 rounded-xl p-1.5 text-white shadow-md flex flex-col justify-between overflow-hidden">
+                                <div class="flex justify-between items-center gap-1">
+                                    <span class="font-extrabold text-[10px] text-indigo-200 truncate flex items-center gap-0.5">
+                                        <span>💤</span> <span>${tagTitle}</span>
+                                    </span>
+                                    <span class="text-[8px] font-extrabold bg-indigo-950 px-1 py-0.5 rounded border border-indigo-700/60 text-indigo-300 shrink-0">${portionDurStr}</span>
+                                </div>
+                                <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                    ${timeRangeLabel}
+                                </div>
+                                ${ev.note ? `<p class="text-[8px] text-indigo-300/80 italic truncate leading-none">${ev.note}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Active Sleep - calculate estimated wake & remaining time
+                    const nowMins = (today.getHours() * 60) + today.getMinutes();
+                    const isBridge = (startMins >= 930);
+                    const typicalNapDur = getAdaptiveNapDuration(startMins, isBridge);
+                    const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
+                    let estWakeMins = startMins + typicalNapDur;
+                    if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
+
+                    const isDayActiveNap = (startMins >= NIGHT_SLEEP_CUTOFF_MINS && startMins < (ROUTINE_CONFIG.bedtime.nightCutoffHour * 60));
+                    const activeTagTitle = isDayActiveNap ? "Nap" : "Night Sleep";
+
+                    const sWakeH = Math.floor(estWakeMins / 60);
+                    const sWakeM = estWakeMins % 60;
+                    const estWakeStr = `${String(sWakeH).padStart(2, '0')}:${String(sWakeM).padStart(2, '0')}`;
+                    const remMins = Math.max(0, estWakeMins - nowMins);
+                    const remDurStr = formatMinsToHhMm(remMins);
+
+                    // Block spans from start of nap to projected wake time (or now if overdue)
+                    const fullActiveSpanMins = Math.max(nowMins, estWakeMins) - startMins;
+                    const activeBlockHeight = Math.max(38, fullActiveSpanMins * MINUTE_HEIGHT);
+
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-98 transition-transform" style="top: ${topPos}px; height: ${activeBlockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('💤 ${activeTagTitle} since ${ev.origStartStr} • Est. Wake ~${estWakeStr} (${remDurStr} remaining)', true)">
+                            <div class="w-full h-full bg-gradient-to-b from-indigo-900/95 via-indigo-950/95 to-indigo-950/80 border-2 border-indigo-400 rounded-xl p-1.5 text-white shadow-lg flex flex-col justify-between overflow-hidden">
+                                <div class="flex justify-between items-center gap-1">
+                                    <span class="font-extrabold text-[10px] text-indigo-200 truncate flex items-center gap-1">
+                                        <span>💤</span> <span>${activeTagTitle}</span>
+                                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    </span>
+                                    <span class="text-[8px] font-black bg-rose-600 text-white px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wide shrink-0">Live</span>
+                                </div>
+                                <div class="flex flex-col leading-tight my-auto">
+                                    <span id="timelineLiveSleepTimer" class="text-[10px] text-indigo-100 font-mono font-extrabold tracking-tight">Ticking...</span>
+                                    <span class="text-[8px] text-indigo-300 font-mono">${ev.origStartStr} → ~${estWakeStr}</span>
+                                </div>
+                                <div class="text-[8px] text-emerald-400 font-mono font-bold leading-none truncate">
+                                    ${remDurStr} remaining
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (selectedTimelineDate === todayStr && lastSleepEndMinutes !== null && !daySleepPortions.some(e => !e.isClosed)) {
+                const nowMins = (today.getHours() * 60) + today.getMinutes();
+                if (nowMins > lastSleepEndMinutes) {
+                    const wakeMins = nowMins - lastSleepEndMinutes;
+                    const wakeTop = lastSleepEndMinutes * MINUTE_HEIGHT;
+                    const wakeHeight = Math.max(28, wakeMins * MINUTE_HEIGHT);
+                    const wDurStr = formatMinsToHhMm(wakeMins);
+                    const wStartH = Math.floor(lastSleepEndMinutes / 60);
+                    const wStartM = lastSleepEndMinutes % 60;
+                    const wStartStr = `${String(wStartH).padStart(2, '0')}:${String(wStartM).padStart(2, '0')}`;
+
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-98 transition-transform" style="top: ${wakeTop}px; height: ${wakeHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Currently Awake since ${wStartStr} (${wDurStr})', true)">
+                            <div class="w-full h-full bg-gradient-to-b from-amber-950/90 to-slate-900 border-2 border-amber-400 rounded-xl p-1.5 text-white shadow-lg flex flex-col justify-between overflow-hidden">
+                                <div class="flex justify-between items-center gap-1">
+                                    <span class="font-extrabold text-[10px] text-amber-300 truncate flex items-center gap-1">
+                                        <span>☀️</span> <span>Awake</span>
+                                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                    </span>
+                                    <span class="text-[8px] font-black bg-rose-600 text-white px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wide shrink-0">Live</span>
+                                </div>
+                                <div class="flex flex-col leading-tight">
+                                    <span class="text-[10px] text-amber-300 font-mono font-extrabold tracking-tight">${wDurStr}</span>
+                                    <span class="text-[8px] text-amber-200/70 font-mono">Since ${wStartStr}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            const rightColumnEvents = dayEvents.filter(e => e.eventType !== 'sleep');
+            rightColumnEvents.sort((a, b) => a.totalMinutes - b.totalMinutes);
+
+            const eventItems = rightColumnEvents.map((ev, index) => {
+                return {
+                    ev: ev,
+                    index: index,
+                    startMins: ev.totalMinutes,
+                    endMins: ev.totalMinutes + 25,
+                    topPos: ev.totalMinutes * MINUTE_HEIGHT,
+                    cardHeight: 28
+                };
+            });
+
+            // Group into overlapping clusters
+            const clusters = [];
+            let currentCluster = [];
+            let clusterEnd = -1;
+
+            eventItems.forEach(item => {
+                if (currentCluster.length === 0) {
+                    currentCluster.push(item);
+                    clusterEnd = item.endMins;
+                } else {
+                    if (item.startMins < clusterEnd) {
+                        currentCluster.push(item);
+                        clusterEnd = Math.max(clusterEnd, item.endMins);
+                    } else {
+                        clusters.push(currentCluster);
+                        currentCluster = [item];
+                        clusterEnd = item.endMins;
+                    }
+                }
+            });
+            if (currentCluster.length > 0) {
+                clusters.push(currentCluster);
+            }
+
+            // Assign sub-columns (Google Calendar Algorithm)
+            clusters.forEach(cluster => {
+                const colEnds = [];
+                cluster.forEach(item => {
+                    let assignedCol = -1;
+                    for (let c = 0; c < colEnds.length; c++) {
+                        if (item.startMins >= colEnds[c]) {
+                            assignedCol = c;
+                            colEnds[c] = item.endMins;
+                            break;
+                        }
+                    }
+                    if (assignedCol === -1) {
+                        assignedCol = colEnds.length;
+                        colEnds.push(item.endMins);
+                    }
+                    item.colIndex = assignedCol;
+                });
+
+                const totalCols = Math.min(3, colEnds.length);
+                cluster.forEach(item => {
+                    item.totalCols = totalCols;
+                    if (item.colIndex >= 3) item.colIndex = 2;
+                });
+            });
+
+            eventItems.forEach(item => {
+                const ev = item.ev;
+                const topPos = item.topPos;
+                const totalCols = item.totalCols || 1;
+                const colIndex = item.colIndex || 0;
+                const showTime = (totalCols === 1);
+
+                const colFraction = 1 / totalCols;
+                const leftOffsetFraction = colIndex / totalCols;
+
+                const leftCss = (totalCols === 1)
+                    ? 'calc(38px + (100% - 42px) * 0.35 + 4px)'
+                    : `calc(38px + (100% - 42px) * 0.35 + 4px + ((100% - 42px) * 0.65 - 6px) * ${leftOffsetFraction})`;
+                const widthCss = (totalCols === 1)
+                    ? 'calc((100% - 42px) * 0.65 - 6px)'
+                    : `calc(((100% - 42px) * 0.65 - 6px) * ${colFraction} - 2px)`;
+
+                const escapeToastStr = (s) => {
+                    if (!s) return '';
+                    return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r?\n/g, ' ');
+                };
+
+                if (ev.eventType === 'feed') {
+                    const isBottle = ev.eventLower.includes('bottle');
+                    if (isBottle) {
+                        const volNum = parseFloat(ev.valStr) || 0;
+                        const toastMsg = `🍼 Bottle Feed: ${volNum}ml at ${ev.timeStr}${ev.note ? ' (' + ev.note + ')' : ''}`;
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: 28px; left: ${leftCss}; width: ${widthCss};" onclick="showToast('${escapeToastStr(toastMsg)}', true)">
+                                <div class="w-full h-full bg-gradient-to-r from-sky-950/95 to-slate-900/95 border border-sky-500/70 rounded-xl px-1.5 py-0.5 shadow-md flex items-center justify-between text-white overflow-hidden">
+                                    <div class="flex items-center gap-1 min-w-0">
+                                        <span class="text-xs shrink-0">🍼</span>
+                                        <span class="font-extrabold text-[11px] text-sky-200 truncate">${volNum}ml</span>
+                                    </div>
+                                    ${showTime ? `<span class="text-[9px] font-mono font-bold text-slate-400 shrink-0 ml-0.5">${ev.timeStr}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        const isNursingActive = (ev.valStr === '');
+                        const sideLabel = ev.eventLower.includes('left') ? 'Left' : 'Right';
+                        const durText = isNursingActive ? 'Active' : `${ev.valStr}m`;
+                        const toastMsg = `🤱 Nursing (${sideLabel}): ${durText} at ${ev.timeStr}${ev.note ? ' (' + ev.note + ')' : ''}`;
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: 28px; left: ${leftCss}; width: ${widthCss};" onclick="showToast('${escapeToastStr(toastMsg)}', true)">
+                                <div class="w-full h-full bg-gradient-to-r from-amber-950/95 to-slate-900/95 border border-amber-500/70 rounded-xl px-1.5 py-0.5 shadow-md flex items-center justify-between text-white overflow-hidden">
+                                    <div class="flex items-center gap-1 min-w-0">
+                                        <span class="text-xs shrink-0">🤱</span>
+                                        <span class="font-extrabold text-[10px] text-amber-200 truncate">${sideLabel} (${durText})</span>
+                                    </div>
+                                    ${showTime ? `<span class="text-[8px] font-mono text-slate-300 font-bold shrink-0 ml-0.5">${ev.timeStr}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else if (ev.eventType === 'pump') {
+                    const volNum = parseFloat(ev.valStr) || 0;
+                    const toastMsg = `🐳 Pumping: ${volNum}ml at ${ev.timeStr}${ev.note ? ' (' + ev.note + ')' : ''}`;
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: 28px; left: ${leftCss}; width: ${widthCss};" onclick="showToast('${escapeToastStr(toastMsg)}', true)">
+                            <div class="w-full h-full bg-gradient-to-r from-purple-950/95 to-slate-900/95 border border-purple-500/70 rounded-xl px-1.5 py-0.5 shadow-md flex items-center justify-between text-white overflow-hidden">
+                                <div class="flex items-center gap-1 min-w-0">
+                                    <span class="text-xs shrink-0">🐳</span>
+                                    <span class="font-extrabold text-[11px] text-purple-200 truncate">${volNum}ml</span>
+                                </div>
+                                ${showTime ? `<span class="text-[9px] font-mono font-bold text-slate-400 shrink-0 ml-0.5">${ev.timeStr}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else if (ev.eventType === 'diaper') {
+                    const isPee = ev.eventLower.includes('pee');
+                    const icon = isPee ? '💧' : '💩';
+                    const colorClass = isPee
+                        ? 'bg-blue-950/90 border-blue-500/70 text-blue-300'
+                        : 'bg-amber-950/90 border-amber-500/70 text-amber-400';
+                    const scaleStr = ev.valStr ? `<span class="text-[10px] font-extrabold ml-0.5">${ev.valStr}</span>` : '';
+                    const labelContent = `<span class="flex items-center gap-0.5"><span class="text-xs">${icon}</span>${scaleStr}</span>`;
+                    const toastMsg = `${icon} ${isPee ? 'Pee Diaper' : 'Poop Diaper'}${ev.valStr ? ' (Level ' + ev.valStr + ')' : ''} at ${ev.timeStr}${ev.note ? ' - ' + ev.note : ''}`;
+
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: 28px; left: ${leftCss}; width: ${widthCss};" onclick="showToast('${escapeToastStr(toastMsg)}', true)">
+                            <div class="w-full h-full ${colorClass} border rounded-xl px-1.5 flex items-center justify-between font-bold shadow-xs overflow-hidden">
+                                ${labelContent}
+                                ${showTime ? `<span class="text-[8px] font-mono text-slate-300 font-bold">${ev.timeStr}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let icon = '📝';
+                    let label = ev.rawEvent;
+                    let isMed = ev.eventLower.includes('med');
+                    let isTummy = ev.eventLower.includes('tummy');
+                    let isNote = ev.eventLower.includes('note') || ev.eventLower.includes('memo');
+                    if (isMed) icon = '💊';
+                    else if (isTummy) icon = '🤸';
+                    else if (isNote) icon = '📝';
+
+                    let labelContent = '';
+                    let toastMsg = '';
+
+                    if (isMed) {
+                        const medText = ev.note || ev.valStr || label;
+                        labelContent = `<span class="flex items-center gap-0.5 truncate text-emerald-300"><span>💊</span> <span>${medText}</span></span>`;
+                        toastMsg = `💊 Medicine (${ev.timeStr}): ${medText}`;
+                    } else if (isTummy) {
+                        const durPart = ev.valStr ? `${ev.valStr}m` : '';
+                        labelContent = `<span class="flex items-center gap-0.5 truncate text-green-400"><span>🤸</span> <span>Tummy${durPart ? ` (${durPart})` : ''}</span></span>`;
+                        toastMsg = `🤸 Tummy Time (${ev.timeStr}): ${durPart ? durPart + ' ' : ''}${ev.note ? '- ' + ev.note : ''}`.trim();
+                    } else if (isNote) {
+                        const noteText = ev.note || ev.valStr || label;
+                        labelContent = `<span class="flex items-center gap-0.5 truncate text-cyan-300"><span>📝</span> <span>${noteText}</span></span>`;
+                        toastMsg = `📝 Note (${ev.timeStr}): ${noteText}`;
+                    } else {
+                        const desc = ev.note || (ev.valStr ? `${label} (${ev.valStr})` : label);
+                        labelContent = `<span class="flex items-center gap-0.5 truncate text-slate-200"><span>${icon}</span> <span>${desc}</span></span>`;
+                        toastMsg = `${icon} ${label} (${ev.timeStr})${ev.valStr ? ' - ' + ev.valStr : ''}${ev.note ? ' - ' + ev.note : ''}`;
+                    }
+
+                    gridHtml += `
+                        <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${topPos}px; height: 28px; left: ${leftCss}; width: ${widthCss};" onclick="showToast('${escapeToastStr(toastMsg)}', true)">
+                            <div class="w-full h-full bg-slate-900/90 border ${isMed ? 'border-emerald-500/70 bg-emerald-950/40' : (isNote ? 'border-cyan-500/60 bg-cyan-950/30' : 'border-slate-700/80')} rounded-xl px-1.5 flex items-center justify-between text-[9px] font-bold text-slate-200 shadow-xs overflow-hidden">
+                                ${labelContent}
+                                ${showTime ? `<span class="text-[8px] font-mono text-slate-400 font-bold ml-1 shrink-0">${ev.timeStr}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // Inject Playbook-Based Projections for Today (Next Feed & Next Sleep/Wake)
+            if (selectedTimelineDate === todayStr) {
+                const nowMins = (today.getHours() * 60) + today.getMinutes();
+                const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
+                const nightCutoffMins = ROUTINE_CONFIG.bedtime.nightCutoffHour * 60;
+                const bedtimeTargetMins = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.targetTime);
+                const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
+
+                const isCurrentlySleeping = daySleepPortions.some(e => !e.isClosed);
+                // Any sleep happening within cutoff before DWT is night sleep, not daytime nap
+                const completedDaytimeNaps = daySleepPortions.filter(e => e.isClosed && !e.startsBeforeMidnight && e.startMinutes >= morningStartMins && e.startMinutes < nightCutoffMins);
+                const napCount = completedDaytimeNaps.length;
+
+                // Check if preceding wake window was stretched over threshold
+                let prevWWStretched = false;
+                let morningWakeMins = DWT_MINS; // Default DWT (8:00 AM)
+                let lastNapDur = null;
+
+                // Find the final overnight sleep session ending between 05:00 AM (300m) and 10:30 AM (630m)
+                const overnightSleeps = daySleepPortions.filter(e => e.isClosed && e.endMinutes >= 300 && e.endMinutes <= 630 && (e.startsBeforeMidnight || e.startMinutes < morningStartMins));
+                if (overnightSleeps.length > 0) {
+                    morningWakeMins = overnightSleeps[overnightSleeps.length - 1].endMinutes;
+                }
+
+                if (completedDaytimeNaps.length > 0) {
+                    const lastIdx = completedDaytimeNaps.length - 1;
+                    const lastNap = completedDaytimeNaps[lastIdx];
+                    lastNapDur = lastNap.endMinutes - lastNap.startMinutes;
+                    const prevWakeStart = (lastIdx === 0) ? morningWakeMins : completedDaytimeNaps[lastIdx - 1].endMinutes;
+                    const actualPrevWW = lastNap.startMinutes - prevWakeStart;
+                    const prevPrevNapDur = (lastIdx > 0) ? (completedDaytimeNaps[lastIdx - 1].endMinutes - completedDaytimeNaps[lastIdx - 1].startMinutes) : null;
+                    const expectedPrevWW = getAdaptiveWakeWindow(prevWakeStart, prevPrevNapDur, false, false);
+                    if (actualPrevWW >= expectedPrevWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
+                        prevWWStretched = true;
+                    }
+                } else if (isCurrentlySleeping) {
+                    const activeSleep = daySleepPortions.find(e => !e.isClosed);
+                    if (activeSleep && !activeSleep.startsBeforeMidnight && activeSleep.startMinutes >= morningStartMins) {
+                        const actualWW = activeSleep.startMinutes - morningWakeMins;
+                        const expectedWW = getAdaptiveWakeWindow(morningWakeMins, null, false, false);
+                        if (actualWW >= expectedWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
+                            prevWWStretched = true;
+                        }
+                    }
+                }
+
+                // ==========================================
+                // 1. ADAPTIVE SLEEP PROJECTIONS (Naps & Bedtime)
+                // ==========================================
+                let sleepCursorWakeMins = (lastSleepEndMinutes !== null) ? lastSleepEndMinutes : morningWakeMins;
+                let napNumber = napCount + 1;
+
+                if (isCurrentlySleeping) {
+                    const activeSleep = daySleepPortions.find(e => !e.isClosed);
+                    if (activeSleep) {
+                        const isNightSleep = (activeSleep.startsBeforeMidnight || activeSleep.startMinutes >= nightCutoffMins || activeSleep.startMinutes < morningStartMins);
+                        if (isNightSleep) {
+                            gridHtml += `
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: 1312px; height: 26px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake-Up: Tomorrow at ${ROUTINE_CONFIG.wake.desiredWakeTime} (Desired Wake Time)', true)">
+                                    <div class="w-full h-full bg-indigo-950/50 border border-dashed border-indigo-400/60 rounded-xl px-1.5 flex items-center justify-between text-[9px] font-bold text-indigo-200 shadow-xs">
+                                        <span class="flex items-center gap-1 truncate"><span>☀️</span><span>Tomorrow</span></span>
+                                        <span class="font-mono text-indigo-300">${ROUTINE_CONFIG.wake.desiredWakeTime}</span>
+                                    </div>
+                                </div>
+                            `;
+                            sleepCursorWakeMins = 1440; // Done for the day
+                        } else {
+                            const isBridge = (activeSleep.startMinutes >= 930);
+                            const typicalNapDur = getAdaptiveNapDuration(activeSleep.startMinutes, isBridge);
+                            let estWakeMins = activeSleep.startMinutes + typicalNapDur;
+                            if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
+
+                            sleepCursorWakeMins = Math.max(nowMins, estWakeMins);
+                            lastNapDur = Math.max(nowMins, estWakeMins) - activeSleep.startMinutes;
+                            prevWWStretched = false;
+                            napNumber = napCount + 2;
+                        }
+                    }
+                }
+
+                // Dynamic projection loop: project forward until Bedtime
+                let cursor = sleepCursorWakeMins;
+                let prevNapDuration = lastNapDur;
+                let prevStretched = prevWWStretched;
+
+                while (cursor < 1440) {
+                    const timeToBed = bedtimeTargetMins - cursor;
+
+                    // Direct Bedtime Transition check:
+                    // If wake time is after 17:30 (1050m) OR time-to-bed is within max pre-bed WW + 15m (<= 150m):
+                    if (timeToBed <= ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins + 15 || cursor >= 1050) {
+                        let estBedStart = cursor + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
+                        estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
+                        const estWWMins = Math.max(60, estBedStart - cursor);
+                        let wwLabel = formatMinsToHhMm(estWWMins);
+
+                        if (!isCurrentlySleeping && cursor <= nowMins && (nowMins - cursor) >= ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
+                            estBedStart = nowMins;
+                            wwLabel = 'Due Now';
+                        }
+
+                        const sH = Math.floor(estBedStart / 60);
+                        const sM = estBedStart % 60;
+                        const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                        const eStr = `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`;
+
+                        // Render Estimated Pre-Bed Wake block
+                        if (estWWMins >= 15 && cursor >= nowMins) {
+                            const wwTop = cursor * MINUTE_HEIGHT;
+                            const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
+                            const wakeStartH = Math.floor(cursor / 60);
+                            const wakeStartM = cursor % 60;
+                            const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
+                            gridHtml += `
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before Bedtime: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
+                                    <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                        <div class="flex justify-between items-center gap-1">
+                                            <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
+                                                <span>☀️</span> <span>Est. Wake</span>
+                                            </span>
+                                            <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
+                                        </div>
+                                        <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                            ${wakeStartStr} → ${sStr}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        const todayPortionMins = 1440 - estBedStart;
+                        const blockHeight = Math.max(48, todayPortionMins * MINUTE_HEIGHT);
+                        const toastMsg = `🌙 Est. Bedtime: ${sStr} → ${eStr} (WW: ${wwLabel}, Wake: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM)`;
+
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estBedStart * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
+                                <div class="w-full h-full bg-gradient-to-b from-indigo-950/60 to-purple-950/50 border-indigo-400/80 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                    <div class="flex justify-between items-center gap-1">
+                                        <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
+                                            <span>🌙</span> <span>Est. Bedtime</span>
+                                        </span>
+                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">Night</span>
+                                    </div>
+                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                        ${sStr} → ${eStr}
+                                    </div>
+                                    <span class="text-[7px] text-indigo-400/80 font-bold uppercase tracking-wider">🌙 Wake time ${ROUTINE_CONFIG.wake.desiredWakeTime} AM</span>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    }
+
+                    // Otherwise, project a daytime nap (or catnap)
+                    const isBridge = (cursor >= 900 && timeToBed >= 150 && timeToBed <= 290);
+                    const targetWW = getAdaptiveWakeWindow(cursor, prevNapDuration, prevStretched, false, isBridge);
+                    let estSleepStartMins = cursor + targetWW;
+                    let wwBadgeLabel = formatMinsToHhMm(targetWW);
+                    if (prevStretched) wwBadgeLabel += ` (-${ROUTINE_CONFIG.wakeWindows.overdueWwReductionMins}m)`;
+                    else if (prevNapDuration && prevNapDuration < ROUTINE_CONFIG.wakeWindows.shortNapThresholdMins) wwBadgeLabel += ` (-${ROUTINE_CONFIG.wakeWindows.shortNapWwReductionMins}m)`;
+
+                    // If overdue right now:
+                    if (!isCurrentlySleeping && cursor <= nowMins && (nowMins - cursor) >= targetWW + ROUTINE_CONFIG.wakeWindows.overdueThresholdMins) {
+                        estSleepStartMins = nowMins;
+                        wwBadgeLabel = 'Due Now';
+                    }
+
+                    // If nap start is too late to fit a catnap before 18:00 hard stop (after 17:45), skip to Bedtime
+                    if (estSleepStartMins >= hardStopMins - 15) {
+                        let estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, cursor + ROUTINE_CONFIG.bedtime.minWakeWindowBeforeBedMins));
+                        const estWWMins = Math.max(60, estBedStart - cursor);
+                        const sH = Math.floor(estBedStart / 60);
+                        const sM = estBedStart % 60;
+                        const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                        const eStr = `Tomorrow ${ROUTINE_CONFIG.wake.desiredWakeTime}`;
+
+                        // Render Estimated Pre-Bed Wake block
+                        if (estWWMins >= 15 && cursor >= nowMins) {
+                            const wwTop = cursor * MINUTE_HEIGHT;
+                            const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
+                            const wakeStartH = Math.floor(cursor / 60);
+                            const wakeStartM = cursor % 60;
+                            const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
+                            gridHtml += `
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before Bedtime: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
+                                    <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                        <div class="flex justify-between items-center gap-1">
+                                            <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
+                                                <span>☀️</span> <span>Est. Wake</span>
+                                            </span>
+                                            <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
+                                        </div>
+                                        <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                            ${wakeStartStr} → ${sStr}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        const todayPortionMins = 1440 - estBedStart;
+                        const blockHeight = Math.max(48, todayPortionMins * MINUTE_HEIGHT);
+                        const toastMsg = `🌙 Est. Bedtime: ${sStr} → ${eStr} (WW: ${formatMinsToHhMm(estWWMins)}, Wake: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM)`;
+
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estBedStart * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
+                                <div class="w-full h-full bg-gradient-to-b from-indigo-950/60 to-purple-950/50 border-indigo-400/80 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                    <div class="flex justify-between items-center gap-1">
+                                        <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
+                                            <span>🌙</span> <span>Est. Bedtime</span>
+                                        </span>
+                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">Night</span>
+                                    </div>
+                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                        ${sStr} → ${eStr}
+                                    </div>
+                                    <span class="text-[7px] text-indigo-400/80 font-bold uppercase tracking-wider">🌙 Wake time ${ROUTINE_CONFIG.wake.desiredWakeTime} AM</span>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    }
+
+                    let napDur = getAdaptiveNapDuration(estSleepStartMins, isBridge);
+                    let estSleepEndMins = estSleepStartMins + napDur;
+                    if (estSleepEndMins > hardStopMins) estSleepEndMins = hardStopMins; // 18:00 hard stop
+
+                    const napTitle = isBridge ? 'Est. Catnap' : `Est. Nap ${napNumber}`;
+                    const sH = Math.floor(estSleepStartMins / 60);
+                    const sM = estSleepStartMins % 60;
+                    const sStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                    const eH = Math.floor(estSleepEndMins / 60);
+                    const eM = estSleepEndMins % 60;
+                    const eStr = `${String(eH).padStart(2, '0')}:${String(eM).padStart(2, '0')}`;
+
+                    // Render Estimated Wake block before this nap
+                    const estWWMins = estSleepStartMins - cursor;
+                    if (estWWMins >= 15 && cursor >= nowMins) {
+                        const wwTop = cursor * MINUTE_HEIGHT;
+                        const wwHeight = Math.max(28, estWWMins * MINUTE_HEIGHT);
+                        const wakeStartH = Math.floor(cursor / 60);
+                        const wakeStartM = cursor % 60;
+                        const wakeStartStr = `${String(wakeStartH).padStart(2, '0')}:${String(wakeStartM).padStart(2, '0')}`;
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${wwTop}px; height: ${wwHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('☀️ Est. Wake Window before ${napTitle}: ${wakeStartStr} → ${sStr} (${formatMinsToHhMm(estWWMins)})', true)">
+                                <div class="w-full h-full bg-gradient-to-b from-amber-950/40 to-amber-900/30 border border-dashed border-amber-400/70 rounded-xl p-1.5 text-amber-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                    <div class="flex justify-between items-center gap-1">
+                                        <span class="font-extrabold text-[9px] text-amber-300 flex items-center gap-0.5 truncate">
+                                            <span>☀️</span> <span>Est. Wake</span>
+                                        </span>
+                                        <span class="text-[8px] font-bold bg-amber-950/60 text-amber-400 border border-amber-700/40 px-1 py-0.5 rounded border shrink-0">${formatMinsToHhMm(estWWMins)}</span>
+                                    </div>
+                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                        ${wakeStartStr} → ${sStr}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (estSleepEndMins > nowMins) {
+                        const sleepDurStr = formatMinsToHhMm(estSleepEndMins - estSleepStartMins);
+                        const blockHeight = Math.max(28, (estSleepEndMins - estSleepStartMins) * MINUTE_HEIGHT);
+                        const toastMsg = `💤 ${napTitle}: ${sStr} → ${eStr} (WW: ${wwBadgeLabel})`;
+
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estSleepStartMins * MINUTE_HEIGHT}px; height: ${blockHeight}px; left: 38px; width: calc((100% - 42px) * 0.35);" onclick="showToast('${toastMsg}', true)">
+                                <div class="w-full h-full bg-gradient-to-b from-indigo-950/40 to-indigo-900/30 border-indigo-400/70 border border-dashed rounded-xl p-1.5 text-indigo-200 shadow-xs flex flex-col justify-between overflow-hidden">
+                                    <div class="flex justify-between items-center gap-1">
+                                        <span class="font-extrabold text-[9px] text-indigo-300 flex items-center gap-0.5 truncate">
+                                            <span>💤</span> <span>${napTitle}</span>
+                                        </span>
+                                        <span class="text-[8px] font-bold bg-indigo-950/60 text-indigo-400 border border-indigo-700/40 px-1 py-0.5 rounded border shrink-0">${sleepDurStr}</span>
+                                    </div>
+                                    <div class="text-[9px] text-slate-300 font-mono leading-none pt-0.5 truncate">
+                                        ${sStr} → ${eStr}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    cursor = estSleepEndMins;
+                    prevNapDuration = estSleepEndMins - estSleepStartMins;
+                    prevStretched = false;
+                    napNumber++;
+                }
+
+                // ==========================================
+                // 2. FULL-DAY FEED PROJECTIONS (Configurable Intervals)
+                // ==========================================
+                const feedsToday = dayEvents.filter(e => e.eventType === 'feed');
+                let lastFeedMins = null;
+                let lastFeedTimeStr = '';
+                if (feedsToday.length > 0) {
+                    const lastF = feedsToday[feedsToday.length - 1];
+                    lastFeedMins = lastF.totalMinutes;
+                    lastFeedTimeStr = lastF.timeStr;
+                } else if (lastFeedData && lastFeedData.timeStr) {
+                    const parsed = parseRowTime(lastFeedData.timeStr);
+                    lastFeedMins = parsed.h * 60 + parsed.m;
+                    lastFeedTimeStr = lastFeedData.timeStr;
+                } else {
+                    lastFeedMins = morningWakeMins; // Default to morning wake time if no feed yet
+                }
+
+                if (lastFeedMins !== null) {
+                    const feedInterval = ROUTINE_CONFIG.feeds.daytimeTargetIntervalMins;
+                    let cursorFeedMins = lastFeedMins + feedInterval;
+
+                    // If the first upcoming daytime feed is overdue:
+                    if (cursorFeedMins <= nowMins && cursorFeedMins < FEED_BEDTIME_THRESHOLD_MINS) {
+                        const estTop = nowMins * MINUTE_HEIGHT;
+                        gridHtml += `
+                            <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estTop}px; height: 28px; left: calc(38px + (100% - 42px) * 0.35 + 4px); width: calc((100% - 42px) * 0.65 - 6px);" onclick="showToast('🍼 Feed is due now (Last feed was at ${lastFeedTimeStr})', true)">
+                                <div class="w-full h-full bg-sky-950/30 border border-dashed border-amber-400/70 rounded-xl px-2 py-0.5 flex items-center justify-between text-amber-200 shadow-xs overflow-hidden">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <span class="text-xs shrink-0">🍼</span>
+                                        <span class="text-[10px] font-bold text-amber-300 truncate">Est. Feed (Due)</span>
+                                    </div>
+                                    <span class="text-[9px] font-mono font-bold text-amber-400 shrink-0">Due Now</span>
+                                </div>
+                            </div>
+                        `;
+                        // Step forward to next future interval
+                        while (cursorFeedMins <= nowMins) {
+                            cursorFeedMins += feedInterval;
+                        }
+                    }
+
+                    // Project all daytime feeds BEFORE bedtime
+                    while (cursorFeedMins < FEED_BEDTIME_THRESHOLD_MINS) {
+                        if (cursorFeedMins > nowMins) {
+                            const fH = Math.floor(cursorFeedMins / 60);
+                            const fM = cursorFeedMins % 60;
+                            const fStr = `${String(fH).padStart(2, '0')}:${String(fM).padStart(2, '0')}`;
+                            const estTop = cursorFeedMins * MINUTE_HEIGHT;
+
+                            gridHtml += `
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${estTop}px; height: 28px; left: calc(38px + (100% - 42px) * 0.35 + 4px); width: calc((100% - 42px) * 0.65 - 6px);" onclick="showToast('🍼 Est. Feed at ${fStr} (${formatMinsToHhMm(feedInterval)} interval)', true)">
+                                    <div class="w-full h-full bg-sky-950/30 border border-dashed border-sky-400/60 rounded-xl px-2 py-0.5 flex items-center justify-between text-sky-200 shadow-xs overflow-hidden">
+                                        <div class="flex items-center gap-1.5 min-w-0">
+                                            <span class="text-xs shrink-0">🍼</span>
+                                            <span class="text-[10px] font-bold text-sky-300 truncate">Est. Feed</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono font-bold text-sky-400 shrink-0">${fStr}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        cursorFeedMins += feedInterval;
+                    }
+
+                    // Configurable Overnight feeds during nighttime sleep
+                    if (Array.isArray(ROUTINE_CONFIG.feeds.overnightFeeds)) {
+                        ROUTINE_CONFIG.feeds.overnightFeeds.forEach(onFeed => {
+                            const onFeedMins = parseTimeToMinutes(onFeed.time);
+                            const onTop = (onFeedMins === 0 ? 1440 : onFeedMins) * MINUTE_HEIGHT - 28;
+                            gridHtml += `
+                                <div class="absolute z-10 cursor-pointer active:scale-95 transition-transform" style="top: ${Math.max(1280, Math.min(1312, onTop))}px; height: 30px; left: calc(38px + (100% - 42px) * 0.35 + 4px); width: calc((100% - 42px) * 0.65 - 6px);" onclick="showToast('🍼 ${onFeed.label} around ${onFeed.time}', true)">
+                                    <div class="w-full h-full bg-sky-950/40 border border-dashed border-sky-400/60 rounded-xl px-2 py-0.5 flex items-center justify-between text-sky-200 shadow-xs overflow-hidden">
+                                        <div class="flex items-center gap-1.5 min-w-0">
+                                            <span class="text-xs shrink-0">🍼</span>
+                                            <span class="text-[9px] font-bold text-sky-300 truncate">${onFeed.label}</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono font-bold text-sky-400 shrink-0">${onFeed.time}</span>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+                }
+
+                const nowTop = nowMins * MINUTE_HEIGHT;
+                const hhStr = String(today.getHours()).padStart(2, '0');
+                const mmStr = String(today.getMinutes()).padStart(2, '0');
+
+                gridHtml += `
+                    <div class="absolute left-0 right-0 z-20 pointer-events-none flex items-center" style="top: ${nowTop}px;">
+                        <div class="w-9 text-right pr-1 -mt-2.5">
+                            <span class="bg-red-500 text-white font-mono text-[8px] font-extrabold px-1 py-0.5 rounded-sm shadow-xs">${hhStr}:${mmStr}</span>
+                        </div>
+                        <div class="flex-1 h-[2px] bg-red-500 relative shadow-sm">
+                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
+                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-red-500"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            canvas.innerHTML = gridHtml;
+
+            if (scrollContainer && currentActiveTab === 'timeline') {
+                let targetScrollTop = 300;
+                if (selectedTimelineDate === todayStr) {
+                    const nowMins = (today.getHours() * 60) + today.getMinutes();
+                    targetScrollTop = Math.max(0, (nowMins * MINUTE_HEIGHT) - 100);
+                } else if (dayEvents.length > 0) {
+                    targetScrollTop = Math.max(0, (dayEvents[0].totalMinutes * MINUTE_HEIGHT) - 60);
+                }
+                setTimeout(() => {
+                    scrollContainer.scrollTop = targetScrollTop;
+                }, 50);
+            }
+        }
+
+        function updateDiaperCountsOnIndex() {
+            const pEl = document.getElementById('peeCountDisplay');
+            const poEl = document.getElementById('poopCountDisplay');
+            if (!latestDiaperCounts || !latestDiaperCounts.today) {
+                if (pEl) pEl.innerText = "Loading...";
+                if (poEl) poEl.innerText = "Loading...";
+                return;
+            }
+            const pee = latestDiaperCounts.today.pee ?? 0;
+            const poop = latestDiaperCounts.today.poop ?? 0;
+            if (pEl) pEl.innerText = `Today: ${pee}`;
+            if (poEl) poEl.innerText = `Today: ${poop}`;
+        }
+
+        function updateHealthSummaryOnIndex(healthSummary) {
+            const display = document.getElementById('healthSummaryDisplay');
+            if (!display) return;
+            if (healthSummary) {
+                latestHealthSummary = healthSummary;
+            }
+            const medsText = latestHealthSummary.meds && latestHealthSummary.meds.length > 0
+                ? latestHealthSummary.meds.join(', ')
+                : 'No meds';
+            const tummyText = `${latestHealthSummary.tummyMins || 0}m tummy`;
+
+            display.innerText = `${medsText} • ${tummyText}`;
+        }
+
+        function parseTimeStringToEpoch(timeStr, dateStr) {
+            if (!timeStr) return Date.now();
+            const timeParts = String(timeStr).split(':');
+            const hours = parseInt(timeParts[0], 10) || 0;
+            const minutes = parseInt(timeParts[1], 10) || 0;
+            let d = new Date();
+            if (dateStr && String(dateStr).includes('/')) {
+                const dateParts = String(dateStr).split('/');
+                d.setMonth(parseInt(dateParts[0], 10) - 1);
+                d.setDate(parseInt(dateParts[1], 10));
+            }
+            d.setHours(hours, minutes, 0, 0);
+            if (d.getTime() > Date.now()) { d.setDate(d.getDate() - 1); }
+            return d.getTime();
+        }
+
+        function getDaytimeNapCountToday() {
+            if (typeof globalRawRowsData === 'undefined' || !Array.isArray(globalRawRowsData) || globalRawRowsData.length === 0) return 0;
+            const todayStr = getTodaySheetsDateString();
+            let lastSeenDate = '';
+            let count = 0;
+            const morningStartHour = Math.floor(NIGHT_SLEEP_CUTOFF_MINS / 60);
+            const nightCutoffHour = ROUTINE_CONFIG.bedtime.nightCutoffHour;
+
+            for (let i = 0; i < globalRawRowsData.length; i++) {
+                const r = globalRawRowsData[i];
+                if (!r || r.length < 3) continue;
+                const rawDate = r[0];
+                if (rawDate) {
+                    if (rawDate instanceof Date) lastSeenDate = `${rawDate.getMonth() + 1}/${rawDate.getDate()}`;
+                    else lastSeenDate = String(rawDate).split(' ')[0].split('T')[0];
+                }
+                const ev = String(r[2] || '').toLowerCase();
+                const val = String(r[3] !== null && r[3] !== undefined ? r[3] : '').trim();
+                const isClosed = val !== '' && !isNaN(parseFloat(val));
+                const parsedTime = parseRowTimeSafe(r[1]);
+                // Daytime naps start after night sleep cutoff and before evening night cutoff
+                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && parsedTime.h >= morningStartHour && parsedTime.h < nightCutoffHour) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function getLastCompletedNapDurationMins() {
+            if (typeof globalRawRowsData === 'undefined' || !Array.isArray(globalRawRowsData) || globalRawRowsData.length === 0) return null;
+            const todayStr = getTodaySheetsDateString();
+            let lastSeenDate = '';
+            let lastNapDur = null;
+
+            for (let i = 0; i < globalRawRowsData.length; i++) {
+                const r = globalRawRowsData[i];
+                if (!r || r.length < 4) continue;
+                const rawDate = r[0];
+                if (rawDate) {
+                    if (rawDate instanceof Date) lastSeenDate = `${rawDate.getMonth() + 1}/${rawDate.getDate()}`;
+                    else lastSeenDate = String(rawDate).split(' ')[0].split('T')[0];
+                }
+                const ev = String(r[2] || '').toLowerCase();
+                const val = String(r[3] !== null && r[3] !== undefined ? r[3] : '').trim();
+                const isClosed = val !== '' && !isNaN(parseFloat(val));
+                const parsedTime = parseRowTimeSafe(r[1]);
+                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && parsedTime.h >= Math.floor(NIGHT_SLEEP_CUTOFF_MINS / 60) && parsedTime.h < ROUTINE_CONFIG.bedtime.nightCutoffHour) {
+                    lastNapDur = Math.round(parseFloat(val) * 60);
+                }
+            }
+            return lastNapDur;
+        }
+
+        function getLiveSleepWakeProjection() {
+            const now = new Date();
+            const nowMins = now.getHours() * 60 + now.getMinutes();
+            const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
+            const nightCutoffMins = ROUTINE_CONFIG.bedtime.nightCutoffHour * 60;
+            const bedtimeTargetMins = parseTimeToMinutes(ROUTINE_CONFIG.bedtime.targetTime);
+            const hardStopMins = parseTimeToMinutes(ROUTINE_CONFIG.naps.hardStop);
+
+            if (activeSleepRow) {
+                if (!activeSleepStartTimeMs) {
+                    return {
+                        state: 'asleep',
+                        isNightSleep: false,
+                        targetNapMins: 90,
+                        projWakeStr: '',
+                        startTimeStr: activeSleepTimeString || ''
+                    };
+                }
+                const sleepStartDate = new Date(activeSleepStartTimeMs);
+                const sleepStartHours = sleepStartDate.getHours();
+                const sleepStartMins = sleepStartHours * 60 + sleepStartDate.getMinutes();
+                const isNightSleep = (sleepStartMins < morningStartMins || sleepStartMins >= nightCutoffMins);
+
+                if (isNightSleep) {
+                    const targetWakeDate = new Date(sleepStartDate);
+                    if (sleepStartHours >= 12) targetWakeDate.setDate(targetWakeDate.getDate() + 1);
+                    const dwtParts = ROUTINE_CONFIG.wake.desiredWakeTime.split(':');
+                    targetWakeDate.setHours(parseInt(dwtParts[0], 10), parseInt(dwtParts[1], 10), 0, 0);
+                    const targetNapMins = Math.max(60, Math.round((targetWakeDate.getTime() - activeSleepStartTimeMs) / 60000));
+                    return {
+                        state: 'asleep',
+                        isNightSleep: true,
+                        targetNapMins: targetNapMins,
+                        projWakeStr: ROUTINE_CONFIG.wake.desiredWakeTime,
+                        startTimeStr: activeSleepTimeString || ''
+                    };
+                } else {
+                    const isBridge = (sleepStartMins >= 930);
+                    const typicalNapDur = getAdaptiveNapDuration(sleepStartMins, isBridge);
+                    let estWakeMins = sleepStartMins + typicalNapDur;
+                    if (estWakeMins > hardStopMins) estWakeMins = hardStopMins;
+                    const targetNapMins = estWakeMins - sleepStartMins;
+                    const sWakeH = Math.floor(estWakeMins / 60);
+                    const sWakeM = estWakeMins % 60;
+                    const projWakeStr = `${String(sWakeH).padStart(2, '0')}:${String(sWakeM).padStart(2, '0')}`;
+                    return {
+                        state: 'asleep',
+                        isNightSleep: false,
+                        targetNapMins: targetNapMins,
+                        projWakeStr: projWakeStr,
+                        startTimeStr: activeSleepTimeString || ''
+                    };
+                }
+            } else if (lastWakeUpTimeMs) {
+                const wakeUpDate = new Date(lastWakeUpTimeMs);
+                const wakeUpMins = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes();
+                const wakeUpTimeStr = `${String(wakeUpDate.getHours()).padStart(2, '0')}:${String(wakeUpDate.getMinutes()).padStart(2, '0')}`;
+                const lastNapDur = getLastCompletedNapDurationMins();
+                const timeToBed = bedtimeTargetMins - wakeUpMins;
+
+                // 1. Check direct bedtime transition (within max pre-bed WW or late afternoon wake)
+                if (timeToBed <= ROUTINE_CONFIG.bedtime.maxWakeWindowBeforeBedMins + 15 || wakeUpMins >= 1050) {
+                    let estBedStart = wakeUpMins + ROUTINE_CONFIG.wakeWindows.preBedtimeBaseMins;
+                    estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, estBedStart));
+                    const estWWMins = Math.max(60, estBedStart - wakeUpMins);
+                    const sH = Math.floor(estBedStart / 60);
+                    const sM = estBedStart % 60;
+                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                    return {
+                        state: 'awake',
+                        isBedtime: true,
+                        targetWWMins: estWWMins,
+                        projSleepStr: projSleepStr,
+                        wakeUpTimeStr: wakeUpTimeStr
+                    };
+                }
+
+                // 2. Check bridge catnap vs daytime nap
+                const isBridge = (wakeUpMins >= 900 && timeToBed >= 150 && timeToBed <= 290);
+                const targetWW = getAdaptiveWakeWindow(wakeUpMins, lastNapDur, false, false, isBridge);
+                let estSleepStartMins = wakeUpMins + targetWW;
+
+                // 3. If nap would start too close to hard stop (18:00), skip to Bedtime
+                if (estSleepStartMins >= hardStopMins - 15) {
+                    let estBedStart = Math.max(BEDTIME_START_MINS, Math.min(BEDTIME_END_MINS, wakeUpMins + ROUTINE_CONFIG.bedtime.minWakeWindowBeforeBedMins));
+                    const estWWMins = Math.max(60, estBedStart - wakeUpMins);
+                    const sH = Math.floor(estBedStart / 60);
+                    const sM = estBedStart % 60;
+                    const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                    return {
+                        state: 'awake',
+                        isBedtime: true,
+                        targetWWMins: estWWMins,
+                        projSleepStr: projSleepStr,
+                        wakeUpTimeStr: wakeUpTimeStr
+                    };
+                }
+
+                const sH = Math.floor(estSleepStartMins / 60);
+                const sM = estSleepStartMins % 60;
+                const projSleepStr = `${String(sH).padStart(2, '0')}:${String(sM).padStart(2, '0')}`;
+                return {
+                    state: 'awake',
+                    isBedtime: false,
+                    targetWWMins: targetWW,
+                    projSleepStr: projSleepStr,
+                    wakeUpTimeStr: wakeUpTimeStr
+                };
+            }
+
+            return null;
+        }
+
+        function renderAwakeTimeText() {
+            const sTitle = document.getElementById('sleepBtnTitle');
+            const sSublabel = document.getElementById('sleepBtnSublabel');
+            const sTimer = document.getElementById('sleepBtnTimer');
+            const sCountdown = document.getElementById('sleepBtnCountdown');
+            const sBadge = document.getElementById('sleepBtnBadge');
+            const sProgress = document.getElementById('sleepProgressBar');
+            const sProgressPct = document.getElementById('sleepBtnProgressPct');
+            const sActionHint = document.getElementById('sleepBtnActionHint');
+            const sIcon = document.getElementById('sleepBtnIcon');
+
+            const proj = getLiveSleepWakeProjection();
+
+            if (activeSleepRow) {
+                // Baby is currently ASLEEP
+                let elapsedSecs = 0;
+                if (activeSleepStartTimeMs) {
+                    const diffMs = Date.now() - activeSleepStartTimeMs;
+                    if (diffMs >= 0) elapsedSecs = Math.floor(diffMs / 1000);
+                }
+
+                const elapsedMins = Math.floor(elapsedSecs / 60);
+                const h = Math.floor(elapsedSecs / 3600);
+                const m = Math.floor((elapsedSecs % 3600) / 60);
+                const s = elapsedSecs % 60;
+                const timerStr = h > 0 ? `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s` : `${m}m ${String(s).padStart(2, '0')}s`;
+
+                const isNightSleep = proj ? proj.isNightSleep : false;
+                const targetNapMins = proj ? proj.targetNapMins : 90;
+                const projWakeStr = proj ? proj.projWakeStr : '';
+                const startTimeStr = proj ? proj.startTimeStr : (activeSleepTimeString || '');
+
+                if (sIcon) sIcon.innerText = "💤";
+                if (sTitle) { sTitle.innerText = isNightSleep ? "Baby is Asleep (Night)" : "Baby is Asleep"; sTitle.className = "font-extrabold text-xs text-indigo-300"; }
+                if (sSublabel) sSublabel.innerText = startTimeStr ? `Asleep since ${startTimeStr}` : "Currently sleeping";
+                if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base sm:text-lg font-extrabold font-mono text-indigo-100 tracking-tight leading-none"; }
+
+                const remainingMins = targetNapMins - elapsedMins;
+                const pct = Math.min(100, Math.max(0, Math.round((elapsedMins / targetNapMins) * 100)));
+                const timeRangeStr = (startTimeStr && projWakeStr) ? `${startTimeStr} → ${projWakeStr}` : (startTimeStr ? `Since ${startTimeStr}` : '');
+                const remDurStr = formatMinsToHhMm(Math.abs(remainingMins));
+
+                if (sCountdown) {
+                    if (remainingMins > 0) {
+                        sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (${remDurStr} left)` : `${remDurStr} left (${pct}%)`;
+                        sCountdown.className = "text-[10px] font-mono font-bold text-indigo-300";
+                    } else {
+                        sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (+${remDurStr})` : `Nap complete (+${remDurStr})`;
+                        sCountdown.className = "text-[10px] font-mono font-bold text-emerald-400";
+                    }
+                }
+
+                if (sBadge) {
+                    if (isNightSleep) {
+                        sBadge.innerText = projWakeStr ? `Wake ${projWakeStr} (Tomorrow)` : `Wake time: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM`;
+                    } else {
+                        sBadge.innerText = projWakeStr ? `Wake ${projWakeStr} (${formatMinsToHhMm(targetNapMins)})` : `Target: ${formatMinsToHhMm(targetNapMins)}`;
+                    }
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-500/40";
+                }
+
+                if (sProgress) {
+                    sProgress.style.width = `${pct}%`;
+                    sProgress.className = (pct >= 100)
+                        ? "h-full bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full transition-all duration-300"
+                        : "h-full bg-gradient-to-r from-indigo-600 to-indigo-400 rounded-full transition-all duration-300";
+                }
+                if (sProgressPct) sProgressPct.innerText = `${pct}%`;
+                if (sActionHint) sActionHint.innerText = "Tap to log wake-up";
+
+                const timelineTimerEl = document.getElementById('timelineLiveSleepTimer');
+                if (timelineTimerEl) timelineTimerEl.innerText = timerStr;
+                return;
+            }
+
+            // Baby is AWAKE
+            let elapsedSecs = 0;
+            if (lastWakeUpTimeMs) {
+                const diffMs = Date.now() - lastWakeUpTimeMs;
+                if (diffMs >= 0) elapsedSecs = Math.floor(diffMs / 1000);
+            }
+
+            const elapsedMins = Math.floor(elapsedSecs / 60);
+            const h = Math.floor(elapsedSecs / 3600);
+            const m = Math.floor((elapsedSecs % 3600) / 60);
+            const s = elapsedSecs % 60;
+            const timerStr = h > 0 ? `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s` : `${m}m ${String(s).padStart(2, '0')}s`;
+
+            const isBedtime = proj ? proj.isBedtime : false;
+            const targetWWMins = proj ? proj.targetWWMins : 90;
+            const projSleepStr = proj ? proj.projSleepStr : '';
+            const wakeUpTimeStr = proj ? proj.wakeUpTimeStr : '';
+
+            if (sIcon) sIcon.innerText = "☀️";
+            if (sTitle) { sTitle.innerText = isBedtime ? "Baby is Awake (Before Bed)" : "Baby is Awake"; sTitle.className = "font-extrabold text-xs text-slate-200"; }
+            if (sSublabel) sSublabel.innerText = wakeUpTimeStr ? `Awake since ${wakeUpTimeStr}` : "Awake tracking active";
+            if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base sm:text-lg font-extrabold font-mono text-white tracking-tight leading-none"; }
+
+            const remainingMins = targetWWMins - elapsedMins;
+            const pct = Math.min(100, Math.max(0, Math.round((elapsedMins / targetWWMins) * 100)));
+            const timeRangeStr = (wakeUpTimeStr && projSleepStr) ? `${wakeUpTimeStr} → ${projSleepStr}` : (wakeUpTimeStr ? `Since ${wakeUpTimeStr}` : '');
+            const remDurStr = formatMinsToHhMm(Math.abs(remainingMins));
+
+            if (sCountdown) {
+                if (remainingMins > 0) {
+                    sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (${remDurStr} left)` : `${remDurStr} left (${pct}%)`;
+                    sCountdown.className = "text-[10px] font-mono font-bold text-amber-300";
+                } else {
+                    sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (Due Now)` : `Ready for sleep (Due Now)`;
+                    sCountdown.className = "text-[10px] font-mono font-bold text-rose-400";
+                }
+            }
+
+            if (sBadge) {
+                if (isBedtime) {
+                    sBadge.innerText = projSleepStr ? `Bedtime ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Bedtime (${formatMinsToHhMm(targetWWMins)})`;
+                } else {
+                    sBadge.innerText = projSleepStr ? `Sleep ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Target: ${formatMinsToHhMm(targetWWMins)}`;
+                }
+                sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
+            }
+
+            if (sProgress) {
+                sProgress.style.width = `${pct}%`;
+                sProgress.className = (pct >= 100)
+                    ? "h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full transition-all duration-300"
+                    : "h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-300";
+            }
+            if (sProgressPct) sProgressPct.innerText = `${pct}%`;
+        }
+
+        function renderNursingTimeText() {
+            const bSub = document.getElementById('breastBtnSubtitle');
+            if (!activeBreastRow) return;
+            const labelSide = activeBreastSideString.includes('left') ? 'Left Side' : 'Right Side';
+            if (activeBreastStartTimeMs) {
+                const diffMs = Date.now() - activeBreastStartTimeMs;
+                if (diffMs >= 0) {
+                    const totalSecs = Math.floor(diffMs / 1000);
+                    const hours = Math.floor(totalSecs / 3600);
+                    const mins = Math.floor((totalSecs % 3600) / 60);
+                    const secs = totalSecs % 60;
+                    const durationStr = hours > 0
+                        ? `${hours}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`
+                        : `${mins}m ${String(secs).padStart(2, '0')}s`;
+                    if (bSub) bSub.innerText = `Nursing ${labelSide} since ${activeBreastTimeString} (${durationStr})`;
+                    return;
+                }
+            }
+            if (bSub) bSub.innerText = `Nursing ${labelSide} since ${activeBreastTimeString}`;
+        }
+
+        function renderFeedTimeText() {
+            const feedDisplay = document.getElementById('nextFeedDisplayTime');
+            if (!feedDisplay) return;
+
+            if (!lastFeedData || (!lastFeedData.timeMs && !lastFeedData.todayTotalMl)) {
+                feedDisplay.innerHTML = `<span class="text-[11px] text-slate-400 font-normal italic pt-1">None logged</span>`;
+                return;
+            }
+
+            const todayTotal = Math.round(lastFeedData.todayTotalMl || 0);
+            const todayOz = (todayTotal / 29.5735).toFixed(1);
+            const totalFootnote = `<div class="text-[9px] text-slate-400 font-mono pt-0.5">Total: <span class="text-slate-200 font-semibold">${todayTotal}ml</span> <span class="text-slate-500">(${todayOz}oz)</span></div>`;
+
+            if (!lastFeedData.timeMs) {
+                feedDisplay.innerHTML = `${totalFootnote}`;
+                return;
+            }
+
+            const timeStr = lastFeedData.timeStr || '';
+            let volUnitStr = '';
+            if (lastFeedData.type && lastFeedData.type.includes('breast')) {
+                volUnitStr = `${lastFeedData.volume || 0}m`;
+            } else {
+                volUnitStr = `${lastFeedData.volume || 0}ml`;
+            }
+
+            const clusterStartMs = lastFeedData.clusterStartMs || lastFeedData.timeMs;
+            const nextFeedMs = clusterStartMs + 12600000;
+            const nextFeedDate = new Date(nextFeedMs);
+            const hh = String(nextFeedDate.getHours()).padStart(2, '0');
+            const mm = String(nextFeedDate.getMinutes()).padStart(2, '0');
+
+            const diffMins = Math.round((nextFeedMs - Date.now()) / 60000);
+            let countdownHtml = '';
+            if (diffMins <= 0) {
+                countdownHtml = `<span class="text-rose-400 font-extrabold text-[9px] animate-pulse">(Due now)</span>`;
+            } else {
+                countdownHtml = `<span class="text-slate-400 font-mono text-[9px]">(in ${formatMinsToHhMm(diffMins)})</span>`;
+            }
+
+            feedDisplay.innerHTML = `
+                <div class="bg-indigo-950/80 border border-indigo-700/60 rounded-lg px-2 py-0.5 text-[11px] font-bold text-indigo-200 flex items-center justify-center gap-1 shadow-xs">
+                    <span>${timeStr}</span>
+                    <span class="text-indigo-400 font-normal">•</span>
+                    <span class="text-white font-extrabold">${volUnitStr}</span>
+                </div>
+                <div class="text-[10px] text-slate-300 font-medium flex items-center justify-center gap-1 leading-tight">
+                    <span class="text-slate-400">Next:</span>
+                    <span class="font-bold text-indigo-300 font-mono">${hh}:${mm}</span>
+                    ${countdownHtml}
+                </div>
+                ${totalFootnote}
+            `;
+        }
+
+        function renderPumpTimeText() {
+            const display = document.getElementById('lastPumpDisplay');
+            if (!display) return;
+
+            if (!lastPumpData || (!lastPumpData.timeMs && !lastPumpData.todayTotalMl)) {
+                display.innerHTML = `<span class="text-[11px] text-slate-400 font-normal italic pt-1">None logged</span>`;
+                return;
+            }
+
+            const todayTotal = Math.round(lastPumpData.todayTotalMl || 0);
+            const todayOz = (todayTotal / 29.5735).toFixed(1);
+            const totalFootnote = `<div class="text-[9px] text-slate-400 font-mono pt-0.5">Total: <span class="text-slate-200 font-semibold">${todayTotal}ml</span> <span class="text-slate-500">(${todayOz}oz)</span></div>`;
+
+            if (!lastPumpData.timeMs) {
+                display.innerHTML = `${totalFootnote}`;
+                return;
+            }
+
+            const timeStr = lastPumpData.timeStr || '';
+            const volStr = `${lastPumpData.volume || 0}ml`;
+
+            const clusterStartMs = lastPumpData.clusterStartMs || lastPumpData.timeMs;
+            const nextPumpMs = clusterStartMs + 12600000;
+            const nextPumpDate = new Date(nextPumpMs);
+            const hh = String(nextPumpDate.getHours()).padStart(2, '0');
+            const mm = String(nextPumpDate.getMinutes()).padStart(2, '0');
+
+            const diffMins = Math.round((nextPumpMs - Date.now()) / 60000);
+            let countdownHtml = '';
+            if (diffMins <= 0) {
+                countdownHtml = `<span class="text-rose-400 font-extrabold text-[9px] animate-pulse">(Due now)</span>`;
+            } else {
+                countdownHtml = `<span class="text-slate-400 font-mono text-[9px]">(in ${formatMinsToHhMm(diffMins)})</span>`;
+            }
+
+            display.innerHTML = `
+                <div class="bg-purple-950/80 border border-purple-700/60 rounded-lg px-2 py-0.5 text-[11px] font-bold text-purple-200 flex items-center justify-center gap-1 shadow-xs">
+                    <span>${timeStr}</span>
+                    <span class="text-purple-400 font-normal">•</span>
+                    <span class="text-white font-extrabold">${volStr}</span>
+                </div>
+                <div class="text-[10px] text-slate-300 font-medium flex items-center justify-center gap-1 leading-tight">
+                    <span class="text-slate-400">Next:</span>
+                    <span class="font-bold text-purple-300 font-mono">${hh}:${mm}</span>
+                    ${countdownHtml}
+                </div>
+                ${totalFootnote}
+            `;
+        }
+
+        function renderNoteDisplay() {
+            const display = document.getElementById('lastNoteDisplay');
+            if (!display) return;
+            if (!lastNoteData || (!lastNoteData.timeMs && !lastNoteData.todayCount)) {
+                display.innerText = 'None logged';
+                return;
+            }
+            const count = lastNoteData.todayCount || 0;
+            const countStr = count === 1 ? '1 note' : `${count} notes`;
+            if (!lastNoteData.timeMs) {
+                display.innerText = countStr;
+                return;
+            }
+            const timeStr = lastNoteData.timeStr || '';
+            display.innerText = `${timeStr} • ${countStr}`;
+        }
+
+        function renderRelativeTimeText() {
+            if (lastFetchedEpochTime) {
+                const label = document.getElementById('lastRefreshedLabel');
+                const diffSecs = Math.floor((Date.now() - lastFetchedEpochTime) / 1000);
+                const diffMins = Math.floor(diffSecs / 60);
+
+                if (diffSecs < 15) { label.innerText = "Just now"; }
+                else if (diffSecs < 60) { label.innerText = `${diffSecs}s ago`; }
+                else { label.innerText = `${diffMins}m ago`; }
+            }
+
+            renderAwakeTimeText();
+            renderNursingTimeText();
+            renderFeedTimeText();
+            renderPumpTimeText();
+            renderNoteDisplay();
+        }
+
+        function processRawRowsToAppStatus(data) {
+            if (!data || !data.success) return data;
+            if (!data.rows) return data;
+
+            const rows = data.rows;
+            const startRow = data.startRow || 2;
+
+            const today = new Date();
+            const todayStr = (today.getMonth() + 1) + '/' + today.getDate();
+
+            const status = { sleep: null, breast: null };
+            let lastWakeUpTime = null;
+            const byDate = {};
+
+            const formatDateString = (rawDate) => {
+                if (!rawDate) return '';
+                if (rawDate instanceof Date) {
+                    return (rawDate.getMonth() + 1) + '/' + rawDate.getDate();
+                }
+                const str = String(rawDate).trim();
+                const parts = str.split('/');
+                if (parts.length >= 2) {
+                    return parseInt(parts[0], 10) + '/' + parseInt(parts[1], 10);
+                }
+                return str;
+            };
+
+            const formatTimeString = (rawTime) => {
+                if (!rawTime) return '';
+                if (rawTime instanceof Date) {
+                    return String(rawTime.getHours()).padStart(2, '0') + ':' + String(rawTime.getMinutes()).padStart(2, '0');
+                }
+                const str = String(rawTime).trim();
+                const parts = str.split(':');
+                if (parts.length >= 2) {
+                    return String(parts[0]).padStart(2, '0') + ':' + String(parts[1]).padStart(2, '0');
+                }
+                return str;
+            };
+
+            // Build normalized row date strings for all rows (forward fill)
+            const rowDateStrs = new Array(rows.length);
+            let lastSeenDate = todayStr;
+
+            for (let i = 0; i < rows.length; i++) {
+                const rawDate = rows[i][0];
+                if (rawDate !== "" && rawDate !== undefined && rawDate !== null) {
+                    lastSeenDate = formatDateString(rawDate);
+                }
+                rowDateStrs[i] = lastSeenDate;
+            }
+
+            const parseRowToDateObj = (rowDate, rowTime, rowIndexInRawData) => {
+                let hours = 0, minutes = 0;
+                if (rowTime instanceof Date) {
+                    hours = rowTime.getHours();
+                    minutes = rowTime.getMinutes();
+                } else if (rowTime) {
+                    const parts = String(rowTime).split(':');
+                    hours = parseInt(parts[0], 10) || 0;
+                    minutes = parseInt(parts[1], 10) || 0;
+                }
+
+                const effectiveDateStr = (rowIndexInRawData !== undefined && rowDateStrs[rowIndexInRawData])
+                    ? rowDateStrs[rowIndexInRawData]
+                    : formatDateString(rowDate);
+
+                let d = new Date();
+                if (rowDate instanceof Date) {
+                    d = new Date(rowDate.getTime());
+                } else if (effectiveDateStr && effectiveDateStr.includes('/')) {
+                    const parts = effectiveDateStr.split('/');
+                    d.setMonth(parseInt(parts[0], 10) - 1);
+                    d.setDate(parseInt(parts[1], 10));
+                }
+                d.setHours(hours, minutes, 0, 0);
+                if (d.getTime() > Date.now()) d.setDate(d.getDate() - 1);
+                return d;
+            };
+
+            // 1. Process Diaper Counts & Active Sessions & Wake Up Time in reverse (newest first)
+            for (let i = rows.length - 1; i >= 0; i--) {
+                const rowIndex = startRow + i;
+                const rawDate = rows[i][0];
+                const rawTime = rows[i][1];
+                const eventRaw = rows[i][2];
+                if (!eventRaw) continue;
+
+                const eventName = String(eventRaw).trim().toLowerCase();
+                const valStr = String(rows[i][3]).trim();
+
+                // Track active session (empty value)
+                if (valStr === '' || valStr === null) {
+                    if (eventName === 'sleep' && !status.sleep) {
+                        const parsedDate = parseRowToDateObj(rawDate, rawTime, i);
+                        status.sleep = {
+                            rowNumber: rowIndex,
+                            timeString: formatTimeString(rawTime),
+                            dateString: formatDateString(rawDate),
+                            startTimeMs: parsedDate.getTime()
+                        };
+                    } else if ((eventName === 'breast left' || eventName === 'breast right') && !status.breast) {
+                        const parsedDate = parseRowToDateObj(rawDate, rawTime, i);
+                        status.breast = {
+                            rowNumber: rowIndex,
+                            side: eventName,
+                            timeString: formatTimeString(rawTime),
+                            dateString: formatDateString(rawDate),
+                            startTimeMs: parsedDate.getTime()
+                        };
+                    }
+                }
+
+                // Track latest wake up time (closed sleep entry with duration value)
+                if (eventName === 'sleep' && valStr !== '' && valStr !== null && !isNaN(valStr) && lastWakeUpTime === null) {
+                    const durationHours = parseFloat(valStr);
+                    const parsedDate = parseRowToDateObj(rawDate, rawTime, i);
+                    lastWakeUpTime = parsedDate.getTime() + (durationHours * 3600 * 1000);
+                }
+            }
+
+            // 2. Process Diaper Counts by Date
+            for (let i = 0; i < rows.length; i++) {
+                const rDateStr = rowDateStrs[i];
+                if (!byDate[rDateStr]) {
+                    byDate[rDateStr] = { pee: 0, poop: 0 };
+                }
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (eventLower.includes("pee")) byDate[rDateStr].pee++;
+                if (eventLower.includes("poop")) byDate[rDateStr].poop++;
+            }
+
+            // 3. Find latest feed entry & today's total feed volume (bottle)
+            let lastFeed = null;
+            let todayFeedMl = 0;
+            let feedTargetIdx = -1;
+
+            for (let i = rows.length - 1; i >= 0; i--) {
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (eventLower.includes('breast') || eventLower.includes('bottle')) {
+                    if (feedTargetIdx === -1) {
+                        feedTargetIdx = i;
+                    }
+                }
+            }
+
+            if (feedTargetIdx !== -1) {
+                const latestFeedObj = parseRowToDateObj(rows[feedTargetIdx][0], rows[feedTargetIdx][1], feedTargetIdx);
+                const rawVal = rows[feedTargetIdx][3];
+                const parsedVal = parseFloat(rawVal);
+                const valVolume = !isNaN(parsedVal) ? parsedVal : (rawVal !== null && rawVal !== undefined ? String(rawVal).trim() : 0);
+
+                let firstFeedTimeObj = latestFeedObj;
+                let anchorTimeObj = firstFeedTimeObj;
+
+                for (let i = feedTargetIdx - 1; i >= 0; i--) {
+                    const prevEventLower = String(rows[i][2] || '').toLowerCase();
+                    if (prevEventLower.includes('breast') || prevEventLower.includes('bottle')) {
+                        const prevTimeObj = parseRowToDateObj(rows[i][0], rows[i][1], i);
+                        const gapMins = (anchorTimeObj.getTime() - prevTimeObj.getTime()) / 60000;
+                        if (gapMins >= 0 && gapMins <= 60) {
+                            firstFeedTimeObj = prevTimeObj;
+                            anchorTimeObj = prevTimeObj;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                lastFeed = {
+                    timeMs: latestFeedObj ? latestFeedObj.getTime() : null,
+                    clusterStartMs: firstFeedTimeObj ? firstFeedTimeObj.getTime() : null,
+                    volume: valVolume,
+                    timeStr: formatTimeString(rows[feedTargetIdx][1]),
+                    type: String(rows[feedTargetIdx][2] || '').trim()
+                };
+            }
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowDateStr = rowDateStrs[i];
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (rowDateStr === todayStr && eventLower.includes('bottle')) {
+                    const p = parseFloat(rows[i][3]);
+                    if (!isNaN(p)) todayFeedMl += p;
+                }
+            }
+
+            if (lastFeed) {
+                lastFeed.todayTotalMl = Math.round(todayFeedMl || 0);
+            } else {
+                lastFeed = { timeMs: null, clusterStartMs: null, volume: 0, timeStr: '', type: '', todayTotalMl: Math.round(todayFeedMl || 0) };
+            }
+
+            // 3b. Find latest pump entry & today's total pump volume
+            let lastPump = null;
+            let todayPumpMl = 0;
+            let pumpTargetIdx = -1;
+
+            for (let i = rows.length - 1; i >= 0; i--) {
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (eventLower === 'pump' || eventLower.includes('pump')) {
+                    if (pumpTargetIdx === -1) {
+                        pumpTargetIdx = i;
+                    }
+                }
+            }
+
+            if (pumpTargetIdx !== -1) {
+                const latestPumpObj = parseRowToDateObj(rows[pumpTargetIdx][0], rows[pumpTargetIdx][1], pumpTargetIdx);
+                const pVal = parseFloat(rows[pumpTargetIdx][3]);
+                const valVolume = !isNaN(pVal) ? pVal : 0;
+
+                let firstPumpTimeObj = latestPumpObj;
+                let anchorTimeObj = firstPumpTimeObj;
+
+                for (let i = pumpTargetIdx - 1; i >= 0; i--) {
+                    const prevEventLower = String(rows[i][2] || '').toLowerCase();
+                    if (prevEventLower.includes('pump')) {
+                        const prevTimeObj = parseRowToDateObj(rows[i][0], rows[i][1], i);
+                        const gapMins = (anchorTimeObj.getTime() - prevTimeObj.getTime()) / 60000;
+                        if (gapMins >= 0 && gapMins <= 60) {
+                            firstPumpTimeObj = prevTimeObj;
+                            anchorTimeObj = prevTimeObj;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                lastPump = {
+                    timeMs: latestPumpObj ? latestPumpObj.getTime() : null,
+                    clusterStartMs: firstPumpTimeObj ? firstPumpTimeObj.getTime() : null,
+                    volume: valVolume,
+                    timeStr: formatTimeString(rows[pumpTargetIdx][1])
+                };
+            }
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowDateStr = rowDateStrs[i];
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (rowDateStr === todayStr && (eventLower === 'pump' || eventLower.includes('pump'))) {
+                    const p = parseFloat(rows[i][3]);
+                    if (!isNaN(p)) todayPumpMl += p;
+                }
+            }
+
+            if (lastPump) {
+                lastPump.todayTotalMl = Math.round(todayPumpMl || 0);
+            } else {
+                lastPump = { timeMs: null, clusterStartMs: null, volume: 0, timeStr: '', todayTotalMl: Math.round(todayPumpMl || 0) };
+            }
+
+            // 4. Compute Health & Routine summary (Meds & Tummy Time for today)
+            const todayMedsSet = [];
+            let todayTummyMins = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowDateStr = rowDateStrs[i];
+                if (rowDateStr === todayStr) {
+                    const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                    const noteStr = String(rows[i][5] || rows[i][3] || '').trim();
+
+                    if (eventLower === 'medicine' || eventLower.includes('med')) {
+                        let medName = noteStr || 'Med';
+                        if (medName.toLowerCase().includes('pepcid')) medName = 'Pepcid';
+                        else if (medName.toLowerCase().includes('vd') || medName.toLowerCase().includes('vitamin d')) medName = 'Vitamin D';
+                        else medName = medName.split(' ')[0];
+                        if (medName && !todayMedsSet.includes(medName)) {
+                            todayMedsSet.push(medName);
+                        }
+                    }
+
+                    if (eventLower.includes('tummy')) {
+                        const valNum = parseFloat(rows[i][3]);
+                        if (!isNaN(valNum)) {
+                            todayTummyMins += valNum;
+                        }
+                    }
+                }
+            }
+
+            // 5. Find latest note entry & today's note count
+            let lastNote = null;
+            let todayNoteCount = 0;
+            let noteTargetIdx = -1;
+
+            for (let i = rows.length - 1; i >= 0; i--) {
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (eventLower === 'note' || eventLower.includes('note')) {
+                    if (noteTargetIdx === -1) {
+                        noteTargetIdx = i;
+                    }
+                }
+            }
+
+            if (noteTargetIdx !== -1) {
+                const latestNoteObj = parseRowToDateObj(rows[noteTargetIdx][0], rows[noteTargetIdx][1], noteTargetIdx);
+                lastNote = {
+                    timeMs: latestNoteObj ? latestNoteObj.getTime() : null,
+                    timeStr: formatTimeString(rows[noteTargetIdx][1]),
+                    noteText: String(rows[noteTargetIdx][5] || rows[noteTargetIdx][3] || '').trim()
+                };
+            }
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowDateStr = rowDateStrs[i];
+                const eventLower = String(rows[i][2] || '').toLowerCase().trim();
+                if (rowDateStr === todayStr && (eventLower === 'note' || eventLower.includes('note'))) {
+                    todayNoteCount++;
+                }
+            }
+
+            if (lastNote) {
+                lastNote.todayCount = todayNoteCount;
+            } else {
+                lastNote = { timeMs: null, timeStr: '', noteText: '', todayCount: todayNoteCount };
+            }
+
+            const todayCounts = byDate[todayStr] || { pee: 0, poop: 0 };
+
+            return {
+                success: true,
+                sessions: status,
+                lastFeed: lastFeed,
+                lastFeedTimeMs: lastFeed ? lastFeed.timeMs : null,
+                lastFeedClusterStartMs: lastFeed ? lastFeed.clusterStartMs : null,
+                lastPump: lastPump,
+                lastNote: lastNote,
+                lastWakeUpTime: lastWakeUpTime,
+                diaperCounts: {
+                    today: todayCounts,
+                    byDate: byDate
+                },
+                healthSummary: {
+                    meds: todayMedsSet,
+                    tummyMins: Math.round(todayTummyMins)
+                }
+            };
+        }
+
+        function applyAppStatusData(response) {
+            if (!response || !response.success) {
+                if (response && response.error) {
+                    showToast("Error: " + response.error, false);
+                }
+                return;
+            }
+
+            if (response.rows) {
+                globalRawRowsData = response.rows;
+                globalStartRow = response.startRow || 2;
+                response = processRawRowsToAppStatus(response);
+            }
+
+            lastFetchedEpochTime = Date.now();
+            lastWakeUpTimeMs = response.lastWakeUpTime;
+            if (response.diaperCounts) {
+                latestDiaperCounts = response.diaperCounts;
+                updateDiaperCountsOnIndex();
+            }
+            if (response.lastFeed) {
+                lastFeedData = response.lastFeed;
+            } else if (response.lastFeedTimeMs) {
+                lastFeedData = {
+                    timeMs: response.lastFeedTimeMs,
+                    clusterStartMs: response.lastFeedClusterStartMs,
+                    volume: 0,
+                    timeStr: '',
+                    type: '',
+                    todayTotalMl: 0
+                };
+            }
+            if (response.lastPump) {
+                lastPumpData = response.lastPump;
+            }
+            if (response.lastNote) {
+                lastNoteData = response.lastNote;
+            }
+
+            if (response.healthSummary) {
+                updateHealthSummaryOnIndex(response.healthSummary);
+            }
+
+            const status = response.sessions || {};
+            const sBtn = document.getElementById('sleepGridBtn');
+
+            if (status && status.sleep) {
+                activeSleepRow = status.sleep.rowNumber;
+                activeSleepTimeString = formatSheetsTimeValue(status.sleep.timeString);
+                activeSleepStartTimeMs = status.sleep.startTimeMs || parseTimeStringToEpoch(status.sleep.timeString, status.sleep.dateString);
+                if (sBtn) sBtn.className = "w-full px-3 py-2 bg-slate-900/90 border-2 border-indigo-500/70 rounded-xl flex flex-col gap-1 active:scale-98 transition relative shadow-xs overflow-hidden text-left";
+            } else {
+                activeSleepRow = null; activeSleepStartTimeMs = null; activeSleepTimeString = '';
+                if (sBtn) sBtn.className = "w-full px-3 py-2 bg-slate-900/90 border border-slate-700/70 rounded-xl flex flex-col gap-1 active:scale-98 transition relative shadow-xs overflow-hidden text-left";
+            }
+
+            const bBanner = document.getElementById('breastGridBtn');
+            const bSub = document.getElementById('breastBtnSubtitle');
+
+            if (status && status.breast) {
+                activeBreastRow = status.breast.rowNumber;
+                activeBreastSideString = status.breast.side;
+                activeBreastTimeString = formatSheetsTimeValue(status.breast.timeString);
+                activeBreastStartTimeMs = status.breast.startTimeMs || parseTimeStringToEpoch(status.breast.timeString, status.breast.dateString);
+                if (bBanner) {
+                    bBanner.className = "w-full py-3.5 rounded-xl flex items-center justify-center gap-3 active:scale-98 transition border pulse-amber";
+                    bBanner.classList.remove('hidden');
+                }
+            } else {
+                activeBreastRow = null; activeBreastSideString = ''; activeBreastStartTimeMs = null; activeBreastTimeString = '';
+                if (bBanner) bBanner.classList.add('hidden');
+            }
+
+            renderRelativeTimeText();
+            updateDiaperCountsOnIndex();
+            renderTimelineView();
+            renderAwakeTimeText();
+            if (activeBreastRow) renderNursingTimeText();
+
+            if (!liveLabelIntervalId) {
+                liveLabelIntervalId = setInterval(renderRelativeTimeText, 60000);
+            }
+            if (!liveTimer1sIntervalId) {
+                liveTimer1sIntervalId = setInterval(() => {
+                    renderAwakeTimeText();
+                    if (activeBreastRow) renderNursingTimeText();
+                }, 1000);
+            }
+        }
+
+        function checkGlobalAppStatus() {
+            const refBtn = document.getElementById('manualRefreshBtn');
+            const icon = document.getElementById('refreshSpinnerIcon');
+            if (refBtn) refBtn.disabled = true;
+            if (icon) icon.className = "text-xs inline-block animate-spin";
+
+            BabyTrackerAPI.call('getInitialData')
+                .then((response) => {
+                    if (refBtn) refBtn.disabled = false;
+                    if (icon) icon.className = "text-xs inline-block";
+                    applyAppStatusData(response);
+                })
+                .catch((err) => {
+                    if (refBtn) refBtn.disabled = false;
+                    if (icon) icon.className = "text-xs inline-block";
+                    showToast("Sync check failed: " + err.message, false);
+                });
+        }
+
+        function initPage() {
+            const timeInput = document.getElementById('explicitTimeInput');
+            if (timeInput) {
+                timeInput.addEventListener('input', onExplicitTimeChanged);
+                timeInput.addEventListener('change', onExplicitTimeChanged);
+            }
+            if (typeof preloadedData !== 'undefined' && preloadedData && preloadedData.success) {
+                applyAppStatusData(preloadedData);
+            } else {
+                checkGlobalAppStatus();
+            }
+        }
+
+        function resetTimeToNow() {
+            const now = new Date();
+            const timeInput = document.getElementById('explicitTimeInput');
+            if (timeInput) timeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            if (currentModule === 'breast_active_manager' || (currentModule === 'sleep' && activeSleepRow)) {
+                onExplicitTimeChanged();
+            }
+        }
+
+        function adjustSleepMinutes(delta) {
+            const field = document.getElementById('sleepMinsInput');
+            if (!field) return;
+            let currentVal = parseInt(field.value, 10) || 0;
+            currentVal = Math.max(15, currentVal + delta);
+            field.value = currentVal;
+            onSleepMinsChanged();
+        }
+
+        function adjustHealthValue(dir) {
+            const valInput = document.getElementById('modValue');
+            if (!valInput) return;
+            let currentVal = parseFloat(valInput.value) || 0;
+            let step = 1;
+            if (typeof activeOtherMethod !== 'undefined') {
+                if (activeOtherMethod === 'medicine') step = 0.1;
+                else if (activeOtherMethod === 'tummy time' || activeOtherMethod === 'tummy' || activeOtherMethod === 'play') step = 1;
+                else if (activeOtherMethod === 'weight') step = 0.1;
+                else step = 1;
+            }
+            let newVal = currentVal + (dir * step);
+            if (newVal < 0) newVal = 0;
+            valInput.value = parseFloat(newVal.toFixed(2));
+        }
+
+        function onSleepMinsChanged() {
+            const field = document.getElementById('sleepMinsInput');
+            const timeInput = document.getElementById('explicitTimeInput');
+            if (!field || !timeInput) return;
+            let mins = parseInt(field.value, 10) || 15;
+            if (mins < 1) mins = 1;
+            const startMs = activeSleepStartTimeMs || Date.now();
+            const endObj = new Date(startMs + mins * 60000);
+            const hh = String(endObj.getHours()).padStart(2, '0');
+            const mm = String(endObj.getMinutes()).padStart(2, '0');
+            timeInput.value = `${hh}:${mm}`;
+        }
+
+        function adjustNursingMinutes(delta) {
+            const field = document.getElementById('nursingMinsInput');
+            if (!field) return;
+            let currentVal = parseInt(field.value, 10) || 0;
+            currentVal = Math.max(1, currentVal + delta);
+            field.value = currentVal;
+            onNursingMinsChanged();
+        }
+
+        function onNursingMinsChanged() {
+            const field = document.getElementById('nursingMinsInput');
+            const timeInput = document.getElementById('explicitTimeInput');
+            if (!field || !timeInput) return;
+            let mins = parseInt(field.value, 10) || 1;
+            if (mins < 1) mins = 1;
+            const startMs = activeBreastStartTimeMs || Date.now();
+            const endObj = new Date(startMs + mins * 60000);
+            const hh = String(endObj.getHours()).padStart(2, '0');
+            const mm = String(endObj.getMinutes()).padStart(2, '0');
+            timeInput.value = `${hh}:${mm}`;
+        }
+
+        function onExplicitTimeChanged() {
+            const timeInput = document.getElementById('explicitTimeInput');
+            if (!timeInput || !timeInput.value) return;
+            const parts = timeInput.value.split(':');
+
+            if (currentModule === 'breast_active_manager') {
+                const field = document.getElementById('nursingMinsInput');
+                if (!field) return;
+                const startMs = activeBreastStartTimeMs || Date.now();
+                const endObj = new Date(startMs);
+                endObj.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+                let diffMs = endObj.getTime() - startMs;
+                if (diffMs < 0) diffMs += 24 * 3600 * 1000;
+                field.value = Math.max(1, Math.round(diffMs / 60000));
+            } else if (currentModule === 'sleep' && activeSleepRow) {
+                const field = document.getElementById('sleepMinsInput');
+                if (!field) return;
+                const startMs = activeSleepStartTimeMs || Date.now();
+                const endObj = new Date(startMs);
+                endObj.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+                let diffMs = endObj.getTime() - startMs;
+                if (diffMs < 0) diffMs += 24 * 3600 * 1000;
+                field.value = Math.max(1, Math.round(diffMs / 60000));
+            }
+        }
+
+        function selectPillNote(inputID, text) {
+            const field = document.getElementById(inputID);
+            if (field) field.value = field.value ? `${field.value}, ${text}` : text;
+        }
+
+        function openPanel(module) {
+            currentModule = module;
+            const target = document.getElementById('panelFormContent');
+            const title = document.getElementById('panelTitle');
+            const submitBtn = document.getElementById('panelSubmitBtn');
+
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Confirm & Save Log";
+            submitBtn.className = "w-full bg-indigo-600 text-white font-extrabold py-3.5 rounded-2xl tracking-wide shadow-lg active:scale-98 transition flex justify-center items-center pointer-events-auto";
+
+            document.getElementById('timeFieldLabel').innerText = "Event Time";
+            document.getElementById('timeFieldPrompt').innerText = "Set explicit time:";
+
+            if (module === 'sleep') {
+                if (activeSleepRow) {
+                    title.innerText = "Wake Up Logger";
+                    document.getElementById('timeFieldLabel').innerText = "Wake Up Time";
+                    submitBtn.className = "w-full bg-amber-500 text-slate-950 font-black py-4 rounded-2xl tracking-wide shadow-lg text-base pointer-events-auto";
+                    const startMs = activeSleepStartTimeMs || Date.now();
+                    const initialElapsedMins = Math.max(1, Math.round((Date.now() - startMs) / 60000));
+                    target.innerHTML = `
+          <div class="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3 text-xs text-amber-300 text-center font-medium">
+            Currently tracking active sleep session (started ${activeSleepTimeString || 'earlier'}).
+          </div>
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Sleep Duration (minutes)</label>
+            <div class="flex w-full items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+              <button type="button" onclick="adjustSleepMinutes(-15)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">-</button>
+              <input id="sleepMinsInput" type="number" step="15" min="1" value="${initialElapsedMins}" oninput="onSleepMinsChanged()" class="w-24 bg-transparent text-center text-xl font-black text-white focus:outline-hidden">
+              <button type="button" onclick="adjustSleepMinutes(15)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">+</button>
+            </div>
+          </div>
+          <input id="modNote" type="text" placeholder="Optional notes..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-medium">
+        `;
+                } else {
+                    title.innerText = "Start Sleep Session";
+                    target.innerHTML = `<input id="modNote" type="text" placeholder="Optional notes (e.g. self soothe)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white">`;
+                }
+            }
+
+            else if (module === 'breast_active_manager') {
+                title.innerText = "Finish Nursing Session";
+                document.getElementById('timeFieldLabel').innerText = "End Feeding Time";
+                submitBtn.className = "w-full bg-amber-500 text-slate-950 font-black py-4 rounded-2xl tracking-wide shadow-lg text-base pointer-events-auto";
+                const sideLabel = activeBreastSideString.includes('left') ? 'Left Side' : 'Right Side';
+                const startMs = activeBreastStartTimeMs || Date.now();
+                const initialElapsedMins = Math.max(1, Math.round((Date.now() - startMs) / 60000));
+                target.innerHTML = `
+          <div class="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3 text-xs text-amber-300 text-center font-medium">
+            Currently tracking open session on <strong>${sideLabel}</strong> (started ${activeBreastTimeString}).
+          </div>
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Nursing Duration (minutes)</label>
+            <div class="flex w-full items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+              <button type="button" onclick="adjustNursingMinutes(-1)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">-</button>
+              <input id="nursingMinsInput" type="number" min="1" value="${initialElapsedMins}" oninput="onNursingMinsChanged()" class="w-24 bg-transparent text-center text-xl font-black text-white focus:outline-hidden">
+              <button type="button" onclick="adjustNursingMinutes(1)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">+</button>
+            </div>
+          </div>
+          <input id="modNote" type="text" placeholder="Optional notes (e.g. choked, good feed)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-medium">
+        `;
+            }
+
+            else if (module === 'feed') {
+                title.innerText = "Start Feeding Session";
+                activeFeedMethod = 'breast left';
+                target.innerHTML = `
+          <div class="grid grid-cols-3 gap-1 bg-slate-900/60 p-1 rounded-xl text-xs text-center font-bold mb-2">
+            <button type="button" id="fm-bl" onclick="changeFMethod('breast left')" class="active-btn py-2 rounded-lg text-slate-400">Breast L</button>
+            <button type="button" id="fm-br" onclick="changeFMethod('breast right')" class="py-2 rounded-lg text-slate-400">Breast R</button>
+            <button type="button" id="fm-bo" onclick="changeFMethod('bottle')" class="py-2 rounded-lg text-slate-400">Bottle</button>
+          </div>
+          <div id="feedValueWrapper" class="space-y-2 hidden">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Bottle Volume (ml)</label>
+            <div class="flex w-full items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+              <button type="button" onclick="document.getElementById('modValue').value = Math.max(0,(parseFloat(document.getElementById('modValue').value)||0)-5); return false;" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg">-</button>
+              <input id="modValue" type="number" value="140" class="w-20 bg-transparent text-center text-xl font-black text-white focus:outline-hidden">
+              <button type="button" onclick="document.getElementById('modValue').value = (parseFloat(document.getElementById('modValue').value)||0)+5; return false;" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg">+</button>
+            </div>
+          </div>
+          <div id="breastPromptWrapper" class="bg-indigo-950/20 border border-indigo-500/20 rounded-xl p-3 text-center text-xs text-indigo-300 font-medium">Selecting Breast L or R will create an open-ended row starting at the time chosen below. You can log the duration when the baby is done feeding.</div>
+        `;
+            }
+
+            else if (module === 'pump') {
+                title.innerText = "Log Breast Pump";
+                target.innerHTML = `
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Pumped Volume (ml)</label>
+            <div class="flex w-full items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+              <button type="button" onclick="document.getElementById('modValue').value = Math.max(0,(parseFloat(document.getElementById('modValue').value)||0)-5); return false;" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">-</button>
+              <input id="modValue" type="number" step="5" value="140" class="w-24 bg-transparent text-center text-xl font-black text-white focus:outline-hidden">
+              <button type="button" onclick="document.getElementById('modValue').value = (parseFloat(document.getElementById('modValue').value)||0)+5; return false;" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">+</button>
+            </div>
+          </div>
+          <input id="modNote" type="text" placeholder="Optional notes (e.g. left side, right side)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-medium">
+        `;
+            }
+
+            else if (module === 'pee' || module === 'poop') {
+                title.innerText = `Log ${module}`;
+                activeDiaperScale = 2;
+                const poopPresetsHtml = module === 'poop' ? `
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Quick Presets</label>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="applyPoopPreset('yellow')" class="bg-amber-950/40 border border-amber-900/50 px-2.5 py-1.5 rounded-xl text-xs font-bold text-amber-300 active:bg-amber-900">🟡 yellow</button>
+              <button type="button" onclick="applyPoopPreset('yellow green')" class="bg-lime-950/40 border border-lime-900/50 px-2.5 py-1.5 rounded-xl text-xs font-bold text-lime-300 active:bg-lime-900">🟢 yellow green</button>
+              <button type="button" onclick="applyPoopPreset('no blood')" class="bg-emerald-950/40 border border-emerald-900/50 px-2.5 py-1.5 rounded-xl text-xs font-bold text-emerald-300 active:bg-emerald-900">✅ no blood</button>
+              <button type="button" onclick="applyPoopPreset('tiny bit blood')" class="bg-rose-950/40 border border-rose-900/50 px-2.5 py-1.5 rounded-xl text-xs font-bold text-rose-300 active:bg-rose-900">🩸 tiny bit blood</button>
+              <button type="button" onclick="applyPoopPreset('some blood')" class="bg-red-950/40 border border-red-900/50 px-2.5 py-1.5 rounded-xl text-xs font-bold text-red-300 active:bg-red-900">⚠️ some blood</button>
+            </div>
+          </div>
+        ` : '';
+
+                target.innerHTML = `
+          <div class="space-y-2">
+            <div class="grid grid-cols-5 gap-1.5 bg-slate-900/60 p-1 rounded-xl text-center font-bold text-sm">
+              ${[1, 2, 3, 4, 5].map(v => `<button type="button" id="dsc-${v}" onclick="changeDScale(${v})" class="${v === 2 ? 'active-btn' : ''} py-2.5 rounded-lg transition text-slate-400">${v}</button>`).join('')}
+            </div>
+          </div>
+          ${poopPresetsHtml}
+          <input id="modNote" type="text" placeholder="Add specific notes..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-medium">
+        `;
+            }
+
+            else if (module === 'health') {
+                title.innerText = "Health & Routine";
+                activeOtherMethod = 'medicine';
+                target.innerHTML = `
+          <div class="grid grid-cols-2 gap-1 bg-slate-900/60 p-1 rounded-xl text-xs text-center font-bold">
+            <button type="button" id="hm-med" onclick="changeHMethod('medicine')" class="active-btn py-2 rounded-lg text-slate-400">💊 Medicine</button>
+            <button type="button" id="hm-tummy" onclick="changeHMethod('tummy time')" class="py-2 rounded-lg text-slate-400">🧸 Tummy Time</button>
+            <button type="button" id="hm-spit" onclick="changeHMethod('spit up')" class="py-2 rounded-lg text-slate-400 mt-1">🤮 Spit Up</button>
+            <button type="button" id="hm-wt" onclick="changeHMethod('weight')" class="py-2 rounded-lg text-slate-400 mt-1">⚖️ Weight</button>
+          </div>
+          <div id="medPresetContainer" class="space-y-1.5">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Quick Presets</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="applyMedPreset('0.3', 'Pepcid 0.3mg')" class="bg-indigo-950/40 border border-indigo-900/50 py-2 rounded-xl text-xs font-bold text-indigo-300 active:bg-indigo-900">💊 Pepcid (0.3mg)</button>
+              <button type="button" onclick="applyMedPreset('1.0', 'VD')" class="bg-emerald-950/40 border border-emerald-900/50 py-2 rounded-xl text-xs font-bold text-emerald-300 active:bg-emerald-900">☀️ Vitamin D (1.0ml)</button>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Value Record</label>
+            <div class="flex w-full items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+              <button type="button" onclick="adjustHealthValue(-1)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">-</button>
+              <input id="modValue" type="number" step="any" value="0.3" class="w-24 bg-transparent text-center text-xl font-black text-white focus:outline-hidden">
+              <button type="button" onclick="adjustHealthValue(1)" class="bg-slate-700 text-white font-black text-xl w-12 h-11 rounded-lg active:bg-slate-600">+</button>
+            </div>
+          </div>
+          <input id="modNote" type="text" value="Pepcid 0.3mg" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-hidden text-white">
+        `;
+            }
+
+            else if (module === 'note') {
+                title.innerText = "Log Note / Summary";
+                target.innerHTML = `
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Note / Day Summary</label>
+            <textarea id="modNote" rows="3" placeholder="Enter random note or summary for the day..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-medium focus:outline-hidden focus:border-cyan-500"></textarea>
+          </div>
+        `;
+            }
+
+            resetTimeToNow();
+            const panel = document.getElementById('actionPanel');
+            panel.classList.remove('hidden');
+            setTimeout(() => { panel.classList.add('opacity-100'); document.getElementById('panelSheet').classList.remove('translate-y-full'); }, 20);
+        }
+
+
+
+        function applyPoopPreset(noteText) {
+            const nField = document.getElementById('modNote');
+            if (!nField) return;
+            if (!nField.value.trim()) {
+                nField.value = noteText;
+            } else if (!nField.value.includes(noteText)) {
+                nField.value = `${nField.value.trim()}, ${noteText}`;
+            }
+        }
+
+        function applyMedPreset(value, note) {
+            const vField = document.getElementById('modValue');
+            const nField = document.getElementById('modNote');
+            if (vField) vField.value = value;
+            if (nField) nField.value = note;
+            showToast(`${note.split(' ')[0]} template applied!`, true);
+        }
+
+        function closePanel() {
+            const panel = document.getElementById('actionPanel');
+            const sheet = document.getElementById('panelSheet');
+            sheet.classList.add('translate-y-full'); panel.classList.remove('opacity-100');
+            setTimeout(() => { panel.classList.add('hidden'); }, 300);
+        }
+
+        function handleBackdropClick(event) { if (event.target.id === 'actionPanel') closePanel(); }
+        function changeDScale(val) { activeDiaperScale = val;[1, 2, 3, 4, 5].forEach(i => document.getElementById(`dsc-${i}`)?.classList.toggle('active-btn', i === val)); }
+
+        function changeFMethod(method) {
+            activeFeedMethod = method;
+            document.getElementById('fm-bl').classList.toggle('active-btn', method === 'breast left');
+            document.getElementById('fm-br').classList.toggle('active-btn', method === 'breast right');
+            document.getElementById('fm-bo').classList.toggle('active-btn', method === 'bottle');
+
+            const vWrap = document.getElementById('feedValueWrapper');
+            const bPrompt = document.getElementById('breastPromptWrapper');
+
+            if (method === 'bottle') { vWrap.classList.remove('hidden'); bPrompt.classList.add('hidden'); }
+            else { vWrap.classList.add('hidden'); bPrompt.classList.remove('hidden'); }
+        }
+
+        function changeHMethod(method) {
+            activeOtherMethod = method;
+            document.getElementById('hm-med').classList.toggle('active-btn', method === 'medicine');
+            document.getElementById('hm-tummy').classList.toggle('active-btn', method === 'tummy time' || method === 'tummy' || method === 'play');
+            document.getElementById('hm-spit').classList.toggle('active-btn', method === 'spit up');
+            document.getElementById('hm-wt').classList.toggle('active-btn', method === 'weight');
+
+            const presetBox = document.getElementById('medPresetContainer');
+            const v = document.getElementById('modValue');
+            const n = document.getElementById('modNote');
+
+            if (method === 'medicine') {
+                presetBox.classList.remove('hidden');
+                v.value = "0.3"; n.value = "Pepcid 0.3mg";
+            } else {
+                presetBox.classList.add('hidden');
+                if (method === 'tummy time' || method === 'tummy' || method === 'play') { v.value = "10"; n.value = ""; }
+                else if (method === 'spit up') { v.value = "1"; n.value = "Spit up after burp"; }
+                else { v.value = "13"; n.value = ""; }
+            }
+        }
+
+        function lockSubmitButton(btn) {
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+            btn.className = "w-full bg-slate-700/60 text-slate-400 font-bold py-3.5 rounded-2xl tracking-wide flex justify-center items-center pointer-events-none";
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") checkGlobalAppStatus();
+        });
+
+        function executePanelSubmit() {
+            const btn = document.getElementById('panelSubmitBtn');
+            lockSubmitButton(btn);
+
+            const timeVal = document.getElementById('explicitTimeInput').value;
+            const parts = timeVal.split(':');
+            const customDate = new Date();
+            customDate.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+            const targetTimestamp = customDate.getTime();
+
+            let note = document.getElementById('modNote')?.value || '';
+
+            if (currentModule === 'sleep' && activeSleepRow) {
+                BabyTrackerAPI.call('closeSession', { rowNum: activeSleepRow, endTimestamp: targetTimestamp, isMinutesUnit: false, note })
+                    .then((res) => { 
+                        closePanel(); 
+                        checkGlobalAppStatus(); 
+                        if (res && res.success) showToast(res.queuedOffline ? "Saved offline (pending sync)" : `Logged wake up: ${res.duration} hrs`, true); 
+                    })
+                    .catch(() => { closePanel(); showToast("Network timeout", false); });
+                return;
+            }
+
+            if (currentModule === 'breast_active_manager' && activeBreastRow) {
+                BabyTrackerAPI.call('closeSession', { rowNum: activeBreastRow, endTimestamp: targetTimestamp, isMinutesUnit: true, note })
+                    .then((res) => { 
+                        closePanel(); 
+                        checkGlobalAppStatus(); 
+                        if (res && res.success) showToast(res.queuedOffline ? "Saved offline (pending sync)" : `Logged feed: ${res.duration} mins`, true); 
+                    })
+                    .catch(() => { closePanel(); showToast("Network timeout", false); });
+                return;
+            }
+
+            let event = '', value = '';
+
+            if (currentModule === 'sleep') { event = 'sleep'; value = ''; }
+            else if (currentModule === 'pee' || currentModule === 'poop') { event = currentModule; value = activeDiaperScale; }
+            else if (currentModule === 'feed') {
+                event = activeFeedMethod;
+                value = (activeFeedMethod === 'bottle') ? document.getElementById('modValue').value : '';
+            }
+            else if (currentModule === 'pump') {
+                event = 'pump';
+                value = document.getElementById('modValue')?.value || '140';
+            }
+            else if (currentModule === 'note') {
+                event = 'note';
+                value = '';
+            }
+            else if (currentModule === 'health') { event = activeOtherMethod; value = document.getElementById('modValue').value; }
+
+            BabyTrackerAPI.call('addLogEntry', { event, value, note, passedTimestamp: targetTimestamp })
+                .then((res) => {
+                    closePanel();
+                    if (event === 'pee' && latestDiaperCounts && latestDiaperCounts.today) latestDiaperCounts.today.pee = (latestDiaperCounts.today.pee || 0) + 1;
+                    if (event === 'poop' && latestDiaperCounts && latestDiaperCounts.today) latestDiaperCounts.today.poop = (latestDiaperCounts.today.poop || 0) + 1;
+                    updateDiaperCountsOnIndex();
+
+                    if (event.includes('bottle') || event.includes('breast')) {
+                        const targetDate = new Date(targetTimestamp);
+                        const hh = String(targetDate.getHours()).padStart(2, '0');
+                        const mm = String(targetDate.getMinutes()).padStart(2, '0');
+                        const addedVal = parseFloat(value) || 0;
+                        const prevToday = (lastFeedData && lastFeedData.todayTotalMl) ? lastFeedData.todayTotalMl : 0;
+                        lastFeedData = {
+                            timeMs: targetTimestamp,
+                            clusterStartMs: targetTimestamp,
+                            volume: value,
+                            timeStr: `${hh}:${mm}`,
+                            type: event,
+                            todayTotalMl: event.includes('bottle') ? Math.round(prevToday + addedVal) : prevToday
+                        };
+                        renderFeedTimeText();
+                    }
+
+                    if (event === 'pump') {
+                        const targetDate = new Date(targetTimestamp);
+                        const hh = String(targetDate.getHours()).padStart(2, '0');
+                        const mm = String(targetDate.getMinutes()).padStart(2, '0');
+                        const addedVal = parseFloat(value) || 0;
+                        const prevToday = (lastPumpData && lastPumpData.todayTotalMl) ? lastPumpData.todayTotalMl : 0;
+                        lastPumpData = {
+                            timeMs: targetTimestamp,
+                            clusterStartMs: targetTimestamp,
+                            volume: value,
+                            timeStr: `${hh}:${mm}`,
+                            todayTotalMl: Math.round(prevToday + addedVal)
+                        };
+                        renderPumpTimeText();
+                    }
+
+                    if (event === 'note') {
+                        const targetDate = new Date(targetTimestamp);
+                        const hh = String(targetDate.getHours()).padStart(2, '0');
+                        const mm = String(targetDate.getMinutes()).padStart(2, '0');
+                        const prevCount = (lastNoteData && lastNoteData.todayCount) ? lastNoteData.todayCount : 0;
+                        lastNoteData = {
+                            timeMs: targetTimestamp,
+                            timeStr: `${hh}:${mm}`,
+                            noteText: note,
+                            todayCount: prevCount + 1
+                        };
+                        renderNoteDisplay();
+                    }
+
+                    if (currentModule === 'health') {
+                        if (event === 'medicine') {
+                            let medName = note || 'Med';
+                            if (medName.toLowerCase().includes('pepcid')) medName = 'Pepcid';
+                            else if (medName.toLowerCase().includes('vd') || medName.toLowerCase().includes('vitamin d')) medName = 'Vitamin D';
+                            else medName = medName.split(' ')[0];
+                            if (medName && !latestHealthSummary.meds.includes(medName)) {
+                                latestHealthSummary.meds.push(medName);
+                            }
+                            updateHealthSummaryOnIndex();
+                        } else if (event.includes('tummy')) {
+                            const addedMins = parseFloat(value) || 0;
+                            latestHealthSummary.tummyMins = (latestHealthSummary.tummyMins || 0) + Math.round(addedMins);
+                            updateHealthSummaryOnIndex();
+                        }
+                    }
+
+                    checkGlobalAppStatus();
+                    showToast(res && res.queuedOffline ? "Saved offline (pending sync)" : "Logged to Sheets!", true);
+                })
+                .catch(() => {
+                    closePanel();
+                    showToast("Network error", false);
+                });
+        }
+
+        function initRetryLoop() { }
+    </script>
+
+    <!-- PWA SETTINGS MODAL -->
+    <div id="pwaSettingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                    <span>⚙️</span> Endpoint & Security Settings
+                </h3>
+                <button onclick="closePwaSettingsModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps Script Web App URL</label>
+                    <input type="text" id="pwaApiUrlInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Secret API Key (Family PIN)</label>
+                    <input type="text" id="pwaApiKeyInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
+                </div>
+            </div>
+            <div class="pt-2 flex gap-2">
+                <button onclick="savePwaSettings()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition">Save & Sync</button>
+                <button onclick="closePwaSettingsModal()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-xl text-xs transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
