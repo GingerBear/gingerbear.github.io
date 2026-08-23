@@ -7,14 +7,19 @@
 
 // Universal Global Declaration
 (function (root, factory) {
+    const engine = factory();
     if (typeof exports === 'object' && typeof module !== 'undefined') {
-        module.exports = factory();
+        module.exports = engine;
     } else if (typeof define === 'function' && define.amd) {
-        define([], factory);
-    } else {
-        root.AdaptiveEngine = factory();
+        define([], function () { return engine; });
     }
-}(typeof self !== 'undefined' ? self : this, function () {
+    if (typeof root !== 'undefined' && root) {
+        root.AdaptiveEngine = engine;
+    }
+    if (typeof globalThis !== 'undefined' && globalThis) {
+        globalThis.AdaptiveEngine = engine;
+    }
+}(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : this)), function () {
 
     const ROUTINE_CONFIG = {
         stage: "3–4 Months (Adaptive Routine)",
@@ -320,13 +325,19 @@
 
             if (isNight) {
                 // Phase 1: Night Sleep Active
+                const totalNightMins = getElapsedAcrossMidnight(sleepStartMins, morningWakeMins);
+                const remMins = Math.max(0, totalNightMins - elapsedMins);
                 currentStatus = {
                     state: 'asleep',
                     isNightSleep: true,
                     sleepStartTime: formatMinutesToTime(sleepStartMins),
                     elapsedMins,
                     elapsedStr: formatMinsToHhMm(elapsedMins),
+                    targetDurationMins: totalNightMins,
+                    targetDurationStr: formatMinsToHhMm(totalNightMins),
                     projWakeTime: ROUTINE_CONFIG.wake.desiredWakeTime,
+                    remainingMins: remMins,
+                    remainingStr: formatMinsToHhMm(remMins),
                     summary: `💤 Night Sleep (Asleep for ${formatMinsToHhMm(elapsedMins)} · Est. Wake: ${ROUTINE_CONFIG.wake.desiredWakeTime})`
                 };
                 cursor = morningWakeMins;
