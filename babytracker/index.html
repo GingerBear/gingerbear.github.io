@@ -288,20 +288,20 @@
         class="hidden flex-1 flex flex-col overflow-hidden max-w-md mx-auto w-full px-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] space-y-2">
         <!-- Pinned Top Header Controls: Single Combined Toolbar -->
         <div
-            class="shrink-0 flex items-center justify-between gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-2.5 py-1.5 shadow-xs">
+            class="shrink-0 flex items-center justify-between gap-1.5 bg-slate-800/80 border border-slate-700/60 rounded-xl px-2 py-1.5 shadow-xs">
             <!-- Date Selector Dropdown Button -->
             <div class="relative flex items-center shrink-0">
                 <select id="timelineDateSelect" onchange="setTimelineDate(this.value)"
-                    class="bg-indigo-950/90 text-indigo-200 font-extrabold text-xs pl-2.5 pr-6 py-1 rounded-lg border border-indigo-700/60 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer appearance-none shadow-xs">
+                    class="bg-indigo-950/90 text-indigo-200 font-extrabold text-xs pl-2 pr-4.5 py-1 rounded-lg border border-indigo-700/60 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer appearance-none shadow-xs text-center">
                     <!-- Dynamically injected date options -->
                 </select>
-                <span class="absolute right-2 text-[10px] text-indigo-400 pointer-events-none">▾</span>
+                <span class="absolute right-1.5 text-[9px] text-indigo-400 pointer-events-none">▾</span>
             </div>
 
             <div class="h-4 w-px bg-slate-700/70 shrink-0"></div>
 
             <!-- Daily Summary Stats (Sleep & Awake) -->
-            <div id="timelineDaySummaryBanner" class="flex-1 flex items-center justify-around text-xs">
+            <div id="timelineDaySummaryBanner" class="flex-1 min-w-0 flex items-center justify-around text-xs overflow-hidden">
                 <!-- Dynamic stats for selected day -->
             </div>
         </div>
@@ -405,7 +405,7 @@
 
 
     <script>
-        window.APP_BUILD_VERSION = 'v1.5 • 8/23 9:55 PM';
+        window.APP_BUILD_VERSION = 'v1.5 • 8/23 10:17 PM';
 
         // Destructure AdaptiveEngine methods & configuration for direct global use
         const {
@@ -632,9 +632,7 @@
                 const reversedDates = [...distinctDates].reverse();
                 dateSelect.innerHTML = reversedDates.map(d => {
                     const isSelected = (d === selectedTimelineDate);
-                    let label = d;
-                    if (d === todayStr) label = `Today (${d})`;
-                    else if (d === yesterdayStr) label = `Yesterday (${d})`;
+                    const label = (d === todayStr) ? 'Today' : d;
                     return `<option value="${d}" ${isSelected ? 'selected' : ''}>${label}</option>`;
                 }).join('');
             }
@@ -797,22 +795,14 @@
 
             if (summaryBanner) {
                 summaryBanner.innerHTML = `
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1.5 min-w-0">
                         <span class="text-xs">💤</span>
-                        <span class="text-[10px] text-slate-400 font-medium hidden xs:inline">Total Sleep:</span>
-                        <span class="font-extrabold text-white text-xs">${sleepHoursStr}</span>
+                        <span class="font-extrabold text-white text-xs font-mono whitespace-nowrap">${sleepHoursStr} <span class="text-[11px] text-indigo-300 font-medium">(nap ${daytimeSleepStr})</span></span>
                     </div>
-                    <div class="h-3 w-px bg-slate-700/60"></div>
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs">🧸</span>
-                        <span class="text-[10px] text-indigo-300/80 font-medium hidden xs:inline">Day Naps:</span>
-                        <span class="font-extrabold text-indigo-300 text-xs">${daytimeSleepStr}</span>
-                    </div>
-                    <div class="h-3 w-px bg-slate-700/60"></div>
-                    <div class="flex items-center gap-1">
+                    <div class="h-3 w-px bg-slate-700/60 shrink-0"></div>
+                    <div class="flex items-center gap-1.5 min-w-0">
                         <span class="text-xs">☀️</span>
-                        <span class="text-[10px] text-amber-400/80 font-medium hidden xs:inline">Awake:</span>
-                        <span class="font-extrabold text-amber-300 text-xs">${wakeHoursStr}</span>
+                        <span class="font-extrabold text-amber-300 text-xs font-mono whitespace-nowrap">${wakeHoursStr}</span>
                     </div>
                 `;
             }
