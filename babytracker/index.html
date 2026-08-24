@@ -63,6 +63,13 @@
             scrollbar-width: none;
         }
 
+        #hubView {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            touch-action: pan-y;
+            scroll-behavior: smooth;
+        }
+
         .pulse-amber {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
@@ -119,7 +126,12 @@
 
             <button id="manualRefreshBtn" onclick="checkGlobalAppStatus()"
                 class="flex items-center gap-1.5 bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-white h-9 px-3 rounded-xl text-xs font-semibold active:scale-95 transition shadow-xs cursor-pointer">
-                <span id="refreshSpinnerIcon" class="text-xs inline-block">⟳</span>
+                <svg id="refreshSpinnerIcon" class="w-3.5 h-3.5 text-slate-300 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                    <path d="M16 16h5v5" />
+                </svg>
                 <span class="text-slate-400 font-semibold text-[10px]">Sync:</span>
                 <span id="lastRefreshedLabel" class="text-[11px] font-mono text-slate-200 font-bold">Updating...</span>
             </button>
@@ -145,35 +157,58 @@
         class="hidden fixed top-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl text-sm font-semibold shadow-2xl transition-all duration-300 z-50">
     </div>
 
-    <!-- MAIN HUB PORTAL -->
+    <!-- MAIN HUB PORTAL (SCROLLABLE ACTIONS TAB) -->
     <main id="hubView"
-        class="flex-1 overflow-y-auto max-w-md mx-auto w-full p-4 space-y-3 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] no-scrollbar">
+        class="flex-1 overflow-y-auto max-w-md mx-auto w-full px-4 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+7rem)] space-y-3.5 no-scrollbar scroll-smooth">
 
         <!-- DYNAMIC ONGOING STATUS BANNERS -->
         <div class="space-y-2">
             <!-- Sleep / Wake Status Compact Card -->
             <button id="sleepGridBtn" onclick="openPanel('sleep')"
-                class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700/70 rounded-xl flex flex-col gap-1 active:scale-98 transition relative shadow-xs overflow-hidden text-left">
+                class="w-full p-3.5 bg-slate-900/90 border border-slate-700/80 rounded-2xl flex flex-col gap-2.5 active:scale-98 transition relative shadow-md overflow-hidden text-left cursor-pointer">
+                <!-- Top Row: Icon, Title & Badge -->
                 <div class="flex items-center justify-between w-full">
-                    <div class="flex items-center gap-1.5">
-                        <span id="sleepBtnIcon" class="text-sm">⏳</span>
-                        <span id="sleepBtnTitle" class="font-extrabold text-xs text-slate-400">Loading Status...</span>
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span id="sleepBtnIcon" class="text-base shrink-0">⏳</span>
+                        <div class="flex flex-col min-w-0">
+                            <span id="sleepBtnTitle" class="font-black text-xs text-white truncate">Loading
+                                Status...</span>
+                            <span id="sleepBtnSublabel" class="text-[10px] text-slate-400 font-mono truncate">Since
+                                --:--</span>
+                        </div>
                     </div>
                     <span id="sleepBtnBadge"
-                        class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50">Syncing</span>
+                        class="text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 shrink-0">Target:
+                        1.5h</span>
                 </div>
 
-                <!-- Live Timer & Countdown Display -->
-                <div class="flex items-baseline justify-between w-full pt-0.5">
-                    <span id="sleepBtnTimer"
-                        class="text-base sm:text-lg font-extrabold font-mono text-slate-400 tracking-tight leading-none">--:--</span>
-                    <span id="sleepBtnCountdown" class="text-[10px] font-bold text-slate-400">Syncing status...</span>
+                <!-- Middle Row: Elapsed So Far & Target Countdown -->
+                <div
+                    class="flex items-center justify-between w-full bg-slate-950/70 border border-slate-800/80 rounded-xl px-3 py-2">
+                    <div class="flex flex-col">
+                        <span class="text-[8px] font-bold text-slate-500 uppercase tracking-wider">Elapsed So Far</span>
+                        <span id="sleepBtnTimer"
+                            class="text-base font-mono font-black text-amber-300 tracking-tight leading-tight">--:--</span>
+                    </div>
+                    <div class="flex flex-col items-end text-right min-w-0">
+                        <span id="sleepBtnTargetLabel"
+                            class="text-[8px] font-bold text-slate-500 uppercase tracking-wider truncate">Next Sleep
+                            Target</span>
+                        <span id="sleepBtnCountdown"
+                            class="text-xs font-mono font-extrabold text-slate-200 leading-tight truncate">Syncing...</span>
+                    </div>
                 </div>
 
-                <!-- Live Progress Bar -->
-                <div class="w-full bg-slate-800/90 h-1 rounded-full overflow-hidden border border-slate-700/50">
-                    <div id="sleepProgressBar" class="h-full bg-slate-700 rounded-full transition-all duration-300"
-                        style="width: 0%;"></div>
+                <!-- Bottom Row: Progress Bar & Details -->
+                <div class="space-y-1 w-full pt-0.5">
+                    <div class="flex justify-between items-center text-[9px] font-mono font-bold text-slate-400 px-0.5">
+                        <span id="sleepBtnProgressText">Window Progress</span>
+                        <span id="sleepBtnProgressPct">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden border border-slate-700/50">
+                        <div id="sleepProgressBar" class="h-full bg-slate-700 rounded-full transition-all duration-300"
+                            style="width: 0%;"></div>
+                    </div>
                 </div>
             </button>
 
@@ -192,24 +227,24 @@
         <!-- CORE 2-COLUMN ACTION GRID -->
         <div class="grid grid-cols-2 gap-3.5">
             <button onclick="openPanel('feed')"
-                class="py-4 px-2.5 bg-indigo-950/25 border border-indigo-900/40 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition shadow-sm min-h-[128px]">
+                class="py-5 px-3 bg-indigo-950/25 border border-indigo-900/40 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px] cursor-pointer">
                 <div class="flex items-center gap-1.5">
                     <span class="text-2xl">🍼</span>
                     <span class="font-bold text-sm text-indigo-400">Feed</span>
                 </div>
                 <div id="nextFeedDisplayTime"
-                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
+                    class="w-full flex flex-col items-center gap-0.5 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
                     Loading...</div>
             </button>
 
             <button onclick="openPanel('pump')"
-                class="py-4 px-2.5 bg-purple-950/25 border border-purple-900/40 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition shadow-sm min-h-[128px]">
+                class="py-5 px-3 bg-purple-950/25 border border-purple-900/40 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition shadow-sm min-h-[115px] cursor-pointer">
                 <div class="flex items-center gap-1.5">
                     <span class="text-2xl">🐳</span>
                     <span class="font-bold text-sm text-purple-400">Pump</span>
                 </div>
                 <div id="lastPumpDisplay"
-                    class="w-full flex flex-col items-center gap-1 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
+                    class="w-full flex flex-col items-center gap-0.5 text-[10px] text-slate-300 font-semibold tracking-wide text-center">
                     Loading...</div>
             </button>
 
@@ -271,6 +306,19 @@
             </div>
         </div>
 
+        <!-- Time Simulation Alert Banner (Shown only when simulation is active) -->
+        <div id="timelineSimulationBanner"
+            class="hidden shrink-0 flex items-center justify-between gap-2 bg-gradient-to-r from-amber-950/90 to-slate-900 border border-amber-500/80 rounded-xl px-3 py-1.5 shadow-md text-amber-200 text-xs">
+            <span class="flex items-center gap-1.5 font-bold truncate">
+                <span class="text-amber-400">⚡</span> Simulating: <span id="timelineSimulatedTimeDisplay"
+                    class="font-mono font-extrabold text-amber-300 text-xs tracking-wider">--:--</span>
+            </span>
+            <button type="button" onclick="resetSimulatedTime()"
+                class="text-[10px] bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-extrabold px-2.5 py-1 rounded-lg transition shadow-xs cursor-pointer shrink-0">
+                Reset
+            </button>
+        </div>
+
         <!-- 24-HOUR CALENDAR TIME GRID CONTAINER (EXPANDED DEDICATED SCROLL VIEW) -->
         <div id="calendarScrollContainer"
             class="flex-1 overflow-y-auto bg-slate-950/90 border border-slate-800 rounded-2xl shadow-2xl relative scroll-smooth no-scrollbar">
@@ -320,19 +368,26 @@
 
             <div id="panelFormContent" class="space-y-4"></div>
 
-            <!-- NATIVE TIME WHEEL PICKER -->
+            <!-- NATIVE TIME & DATE PICKER -->
             <div id="timeFieldContainer" class="space-y-2 border-t border-slate-700/60 pt-4">
                 <div class="flex justify-between items-center">
                     <label id="timeFieldLabel"
-                        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Event Time</label>
+                        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Event Time &
+                        Date</label>
                     <button type="button" onclick="resetTimeToNow()"
-                        class="text-[11px] text-indigo-400 font-bold active:text-indigo-300">Reset to Now</button>
+                        class="text-[11px] text-indigo-400 font-bold active:text-indigo-300 cursor-pointer">Reset to
+                        Now</button>
                 </div>
                 <div
-                    class="relative bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span id="timeFieldPrompt" class="text-sm text-slate-400 font-medium">Set explicit time:</span>
-                    <input id="explicitTimeInput" type="time"
-                        class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 font-mono font-bold text-white text-base focus:outline-hidden">
+                    class="relative bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 flex items-center justify-between gap-2">
+                    <span id="timeFieldPrompt" class="text-xs text-slate-400 font-medium whitespace-nowrap">Set explicit
+                        time:</span>
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <input id="explicitDateInput" type="date"
+                            class="bg-slate-800 border border-slate-600 rounded-lg px-2 py-1.5 font-mono font-bold text-white text-xs focus:outline-hidden">
+                        <input id="explicitTimeInput" type="time"
+                            class="bg-slate-800 border border-slate-600 rounded-lg px-2 py-1.5 font-mono font-bold text-white text-xs focus:outline-hidden">
+                    </div>
                 </div>
             </div>
 
@@ -350,7 +405,7 @@
 
 
     <script>
-        window.APP_BUILD_VERSION = 'v1.5 • 8/23 12:35 AM';
+        window.APP_BUILD_VERSION = 'v1.5 • 8/23 9:55 PM';
 
         // Destructure AdaptiveEngine methods & configuration for direct global use
         const {
@@ -392,6 +447,7 @@
         let liveLabelIntervalId = null;
         let liveTimeline10sIntervalId = null;
         let liveTimer1sIntervalId = null;
+        let liveNotif30sIntervalId = null;
         let toastTimeoutId = null;
 
         function showToast(message, isSuccess = true) {
@@ -511,10 +567,22 @@
 
             const rows = globalRawRowsData;
             const startRow = globalStartRow || 2;
-            const today = new Date();
+            const today = getEffectiveTimelineNow();
             const todayStr = (today.getMonth() + 1) + '/' + today.getDate();
-            const yesterday = new Date(Date.now() - 86400000);
+            const yesterday = new Date(today.getTime() - 86400000);
             const yesterdayStr = (yesterday.getMonth() + 1) + '/' + yesterday.getDate();
+
+            // Update Simulation Alert Banner in Timeline View
+            const simBanner = document.getElementById('timelineSimulationBanner');
+            const simTimeDisplay = document.getElementById('timelineSimulatedTimeDisplay');
+            if (simBanner) {
+                if (window.simulatedTimeStr) {
+                    simBanner.classList.remove('hidden');
+                    if (simTimeDisplay) simTimeDisplay.textContent = window.simulatedTimeStr;
+                } else {
+                    simBanner.classList.add('hidden');
+                }
+            }
 
             const formatDateString = (rawDate) => {
                 if (!rawDate) return '';
@@ -605,6 +673,10 @@
             const daySleepPortions = [];
             let totalSleepMinsOnThisDay = 0;
 
+            const isSimulationActive = (selectedTimelineDate === todayStr && !!window.simulatedTimeStr);
+            const simNowMins = (today.getHours() * 60) + today.getMinutes();
+            const simNowMs = dayStartMs + (simNowMins * 60000);
+
             for (let i = 0; i < rows.length; i++) {
                 const eventRaw = rows[i][2];
                 if (!eventRaw) continue;
@@ -628,7 +700,19 @@
                     const isClosed = (valStr !== '' && !isNaN(parseFloat(valStr)));
                     const durHours = isClosed ? parseFloat(valStr) : 0;
                     const sleepStartMs = parseRowDateTimeToMs(rowDateStr, h, m);
-                    const sleepEndMs = isClosed ? (sleepStartMs + Math.round(durHours * 3600000)) : (selectedTimelineDate === todayStr ? Date.now() : dayEndMs);
+                    let sleepEndMs = isClosed ? (sleepStartMs + Math.round(durHours * 3600000)) : (selectedTimelineDate === todayStr ? (isSimulationActive ? simNowMs : Date.now()) : dayEndMs);
+
+                    // In simulation mode: hide future sleeps that start after simulated time
+                    if (isSimulationActive && sleepStartMs >= simNowMs) {
+                        continue;
+                    }
+
+                    // In simulation mode: if a sleep was in progress at simulated time, treat as live active sleep
+                    let isSimulatedActive = false;
+                    if (isSimulationActive && sleepEndMs > simNowMs) {
+                        sleepEndMs = simNowMs;
+                        isSimulatedActive = true;
+                    }
 
                     // Check if this sleep session overlaps with the selected date [dayStartMs, dayEndMs]
                     if (sleepStartMs < dayEndMs && sleepEndMs > dayStartMs) {
@@ -651,7 +735,7 @@
 
                         daySleepPortions.push({
                             rowNumber: startRow + i,
-                            isClosed: isClosed,
+                            isClosed: isClosed && !isSimulatedActive,
                             totalDurationHours: durHours,
                             portionMins: portionMins,
                             startMinutes: startMinutes,
@@ -664,12 +748,17 @@
                         });
                     }
                 } else if (rowDateStr === selectedTimelineDate) {
+                    const totalMinutes = (h * 60) + m;
+
+                    // In simulation mode: hide future events that happened after simulated time
+                    if (isSimulationActive && totalMinutes > simNowMins) {
+                        continue;
+                    }
+
                     let eventType = 'other';
                     if (eventLower.includes('breast') || eventLower.includes('bottle')) eventType = 'feed';
                     else if (eventLower.includes('pump')) eventType = 'pump';
                     else if (eventLower.includes('pee') || eventLower.includes('poop')) eventType = 'diaper';
-
-                    const totalMinutes = (h * 60) + m;
 
                     dayEvents.push({
                         rowNumber: startRow + i,
@@ -1332,15 +1421,20 @@
                 const nowTop = nowMins * MINUTE_HEIGHT;
                 const hhStr = String(today.getHours()).padStart(2, '0');
                 const mmStr = String(today.getMinutes()).padStart(2, '0');
+                const isSim = !!window.simulatedTimeStr;
+                const badgeClass = isSim ? 'bg-amber-500 text-slate-950 font-black' : 'bg-red-500 text-white font-extrabold';
+                const lineClass = isSim ? 'bg-amber-400' : 'bg-red-500';
+                const dotClass = isSim ? 'bg-amber-400' : 'bg-red-500';
+                const timeTag = isSim ? `⚡ ${hhStr}:${mmStr}` : `${hhStr}:${mmStr}`;
 
                 gridHtml += `
                     <div class="absolute left-0 right-0 z-20 pointer-events-none flex items-center" style="top: ${nowTop}px;">
                         <div class="w-9 text-right pr-1 -mt-2.5">
-                            <span class="bg-red-500 text-white font-mono text-[8px] font-extrabold px-1 py-0.5 rounded-sm shadow-xs">${hhStr}:${mmStr}</span>
+                            <span class="${badgeClass} font-mono text-[8px] px-1 py-0.5 rounded-sm shadow-xs">${timeTag}</span>
                         </div>
-                        <div class="flex-1 h-[2px] bg-red-500 relative shadow-sm">
-                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
-                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-red-500"></div>
+                        <div class="flex-1 h-[2px] ${lineClass} relative shadow-sm">
+                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full ${dotClass} animate-ping"></div>
+                            <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full ${dotClass}"></div>
                         </div>
                     </div>
                 `;
@@ -1411,8 +1505,8 @@
             const todayStr = getTodaySheetsDateString();
             let lastSeenDate = '';
             let count = 0;
-            const morningStartHour = Math.floor(NIGHT_SLEEP_CUTOFF_MINS / 60);
-            const nightCutoffHour = ROUTINE_CONFIG.bedtime.nightCutoffHour;
+            const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
+            const nightCutoffMins = Math.round(ROUTINE_CONFIG.bedtime.nightCutoffHour * 60);
 
             for (let i = 0; i < globalRawRowsData.length; i++) {
                 const r = globalRawRowsData[i];
@@ -1426,8 +1520,9 @@
                 const val = String(r[3] !== null && r[3] !== undefined ? r[3] : '').trim();
                 const isClosed = val !== '' && !isNaN(parseFloat(val));
                 const parsedTime = parseRowTimeSafe(r[1]);
+                const timeMins = (parsedTime.h * 60) + parsedTime.m;
                 // Daytime naps start after night sleep cutoff and before evening night cutoff
-                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && parsedTime.h >= morningStartHour && parsedTime.h < nightCutoffHour) {
+                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && timeMins >= morningStartMins && timeMins < nightCutoffMins) {
                     count++;
                 }
             }
@@ -1439,6 +1534,8 @@
             const todayStr = getTodaySheetsDateString();
             let lastSeenDate = '';
             let lastNapDur = null;
+            const morningStartMins = NIGHT_SLEEP_CUTOFF_MINS;
+            const nightCutoffMins = Math.round(ROUTINE_CONFIG.bedtime.nightCutoffHour * 60);
 
             for (let i = 0; i < globalRawRowsData.length; i++) {
                 const r = globalRawRowsData[i];
@@ -1452,7 +1549,8 @@
                 const val = String(r[3] !== null && r[3] !== undefined ? r[3] : '').trim();
                 const isClosed = val !== '' && !isNaN(parseFloat(val));
                 const parsedTime = parseRowTimeSafe(r[1]);
-                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && parsedTime.h >= Math.floor(NIGHT_SLEEP_CUTOFF_MINS / 60) && parsedTime.h < ROUTINE_CONFIG.bedtime.nightCutoffHour) {
+                const timeMins = (parsedTime.h * 60) + parsedTime.m;
+                if (isClosed && ev.includes('sleep') && lastSeenDate.includes(todayStr) && timeMins >= morningStartMins && timeMins < nightCutoffMins) {
                     lastNapDur = Math.round(parseFloat(val) * 60);
                 }
             }
@@ -1479,7 +1577,8 @@
             const sBadge = document.getElementById('sleepBtnBadge');
             const sProgress = document.getElementById('sleepProgressBar');
             const sProgressPct = document.getElementById('sleepBtnProgressPct');
-            const sActionHint = document.getElementById('sleepBtnActionHint');
+            const sProgressText = document.getElementById('sleepBtnProgressText');
+            const sTargetLabel = document.getElementById('sleepBtnTargetLabel');
             const sIcon = document.getElementById('sleepBtnIcon');
 
             const proj = getLiveSleepWakeProjection();
@@ -1504,42 +1603,44 @@
                 const startTimeStr = proj ? proj.startTimeStr : (activeSleepTimeString || '');
 
                 if (sIcon) sIcon.innerText = "💤";
-                if (sTitle) { sTitle.innerText = isNightSleep ? "Baby is Asleep (Night)" : "Baby is Asleep"; sTitle.className = "font-extrabold text-xs text-indigo-300"; }
+                if (sTitle) { sTitle.innerText = isNightSleep ? "Baby is Asleep (Night)" : "Baby is Asleep"; sTitle.className = "font-black text-xs text-indigo-300 truncate"; }
                 if (sSublabel) sSublabel.innerText = startTimeStr ? `Asleep since ${startTimeStr}` : "Currently sleeping";
-                if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base sm:text-lg font-extrabold font-mono text-indigo-100 tracking-tight leading-none"; }
+                if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base font-mono font-black text-indigo-200 tracking-tight leading-tight"; }
+                if (sTargetLabel) sTargetLabel.innerText = isNightSleep ? "Morning Wake Target" : "Estimated Wake";
 
                 const remainingMins = targetNapMins - elapsedMins;
                 const pct = Math.min(100, Math.max(0, Math.round((elapsedMins / targetNapMins) * 100)));
-                const timeRangeStr = (startTimeStr && projWakeStr) ? `${startTimeStr} → ${projWakeStr}` : (startTimeStr ? `Since ${startTimeStr}` : '');
                 const remDurStr = formatMinsToHhMm(Math.abs(remainingMins));
 
                 if (sCountdown) {
                     if (remainingMins > 0) {
-                        sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (${remDurStr} left)` : `${remDurStr} left (${pct}%)`;
-                        sCountdown.className = "text-[10px] font-mono font-bold text-indigo-300";
+                        sCountdown.innerText = projWakeStr ? `➔ Wake ~${projWakeStr} (${remDurStr} left)` : `${remDurStr} left`;
+                        sCountdown.className = "text-xs font-mono font-extrabold text-indigo-300 leading-tight truncate";
                     } else {
-                        sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (+${remDurStr})` : `Nap complete (+${remDurStr})`;
-                        sCountdown.className = "text-[10px] font-mono font-bold text-emerald-400";
+                        sCountdown.innerText = projWakeStr ? `➔ Wake ~${projWakeStr} (+${remDurStr} over)` : `+${remDurStr} overdue`;
+                        sCountdown.className = "text-xs font-mono font-extrabold text-emerald-400 leading-tight truncate";
                     }
                 }
 
                 if (sBadge) {
                     if (isNightSleep) {
-                        sBadge.innerText = projWakeStr ? `Wake ${projWakeStr} (Tomorrow)` : `Wake time: ${ROUTINE_CONFIG.wake.desiredWakeTime} AM`;
+                        sBadge.innerText = "Night Sleep";
+                        sBadge.className = "text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-indigo-950/90 text-indigo-300 border border-indigo-500/50 shrink-0";
                     } else {
-                        sBadge.innerText = projWakeStr ? `Wake ${projWakeStr} (${formatMinsToHhMm(targetNapMins)})` : `Target: ${formatMinsToHhMm(targetNapMins)}`;
+                        sBadge.innerText = `Target: ${formatMinsToHhMm(targetNapMins)} nap`;
+                        sBadge.className = "text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-indigo-950/90 text-indigo-300 border border-indigo-500/50 shrink-0";
                     }
-                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-500/40";
                 }
+
+                if (sProgressText) sProgressText.innerText = (remainingMins <= 0) ? "Nap Complete" : "Nap Progress";
+                if (sProgressPct) sProgressPct.innerText = `${pct}%`;
 
                 if (sProgress) {
                     sProgress.style.width = `${pct}%`;
-                    sProgress.className = (pct >= 100)
+                    sProgress.className = (remainingMins <= 0)
                         ? "h-full bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full transition-all duration-300"
                         : "h-full bg-gradient-to-r from-indigo-600 to-indigo-400 rounded-full transition-all duration-300";
                 }
-                if (sProgressPct) sProgressPct.innerText = `${pct}%`;
-                if (sActionHint) sActionHint.innerText = "Tap to log wake-up";
 
                 const timelineTimerEl = document.getElementById('timelineLiveSleepTimer');
                 if (timelineTimerEl) timelineTimerEl.innerText = timerStr;
@@ -1569,13 +1670,13 @@
             if (sTitle) {
                 if (isNightAwake) {
                     sTitle.innerText = "Night Waking / Feed";
-                    sTitle.className = "font-extrabold text-xs text-indigo-200";
+                    sTitle.className = "font-black text-xs text-indigo-200 truncate";
                 } else if (isBedtime) {
-                    sTitle.innerText = "Baby is Awake (Before Bed)";
-                    sTitle.className = "font-extrabold text-xs text-slate-200";
+                    sTitle.innerText = "Baby is Awake (Pre-Bed)";
+                    sTitle.className = "font-black text-xs text-purple-200 truncate";
                 } else {
                     sTitle.innerText = "Baby is Awake";
-                    sTitle.className = "font-extrabold text-xs text-slate-200";
+                    sTitle.className = "font-black text-xs text-amber-200 truncate";
                 }
             }
             if (sSublabel) {
@@ -1585,43 +1686,47 @@
                     sSublabel.innerText = wakeUpTimeStr ? `Awake since ${wakeUpTimeStr}` : "Awake tracking active";
                 }
             }
-            if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base sm:text-lg font-extrabold font-mono text-white tracking-tight leading-none"; }
+            if (sTimer) { sTimer.innerText = timerStr; sTimer.className = "text-base font-mono font-black text-amber-300 tracking-tight leading-tight"; }
+            if (sTargetLabel) sTargetLabel.innerText = isBedtime ? "Target Bedtime" : "Next Sleep Target";
 
             const remainingMins = targetWWMins - elapsedMins;
             const pct = Math.min(100, Math.max(0, Math.round((elapsedMins / targetWWMins) * 100)));
-            const timeRangeStr = (wakeUpTimeStr && projSleepStr) ? `${wakeUpTimeStr} → ${projSleepStr}` : (wakeUpTimeStr ? `Since ${wakeUpTimeStr}` : '');
             const remDurStr = formatMinsToHhMm(Math.abs(remainingMins));
 
             if (sCountdown) {
                 if (remainingMins > 0) {
-                    sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (${remDurStr} left)` : `${remDurStr} left (${pct}%)`;
-                    sCountdown.className = isNightAwake ? "text-[10px] font-mono font-bold text-indigo-300" : "text-[10px] font-mono font-bold text-amber-300";
+                    sCountdown.innerText = projSleepStr ? `➔ ${projSleepStr} (${remDurStr} left)` : `${remDurStr} left`;
+                    sCountdown.className = isBedtime ? "text-xs font-mono font-extrabold text-purple-300 leading-tight truncate" : "text-xs font-mono font-extrabold text-amber-300 leading-tight truncate";
                 } else {
-                    sCountdown.innerText = timeRangeStr ? `${timeRangeStr} (Due Now)` : `Ready for sleep (Due Now)`;
-                    sCountdown.className = "text-[10px] font-mono font-bold text-rose-400";
+                    sCountdown.innerText = projSleepStr ? `➔ ${projSleepStr} (Due Now)` : `Ready for sleep (Due Now)`;
+                    sCountdown.className = "text-xs font-mono font-extrabold text-rose-400 leading-tight truncate";
                 }
             }
 
             if (sBadge) {
                 if (isNightAwake) {
-                    sBadge.innerText = projSleepStr ? `Back to Sleep ${projSleepStr}` : `Goal: Back to sleep`;
-                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-500/40";
+                    sBadge.innerText = projSleepStr ? `Back to Sleep ~${projSleepStr}` : `Goal: Back to sleep`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-indigo-950/80 text-indigo-300 border border-indigo-500/40 shrink-0";
                 } else if (isBedtime) {
-                    sBadge.innerText = projSleepStr ? `Bedtime ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Bedtime (${formatMinsToHhMm(targetWWMins)})`;
-                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
+                    sBadge.innerText = `Target: ${formatMinsToHhMm(targetWWMins)} (Bedtime)`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-purple-950/80 text-purple-300 border border-purple-500/40 shrink-0";
                 } else {
-                    sBadge.innerText = projSleepStr ? `Sleep ${projSleepStr} (${formatMinsToHhMm(targetWWMins)})` : `Target: ${formatMinsToHhMm(targetWWMins)}`;
-                    sBadge.className = "text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-slate-700/50";
+                    sBadge.innerText = `Target: ${formatMinsToHhMm(targetWWMins)} window`;
+                    sBadge.className = "text-[9px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-amber-950/80 text-amber-300 border border-amber-500/40 shrink-0";
                 }
             }
 
+            if (sProgressText) sProgressText.innerText = (remainingMins <= 0) ? "Sleep Window Overdue" : "Wake Window Progress";
+            if (sProgressPct) sProgressPct.innerText = `${pct}%`;
+
             if (sProgress) {
                 sProgress.style.width = `${pct}%`;
-                sProgress.className = (pct >= 100)
+                sProgress.className = (remainingMins <= 0)
                     ? "h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full transition-all duration-300"
-                    : "h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-300";
+                    : (isBedtime
+                        ? "h-full bg-gradient-to-r from-purple-500 to-amber-400 rounded-full transition-all duration-300"
+                        : "h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-300");
             }
-            if (sProgressPct) sProgressPct.innerText = `${pct}%`;
         }
 
         function renderNursingTimeText() {
@@ -1650,16 +1755,24 @@
             if (!feedDisplay) return;
 
             if (!lastFeedData || (!lastFeedData.timeMs && !lastFeedData.todayTotalMl)) {
-                feedDisplay.innerHTML = `<span class="text-[11px] text-slate-400 font-normal italic pt-1">None logged</span>`;
+                feedDisplay.innerHTML = `
+                    <div class="bg-indigo-950/50 border border-indigo-800/40 rounded-lg px-2 py-0.5 text-[10px] font-bold text-indigo-300 w-full text-center">
+                        Next: Tap to Log
+                    </div>
+                    <span class="text-[9px] text-slate-500 font-mono pt-0.5">None logged</span>
+                `;
                 return;
             }
 
             const todayTotal = Math.round(lastFeedData.todayTotalMl || 0);
-            const todayOz = (todayTotal / 29.5735).toFixed(1);
-            const totalFootnote = `<div class="text-[9px] text-slate-400 font-mono pt-0.5">Total: <span class="text-slate-200 font-semibold">${todayTotal}ml</span> <span class="text-slate-500">(${todayOz}oz)</span></div>`;
 
             if (!lastFeedData.timeMs) {
-                feedDisplay.innerHTML = `${totalFootnote}`;
+                feedDisplay.innerHTML = `
+                    <div class="bg-indigo-950/50 border border-indigo-800/40 rounded-lg px-2 py-0.5 text-[10px] font-bold text-indigo-300 w-full text-center">
+                        Next: Tap to Log
+                    </div>
+                    <div class="text-[9px] text-slate-400 font-mono pt-0.5">Today: <span class="text-slate-200 font-semibold">${todayTotal}ml</span></div>
+                `;
                 return;
             }
 
@@ -1678,25 +1791,25 @@
             const mm = String(nextFeedDate.getMinutes()).padStart(2, '0');
 
             const diffMins = Math.round((nextFeedMs - Date.now()) / 60000);
-            let countdownHtml = '';
-            if (diffMins <= 0) {
-                countdownHtml = `<span class="text-rose-400 font-extrabold text-[9px] animate-pulse">(Due now)</span>`;
-            } else {
-                countdownHtml = `<span class="text-slate-400 font-mono text-[9px]">(in ${formatMinsToHhMm(diffMins)})</span>`;
-            }
+            const isDue = diffMins <= 0;
+            const badgeClass = isDue
+                ? 'bg-rose-950/90 border-rose-600/70 text-rose-300'
+                : 'bg-indigo-950/90 border-indigo-700/60 text-indigo-200';
+            const countdownStr = isDue
+                ? '<span class="text-rose-400 font-black animate-pulse">(Due)</span>'
+                : `<span class="text-indigo-400 font-normal">(${formatMinsToHhMm(diffMins)})</span>`;
 
             feedDisplay.innerHTML = `
-                <div class="bg-indigo-950/80 border border-indigo-700/60 rounded-lg px-2 py-0.5 text-[11px] font-bold text-indigo-200 flex items-center justify-center gap-1 shadow-xs">
-                    <span>${timeStr}</span>
-                    <span class="text-indigo-400 font-normal">•</span>
-                    <span class="text-white font-extrabold">${volUnitStr}</span>
+                <div class="${badgeClass} border rounded-lg px-2 py-0.5 text-[11px] font-bold flex items-center justify-center gap-1 shadow-xs w-full">
+                    <span class="text-[10px] opacity-80">Next</span>
+                    <span class="font-mono font-extrabold text-white">${hh}:${mm}</span>
+                    <span class="text-[9px] font-mono">${countdownStr}</span>
                 </div>
-                <div class="text-[10px] text-slate-300 font-medium flex items-center justify-center gap-1 leading-tight">
-                    <span class="text-slate-400">Next:</span>
-                    <span class="font-bold text-indigo-300 font-mono">${hh}:${mm}</span>
-                    ${countdownHtml}
+                <div class="text-[9px] text-slate-400 font-mono pt-[11px] flex items-center justify-center gap-1 leading-none truncate max-w-full">
+                    <span>Last ${timeStr} (${volUnitStr})</span>
+                    <span class="text-slate-600">•</span>
+                    <span class="text-slate-300 font-semibold">${todayTotal}ml</span>
                 </div>
-                ${totalFootnote}
             `;
         }
 
@@ -1705,16 +1818,24 @@
             if (!display) return;
 
             if (!lastPumpData || (!lastPumpData.timeMs && !lastPumpData.todayTotalMl)) {
-                display.innerHTML = `<span class="text-[11px] text-slate-400 font-normal italic pt-1">None logged</span>`;
+                display.innerHTML = `
+                    <div class="bg-purple-950/50 border border-purple-800/40 rounded-lg px-2 py-0.5 text-[10px] font-bold text-purple-300 w-full text-center">
+                        Next: Tap to Log
+                    </div>
+                    <span class="text-[9px] text-slate-500 font-mono pt-0.5">None logged</span>
+                `;
                 return;
             }
 
             const todayTotal = Math.round(lastPumpData.todayTotalMl || 0);
-            const todayOz = (todayTotal / 29.5735).toFixed(1);
-            const totalFootnote = `<div class="text-[9px] text-slate-400 font-mono pt-0.5">Total: <span class="text-slate-200 font-semibold">${todayTotal}ml</span> <span class="text-slate-500">(${todayOz}oz)</span></div>`;
 
             if (!lastPumpData.timeMs) {
-                display.innerHTML = `${totalFootnote}`;
+                display.innerHTML = `
+                    <div class="bg-purple-950/50 border border-purple-800/40 rounded-lg px-2 py-0.5 text-[10px] font-bold text-purple-300 w-full text-center">
+                        Next: Tap to Log
+                    </div>
+                    <div class="text-[9px] text-slate-400 font-mono pt-0.5">Today: <span class="text-slate-200 font-semibold">${todayTotal}ml</span></div>
+                `;
                 return;
             }
 
@@ -1728,25 +1849,25 @@
             const mm = String(nextPumpDate.getMinutes()).padStart(2, '0');
 
             const diffMins = Math.round((nextPumpMs - Date.now()) / 60000);
-            let countdownHtml = '';
-            if (diffMins <= 0) {
-                countdownHtml = `<span class="text-rose-400 font-extrabold text-[9px] animate-pulse">(Due now)</span>`;
-            } else {
-                countdownHtml = `<span class="text-slate-400 font-mono text-[9px]">(in ${formatMinsToHhMm(diffMins)})</span>`;
-            }
+            const isDue = diffMins <= 0;
+            const badgeClass = isDue
+                ? 'bg-rose-950/90 border-rose-600/70 text-rose-300'
+                : 'bg-purple-950/90 border-purple-700/60 text-purple-200';
+            const countdownStr = isDue
+                ? '<span class="text-rose-400 font-black animate-pulse">(Due)</span>'
+                : `<span class="text-purple-400 font-normal">(${formatMinsToHhMm(diffMins)})</span>`;
 
             display.innerHTML = `
-                <div class="bg-purple-950/80 border border-purple-700/60 rounded-lg px-2 py-0.5 text-[11px] font-bold text-purple-200 flex items-center justify-center gap-1 shadow-xs">
-                    <span>${timeStr}</span>
-                    <span class="text-purple-400 font-normal">•</span>
-                    <span class="text-white font-extrabold">${volStr}</span>
+                <div class="${badgeClass} border rounded-lg px-2 py-0.5 text-[11px] font-bold flex items-center justify-center gap-1 shadow-xs w-full">
+                    <span class="text-[10px] opacity-80">Next</span>
+                    <span class="font-mono font-extrabold text-white">${hh}:${mm}</span>
+                    <span class="text-[9px] font-mono">${countdownStr}</span>
                 </div>
-                <div class="text-[10px] text-slate-300 font-medium flex items-center justify-center gap-1 leading-tight">
-                    <span class="text-slate-400">Next:</span>
-                    <span class="font-bold text-purple-300 font-mono">${hh}:${mm}</span>
-                    ${countdownHtml}
+                <div class="text-[9px] text-slate-400 font-mono pt-[11px] flex items-center justify-center gap-1 leading-none truncate max-w-full">
+                    <span>Last ${timeStr} (${volStr})</span>
+                    <span class="text-slate-600">•</span>
+                    <span class="text-slate-300 font-semibold">${todayTotal}ml</span>
                 </div>
-                ${totalFootnote}
             `;
         }
 
@@ -2218,13 +2339,23 @@
                     if (activeBreastRow) renderNursingTimeText();
                 }, 1000);
             }
+            if (!liveNotif30sIntervalId) {
+                liveNotif30sIntervalId = setInterval(() => {
+                    if (typeof NotificationManager !== 'undefined') {
+                        NotificationManager.checkScheduleAlerts();
+                    }
+                }, 30000);
+            }
+            if (typeof NotificationManager !== 'undefined') {
+                NotificationManager.checkScheduleAlerts();
+            }
         }
 
         async function checkGlobalAppStatus() {
             const refBtn = document.getElementById('manualRefreshBtn');
             const icon = document.getElementById('refreshSpinnerIcon');
             if (refBtn) refBtn.disabled = true;
-            if (icon) icon.className = "text-xs inline-block animate-spin";
+            if (icon) icon.classList.add('animate-spin', 'text-indigo-400');
 
             if (typeof BabyTrackerAPI !== 'undefined' && BabyTrackerAPI.flushOutbox) {
                 try {
@@ -2237,13 +2368,15 @@
             google.script.run
                 .withSuccessHandler((response) => {
                     if (refBtn) refBtn.disabled = false;
-                    if (icon) icon.className = "text-xs inline-block";
+                    if (icon) icon.classList.remove('animate-spin', 'text-indigo-400');
                     applyAppStatusData(response);
                 })
-                .withFailureHandler(() => {
+                .withFailureHandler((err) => {
                     if (refBtn) refBtn.disabled = false;
-                    if (icon) icon.className = "text-xs inline-block";
-                    showToast("Sync check failed", false);
+                    if (icon) icon.classList.remove('animate-spin', 'text-indigo-400');
+                    console.error('[Sync] Failure:', err);
+                    const msg = (err && err.message) ? err.message : "Sync check failed";
+                    showToast(`${msg}`, false);
                 })
                 .getInitialAppInitializationData();
         }
@@ -2269,6 +2402,13 @@
 
         function resetTimeToNow() {
             const now = new Date();
+            const dateInput = document.getElementById('explicitDateInput');
+            if (dateInput) {
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
             const timeInput = document.getElementById('explicitTimeInput');
             if (timeInput) timeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             if (currentModule === 'breast_active_manager' || (currentModule === 'sleep' && activeSleepRow)) {
@@ -2610,16 +2750,26 @@
         }
 
         document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === "visible") checkGlobalAppStatus();
+            if (document.visibilityState === "visible") {
+                checkGlobalAppStatus();
+                if (typeof NotificationManager !== 'undefined') {
+                    NotificationManager.checkScheduleAlerts();
+                }
+            }
         });
 
         function executePanelSubmit() {
             const btn = document.getElementById('panelSubmitBtn');
             lockSubmitButton(btn);
 
+            const dateVal = document.getElementById('explicitDateInput')?.value;
             const timeVal = document.getElementById('explicitTimeInput').value;
             const parts = timeVal.split(':');
-            const customDate = new Date();
+            let customDate = new Date();
+            if (dateVal && dateVal.includes('-')) {
+                const dParts = dateVal.split('-');
+                customDate = new Date(parseInt(dParts[0], 10), parseInt(dParts[1], 10) - 1, parseInt(dParts[2], 10));
+            }
             customDate.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
             const targetTimestamp = customDate.getTime();
 
@@ -2741,17 +2891,15 @@
     </script>
 
     <!-- PWA SETTINGS MODAL -->
-    <div id="pwaSettingsModal"
-        class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="pwaSettingsModal" onclick="if(event.target.id === 'pwaSettingsModal') closePwaSettingsModal()"
+        class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
         <div
-            class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+            class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar cursor-default">
             <!-- Modal Header -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
-                    <span>⚙️</span> Settings & App Info
-                </h3>
+                <h3 class="text-sm font-extrabold text-white">Settings</h3>
                 <button type="button" onclick="closePwaSettingsModal()"
-                    class="text-slate-400 hover:text-white text-lg font-bold p-1 leading-none">✕</button>
+                    class="text-slate-400 hover:text-white text-lg font-bold p-1 leading-none cursor-pointer">✕</button>
             </div>
 
             <!-- Auth Error Alert -->
@@ -2775,97 +2923,253 @@
                     <span
                         class="text-[9px] font-bold bg-indigo-500/40 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/40">Ready</span>
                 </div>
-                <p class="text-[11px] text-indigo-200/90 leading-tight">A new update has been downloaded. Tap below to
-                    reload and apply.</p>
+                <p class="text-[11px] text-indigo-200/90 leading-tight">A new update has been downloaded. Tap below to reload and apply.</p>
                 <button type="button" onclick="reloadPwaUpdate()"
                     class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-extrabold text-xs rounded-xl shadow-md transition cursor-pointer">
                     🚀 Apply Update & Reload
                 </button>
             </div>
 
-            <!-- Section 1: App Info & Version -->
-            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Version</span>
-                    <span id="pwaAppVersionBadge"
-                        class="text-[10px] text-indigo-300 font-mono font-bold bg-indigo-950/80 border border-indigo-800/60 px-2 py-0.5 rounded-md">Loading...</span>
+            <!-- Section 1: Time Simulation (Diagnostics) -->
+            <details id="pwaSimDetails" class="group bg-slate-950/60 border border-slate-800/80 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between p-3 cursor-pointer list-none select-none hover:bg-slate-900/60 transition">
+                    <span class="text-xs font-bold text-slate-200">Simulate Time</span>
+                    <span class="text-[10px] text-slate-400 font-bold transition-transform duration-200 group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-3 pb-3 pt-1 space-y-2 border-t border-slate-800/60">
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-[10px] text-slate-400 font-medium">Status:</span>
+                        <span id="pwaSimStatusBadge" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Live Time</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-tight">Simulate the timeline and projected naps/wake windows at any time of day.</p>
+                    <div class="flex gap-2 items-center">
+                        <input type="time" id="pwaSimulateTimeInput"
+                            class="flex-1 bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500 font-mono">
+                        <button type="button" onclick="applySimulatedTime()"
+                            class="bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition shadow-md cursor-pointer shrink-0">
+                            ⚡ Simulate
+                        </button>
+                    </div>
+                    <button type="button" onclick="resetSimulatedTime()" id="pwaSimResetBtn"
+                        class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 text-slate-300 border border-slate-700/60 font-semibold py-1.5 rounded-xl text-[11px] transition cursor-pointer">
+                        🔄 Reset to Live Device Time
+                    </button>
                 </div>
-                <button type="button" onclick="checkForPwaUpdates(true)" id="pwaCheckUpdateBtn"
-                    class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 border border-slate-700/60 text-slate-200 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer">
-                    <span id="pwaUpdateBtnIcon">🔄</span> <span id="pwaUpdateBtnText">Check for Updates</span>
-                </button>
-            </div>
+            </details>
 
             <!-- Section 2: Connection & Security -->
-            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-3">
-                <div>
-                    <div class="flex justify-between items-baseline mb-1">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Family PIN
-                            (API Key)</label>
-                        <span id="pwaKeyStatusBadge"
-                            class="text-[10px] text-emerald-400 font-semibold font-mono"></span>
+            <details id="pwaConnDetails" class="group bg-slate-950/60 border border-slate-800/80 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between p-3 cursor-pointer list-none select-none hover:bg-slate-900/60 transition">
+                    <span class="text-xs font-bold text-slate-200">Connection & PIN</span>
+                    <span class="text-[10px] text-slate-400 font-bold transition-transform duration-200 group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-3 pb-3 pt-2 space-y-2.5 border-t border-slate-800/60">
+                    <div>
+                        <div class="flex justify-between items-baseline mb-1">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Family PIN (API Key)</label>
+                            <span id="pwaKeyStatusBadge" class="text-[9px] text-emerald-400 font-semibold font-mono"></span>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="pwaApiKeyInput" placeholder="Enter Family PIN"
+                                class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-3 pr-10 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
+                            <button type="button" onclick="toggleApiKeyVisibility()"
+                                class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-200 text-sm p-1 cursor-pointer">
+                                <span id="pwaEyeIcon">👁️</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="relative">
-                        <input type="password" id="pwaApiKeyInput" placeholder="Enter Family PIN"
-                            class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-3 pr-10 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono tracking-wider">
-                        <button type="button" onclick="toggleApiKeyVisibility()"
-                            class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-200 text-sm p-1">
-                            <span id="pwaEyeIcon">👁️</span>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps Script URL</label>
+                        <input type="text" id="pwaApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
+                            class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
+                    </div>
+
+                    <div class="pt-1 flex gap-2">
+                        <button type="button" onclick="savePwaSettings()"
+                            class="flex-1 bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold py-2 rounded-xl text-xs transition shadow-md cursor-pointer">
+                            💾 Save & Connect
+                        </button>
+                        <button type="button" onclick="resetPwaKeyToDefault()"
+                            class="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 px-3 py-2 rounded-xl text-[11px] font-medium transition cursor-pointer">
+                            Reset PIN
                         </button>
                     </div>
                 </div>
+            </details>
 
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Google Apps
-                        Script URL</label>
-                    <input type="text" id="pwaApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
-                        class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 font-mono">
-                </div>
-            </div>
+            <!-- Section 3: Notifications (10m Advance Alerts) -->
+            <details id="pwaNotifDetails" class="group bg-slate-950/60 border border-slate-800/80 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between p-3 cursor-pointer list-none select-none hover:bg-slate-900/60 transition">
+                    <span class="text-xs font-bold text-slate-200">Notifications</span>
+                    <span class="text-[10px] text-slate-400 font-bold transition-transform duration-200 group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-3 pb-3 pt-2 space-y-2.5 border-t border-slate-800/60">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-300">10m Advance Alerts</span>
+                        <button type="button" id="pwaNotifPermBtn" onclick="toggleNotificationPermission()"
+                            class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer bg-slate-800 text-slate-300 border border-slate-700">
+                            Check Status
+                        </button>
+                    </div>
 
-            <!-- Section 3: Developer & Diagnostics -->
-            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 space-y-2">
-                <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Diagnostics</span>
-                    <span class="text-[9px] text-indigo-400 font-mono font-bold">test_schedule.js</span>
-                </div>
-                <button type="button" onclick="exportCurrentDayAsTestScenario()"
-                    class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 border border-indigo-500/30 text-indigo-200 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer">
-                    <span>🧪</span> Export Day as Test Scenario
-                </button>
-            </div>
+                    <div id="pwaNotifPermNotice" class="hidden text-[10px] text-amber-400 bg-amber-950/40 border border-amber-800/40 p-2 rounded-lg leading-tight">
+                        Tap "Enable" to grant browser permission for schedule alerts.
+                    </div>
 
-            <!-- Modal Action Buttons -->
-            <div class="pt-1 flex flex-col gap-2">
-                <button type="button" onclick="savePwaSettings()"
-                    class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
-                    💾 Save & Connect
-                </button>
-                <div class="flex gap-2">
-                    <button type="button" onclick="resetPwaKeyToDefault()"
-                        class="flex-1 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition cursor-pointer">
-                        Reset Default PIN
+                    <div class="space-y-2 pt-1 border-t border-slate-800/50">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-[11px] text-slate-300 flex items-center gap-1.5">
+                                <span>🍼</span> Feed (10m before)
+                            </span>
+                            <input type="checkbox" id="notifPrefFeed" onchange="saveNotificationPrefs()" class="accent-indigo-500 rounded cursor-pointer">
+                        </label>
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-[11px] text-slate-300 flex items-center gap-1.5">
+                                <span>🐳</span> Pump (10m before)
+                            </span>
+                            <input type="checkbox" id="notifPrefPump" onchange="saveNotificationPrefs()" class="accent-indigo-500 rounded cursor-pointer">
+                        </label>
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-[11px] text-slate-300 flex items-center gap-1.5">
+                                <span>💤</span> Nap & Bedtime (10m before)
+                            </span>
+                            <input type="checkbox" id="notifPrefSleep" onchange="saveNotificationPrefs()" class="accent-indigo-500 rounded cursor-pointer">
+                        </label>
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-[11px] text-slate-300 flex items-center gap-1.5">
+                                <span>☀️</span> Wake Up (10m before)
+                            </span>
+                            <input type="checkbox" id="notifPrefWake" onchange="saveNotificationPrefs()" class="accent-indigo-500 rounded cursor-pointer">
+                        </label>
+                    </div>
+
+                    <button type="button" onclick="sendTestNotificationAlert()"
+                        class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 border border-slate-700/60 text-slate-300 font-semibold py-1.5 px-3 rounded-xl text-[11px] transition cursor-pointer">
+                        🔔 Send Test Notification
                     </button>
-                    <button type="button" onclick="closePwaSettingsModal()"
-                        class="px-4 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 py-2 rounded-xl text-[11px] font-medium transition cursor-pointer">
-                        Cancel
+                </div>
+            </details>
+
+            <!-- Section 4: App Info & Updates -->
+            <details id="pwaAppDetails" class="group bg-slate-950/60 border border-slate-800/80 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between p-3 cursor-pointer list-none select-none hover:bg-slate-900/60 transition">
+                    <span class="text-xs font-bold text-slate-200">App Info & Updates</span>
+                    <span class="text-[10px] text-slate-400 font-bold transition-transform duration-200 group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-3 pb-3 pt-2 space-y-2.5 border-t border-slate-800/60">
+                    <div class="flex items-center justify-between text-xs text-slate-400">
+                        <span>Current Version:</span>
+                        <span id="pwaAppVersionBadge" class="text-[9px] text-indigo-300 font-mono font-bold bg-indigo-950/80 border border-indigo-800/60 px-1.5 py-0.5 rounded-md">Loading...</span>
+                    </div>
+                    <button type="button" onclick="checkForPwaUpdates(true)" id="pwaCheckUpdateBtn"
+                        class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 border border-slate-700/60 text-slate-200 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                        <span id="pwaUpdateBtnIcon">🔄</span> <span id="pwaUpdateBtnText">Check for Updates</span>
                     </button>
                 </div>
+            </details>
+
+            <!-- Section 5: Developer Diagnostics -->
+            <details id="pwaDevDetails" class="group bg-slate-950/60 border border-slate-800/80 rounded-xl overflow-hidden">
+                <summary class="flex items-center justify-between p-3 cursor-pointer list-none select-none hover:bg-slate-900/60 transition">
+                    <span class="text-xs font-bold text-slate-200">Developer Tools</span>
+                    <span class="text-[10px] text-slate-400 font-bold transition-transform duration-200 group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-3 pb-3 pt-2 space-y-2 border-t border-slate-800/60">
+                    <button type="button" onclick="exportCurrentDayAsTestScenario()"
+                        class="w-full bg-slate-800/80 hover:bg-slate-800 active:scale-98 border border-indigo-500/30 text-indigo-200 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                        <span>🧪</span> Export Day as Test Scenario
+                    </button>
+                </div>
+            </details>
+
+            <!-- Modal Close Button -->
+            <div class="pt-1">
+                <button type="button" onclick="closePwaSettingsModal()"
+                    class="w-full bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 text-slate-200 font-bold py-2 rounded-xl text-xs transition cursor-pointer">
+                    Done
+                </button>
             </div>
         </div>
     </div>
 
     <!-- PWA SETTINGS LOGIC -->
     <script>
+        window.simulatedTimeStr = localStorage.getItem('babytracker_simulated_time') || null;
+
+        function getEffectiveTimelineNow() {
+            const d = new Date();
+            if (window.simulatedTimeStr && window.simulatedTimeStr.includes(':')) {
+                const parts = window.simulatedTimeStr.split(':');
+                const h = parseInt(parts[0], 10);
+                const m = parseInt(parts[1], 10);
+                if (!isNaN(h) && !isNaN(m)) {
+                    d.setHours(h, m, 0, 0);
+                }
+            }
+            return d;
+        }
+
+        function applySimulatedTime() {
+            const val = document.getElementById('pwaSimulateTimeInput').value;
+            if (val) {
+                window.simulatedTimeStr = val;
+                localStorage.setItem('babytracker_simulated_time', val);
+                closePwaSettingsModal();
+                showToast(`⚡ Simulating time as ${val}`, true);
+                renderTimelineView(true);
+            }
+        }
+
+        function resetSimulatedTime() {
+            window.simulatedTimeStr = null;
+            localStorage.removeItem('babytracker_simulated_time');
+            const input = document.getElementById('pwaSimulateTimeInput');
+            if (input) input.value = '';
+            closePwaSettingsModal();
+            showToast("Reset to real device time", true);
+            renderTimelineView(true);
+        }
+
         function openPwaSettingsModal(isAuthError = false) {
             const modal = document.getElementById('pwaSettingsModal');
             if (modal) {
                 document.getElementById('pwaApiUrlInput').value = BabyTrackerAPI.getUrl();
                 document.getElementById('pwaApiKeyInput').value = BabyTrackerAPI.getKey();
                 const badge = document.getElementById('pwaKeyStatusBadge');
-                if (badge) badge.textContent = BabyTrackerAPI.hasConfiguredKey() ? '✓ Saved in LocalStorage' : 'Default Key';
+                if (badge) badge.textContent = BabyTrackerAPI.hasConfiguredKey() ? '✓ Custom PIN' : 'Default PIN';
                 const versionBadge = document.getElementById('pwaAppVersionBadge');
                 if (versionBadge) versionBadge.textContent = window.APP_BUILD_VERSION || 'v1.5';
+
+                const simInput = document.getElementById('pwaSimulateTimeInput');
+                if (simInput) simInput.value = window.simulatedTimeStr || '';
+                const simBadge = document.getElementById('pwaSimStatusBadge');
+                if (simBadge) {
+                    if (window.simulatedTimeStr) {
+                        simBadge.textContent = `⚡ ${window.simulatedTimeStr}`;
+                        simBadge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/60';
+                    } else {
+                        simBadge.textContent = 'Live Time';
+                        simBadge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400';
+                    }
+                }
+
+                // Hide/collapse all sections by default
+                const simDetails = document.getElementById('pwaSimDetails');
+                const connDetails = document.getElementById('pwaConnDetails');
+                const notifDetails = document.getElementById('pwaNotifDetails');
+                const appDetails = document.getElementById('pwaAppDetails');
+                const devDetails = document.getElementById('pwaDevDetails');
+                if (simDetails) simDetails.open = false;
+                if (connDetails) connDetails.open = isAuthError;
+                if (notifDetails) notifDetails.open = false;
+                if (appDetails) appDetails.open = false;
+                if (devDetails) devDetails.open = false;
+
+                if (typeof NotificationManager !== 'undefined') {
+                    NotificationManager.updateSettingsUI();
+                }
+
                 const alertBox = document.getElementById('pwaAuthAlert');
                 if (alertBox) {
                     if (isAuthError) {
@@ -3145,6 +3449,257 @@
                 if (text) text.textContent = "Check for Updates";
                 if (isUserInitiated) showToast("Could not check updates (offline)", false);
             });
+        }
+
+        // ==========================================
+        // PWA NOTIFICATION MANAGER (10m ADVANCE ALERTS)
+        // ==========================================
+        function parseTimeToEpochToday(timeStr) {
+            if (!timeStr || !timeStr.includes(':')) return null;
+            const parts = timeStr.split(':');
+            const hh = parseInt(parts[0], 10);
+            const mm = parseInt(parts[1], 10);
+            if (isNaN(hh) || isNaN(mm)) return null;
+            const now = getEffectiveTimelineNow();
+            const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0, 0);
+            return d.getTime();
+        }
+
+        const NotificationManager = {
+            STORAGE_KEY_PREFS: 'babytracker_notif_prefs',
+            STORAGE_KEY_SENT_PREFIX: 'bt_notif_sent_',
+
+            getPrefs() {
+                const defaults = { feed: true, pump: true, sleep: true, wake: true };
+                try {
+                    const saved = localStorage.getItem(this.STORAGE_KEY_PREFS);
+                    return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
+                } catch (e) {
+                    return defaults;
+                }
+            },
+
+            savePrefs(prefs) {
+                try {
+                    localStorage.setItem(this.STORAGE_KEY_PREFS, JSON.stringify(prefs));
+                } catch (e) {
+                    console.warn('[Notif] Error saving prefs:', e);
+                }
+            },
+
+            isSupported() {
+                return ('Notification' in window);
+            },
+
+            getPermissionState() {
+                if (!this.isSupported()) return 'unsupported';
+                return Notification.permission; // 'granted', 'denied', or 'default'
+            },
+
+            async requestPermission() {
+                if (!this.isSupported()) {
+                    showToast('Notifications not supported on this browser', false);
+                    return false;
+                }
+                try {
+                    const perm = await Notification.requestPermission();
+                    this.updateSettingsUI();
+                    if (perm === 'granted') {
+                        showToast('✓ Notifications enabled!', true);
+                        return true;
+                    } else if (perm === 'denied') {
+                        showToast('Notifications blocked in browser settings', false);
+                        return false;
+                    }
+                } catch (e) {
+                    console.warn('[Notif] Permission request failed:', e);
+                }
+                return false;
+            },
+
+            updateSettingsUI() {
+                const btn = document.getElementById('pwaNotifPermBtn');
+                const notice = document.getElementById('pwaNotifPermNotice');
+                const prefs = this.getPrefs();
+
+                const feedCb = document.getElementById('notifPrefFeed');
+                const pumpCb = document.getElementById('notifPrefPump');
+                const sleepCb = document.getElementById('notifPrefSleep');
+                const wakeCb = document.getElementById('notifPrefWake');
+
+                if (feedCb) feedCb.checked = !!prefs.feed;
+                if (pumpCb) pumpCb.checked = !!prefs.pump;
+                if (sleepCb) sleepCb.checked = !!prefs.sleep;
+                if (wakeCb) wakeCb.checked = !!prefs.wake;
+
+                const state = this.getPermissionState();
+                if (btn) {
+                    if (state === 'granted') {
+                        btn.textContent = 'Active';
+                        btn.className = 'px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60 cursor-default';
+                        if (notice) notice.classList.add('hidden');
+                    } else if (state === 'denied') {
+                        btn.textContent = 'Blocked';
+                        btn.className = 'px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-700/60 cursor-default';
+                        if (notice) {
+                            notice.textContent = 'Notifications are blocked in your browser settings. Please allow notifications in site permissions.';
+                            notice.classList.remove('hidden');
+                        }
+                    } else {
+                        btn.textContent = 'Enable';
+                        btn.className = 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white transition cursor-pointer shadow-xs';
+                        if (notice) {
+                            notice.textContent = 'Tap "Enable" to grant permission for 10m advance schedule reminders.';
+                            notice.classList.remove('hidden');
+                        }
+                    }
+                }
+            },
+
+            async show(title, body, tag, icon = './icons/icon.svg') {
+                if (this.getPermissionState() !== 'granted') return;
+
+                const options = {
+                    body,
+                    icon,
+                    badge: './icons/icon.svg',
+                    tag: tag || 'bt-alert',
+                    renotify: true,
+                    vibrate: [200, 100, 200]
+                };
+
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'SHOW_NOTIFICATION',
+                        title,
+                        options
+                    });
+                } else if ('Notification' in window) {
+                    try {
+                        new Notification(title, options);
+                    } catch (e) {
+                        console.warn('[Notif] Fallback notification error:', e);
+                    }
+                }
+            },
+
+            isSent(eventKey, targetMs) {
+                if (!targetMs) return false;
+                const slotKey = `${this.STORAGE_KEY_SENT_PREFIX}${eventKey}_${Math.floor(targetMs / 600000)}`;
+                return !!localStorage.getItem(slotKey);
+            },
+
+            markSent(eventKey, targetMs) {
+                if (!targetMs) return;
+                const slotKey = `${this.STORAGE_KEY_SENT_PREFIX}${eventKey}_${Math.floor(targetMs / 600000)}`;
+                try {
+                    localStorage.setItem(slotKey, String(Date.now()));
+                } catch (e) {}
+            },
+
+            checkScheduleAlerts() {
+                if (this.getPermissionState() !== 'granted') return;
+                const prefs = this.getPrefs();
+                const now = getEffectiveTimelineNow().getTime();
+
+                // 1. Feed Check (~3.5h window, 10m before target)
+                if (prefs.feed && lastFeedData && lastFeedData.timeMs) {
+                    const clusterStart = lastFeedData.clusterStartMs || lastFeedData.timeMs;
+                    const nextFeedMs = clusterStart + 12600000; // 3.5h
+                    const diffMins = Math.round((nextFeedMs - now) / 60000);
+                    if (diffMins <= 10 && diffMins >= -2 && !this.isSent('feed', nextFeedMs)) {
+                        const d = new Date(nextFeedMs);
+                        const hh = String(d.getHours()).padStart(2, '0');
+                        const mm = String(d.getMinutes()).padStart(2, '0');
+                        this.show('🍼 Feed in 10 mins', `Next feed target is ${hh}:${mm}.`, 'feed-10m');
+                        this.markSent('feed', nextFeedMs);
+                    }
+                }
+
+                // 2. Pump Check (~3.5h window, 10m before target)
+                if (prefs.pump && lastPumpData && lastPumpData.timeMs) {
+                    const clusterStart = lastPumpData.clusterStartMs || lastPumpData.timeMs;
+                    const nextPumpMs = clusterStart + 12600000; // 3.5h
+                    const diffMins = Math.round((nextPumpMs - now) / 60000);
+                    if (diffMins <= 10 && diffMins >= -2 && !this.isSent('pump', nextPumpMs)) {
+                        const d = new Date(nextPumpMs);
+                        const hh = String(d.getHours()).padStart(2, '0');
+                        const mm = String(d.getMinutes()).padStart(2, '0');
+                        this.show('🐳 Pump in 10 mins', `Next pump target is ${hh}:${mm}.`, 'pump-10m');
+                        this.markSent('pump', nextPumpMs);
+                    }
+                }
+
+                // 3. Sleep & Wake Adaptive Schedule Check (10m before target)
+                const proj = getLiveSleepWakeProjection();
+                if (proj) {
+                    if (activeSleepRow && prefs.wake) {
+                        // Currently Asleep -> Alert 10m before estimated Wake
+                        const wakeTimeStr = proj.projWakeStr;
+                        if (wakeTimeStr) {
+                            const targetWakeMs = parseTimeToEpochToday(wakeTimeStr);
+                            if (targetWakeMs) {
+                                const diffMins = Math.round((targetWakeMs - now) / 60000);
+                                if (diffMins <= 10 && diffMins >= -2 && !this.isSent('wake', targetWakeMs)) {
+                                    this.show('☀️ Baby Wake Up in 10 mins', `Estimated wake time is ${wakeTimeStr}.`, 'wake-10m');
+                                    this.markSent('wake', targetWakeMs);
+                                }
+                            }
+                        }
+                    } else if (!activeSleepRow && prefs.sleep) {
+                        // Currently Awake -> Alert 10m before estimated Nap or Bedtime
+                        const sleepTimeStr = proj.projSleepStr;
+                        if (sleepTimeStr) {
+                            const targetSleepMs = parseTimeToEpochToday(sleepTimeStr);
+                            if (targetSleepMs) {
+                                const diffMins = Math.round((targetSleepMs - now) / 60000);
+                                const isBedtime = !!proj.isBedtime;
+                                const eventKey = isBedtime ? 'bedtime' : 'nap';
+                                if (diffMins <= 10 && diffMins >= -2 && !this.isSent(eventKey, targetSleepMs)) {
+                                    const title = isBedtime ? '🌙 Bedtime in 10 mins' : '💤 Nap in 10 mins';
+                                    this.show(title, `Target sleep time is ${sleepTimeStr}.`, `${eventKey}-10m`);
+                                    this.markSent(eventKey, targetSleepMs);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        function toggleNotificationPermission() {
+            if (NotificationManager.getPermissionState() !== 'granted') {
+                NotificationManager.requestPermission();
+            } else {
+                showToast('✓ Notifications are already active', true);
+            }
+        }
+
+        function saveNotificationPrefs() {
+            const feedCb = document.getElementById('notifPrefFeed');
+            const pumpCb = document.getElementById('notifPrefPump');
+            const sleepCb = document.getElementById('notifPrefSleep');
+            const wakeCb = document.getElementById('notifPrefWake');
+            NotificationManager.savePrefs({
+                feed: feedCb ? feedCb.checked : true,
+                pump: pumpCb ? pumpCb.checked : true,
+                sleep: sleepCb ? sleepCb.checked : true,
+                wake: wakeCb ? wakeCb.checked : true
+            });
+            showToast('Notification settings saved', true);
+        }
+
+        function sendTestNotificationAlert() {
+            if (NotificationManager.getPermissionState() !== 'granted') {
+                NotificationManager.requestPermission().then(granted => {
+                    if (granted) {
+                        NotificationManager.show('🔔 Test Notification', '10-minute advance alerts are active & ready!', 'test-alert');
+                    }
+                });
+            } else {
+                NotificationManager.show('🔔 Test Notification', '10-minute advance alerts are active & ready!', 'test-alert');
+                showToast('Test notification sent!', true);
+            }
         }
 
         initServiceWorkerLifecycle();

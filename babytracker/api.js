@@ -175,7 +175,18 @@ const BabyTrackerAPI = (function () {
       throw new Error(`HTTP Error ${res.status}`);
     }
 
-    const data = await res.json();
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      if (text.includes('<html') || text.includes('<!DOCTYPE') || text.includes('accounts.google.com')) {
+        handleAuthError();
+        throw new Error('Google Web App returned HTML (check Family PIN or Web App URL in Settings)');
+      }
+      throw new Error('Invalid JSON response from backend');
+    }
+
     if (data.success === false) {
       if (data.error && (data.error.includes('401') || data.error.toLowerCase().includes('unauthorized') || data.error.toLowerCase().includes('api key'))) {
         handleAuthError();

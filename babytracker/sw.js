@@ -5,7 +5,7 @@
  * Caches core application assets for instant 0ms offline launch.
  */
 
-const CACHE_NAME = 'babytracker-v1787459716668';
+const CACHE_NAME = 'babytracker-v1787536534791';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -75,7 +75,28 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+  if (event.data) {
+    if (event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+    } else if (event.data.type === 'SHOW_NOTIFICATION') {
+      const { title, options } = event.data;
+      self.registration.showNotification(title, options);
+    }
   }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow('./');
+      }
+    })
+  );
 });
